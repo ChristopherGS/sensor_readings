@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		{% if title %}
+    		<title>{{ title }} - Sensor Dashboard</title>
+    	{% else %}
+    		<title>Sensor Dashboard</title>
+    	{% endif %}
+		<meta name="display sensor data" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+
+	<body>
+		<div>Sensor Dashboard: <a href="/index">Home</a></div>
+    	<hr>
+    	{% with messages = get_flashed_messages() %}
+      		{% if messages %}
+        		<ul>
+        			{% for message in messages %}
+            			<li>{{ message }} </li>
+        			{% endfor %}
+        		</ul>
+      		{% endif %}
+    	{% endwith %}
+    	{% block content %}{% endblock %}
+	</body>
+</html>

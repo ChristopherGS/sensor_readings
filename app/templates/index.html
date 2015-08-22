@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+
+		<h1>Hello, {{user.nickname}}!</h1>
+		{% for reading in readings %}
+		<div>
+			<p>{{ reading.author.nickname }} recorded on: <b>{{ reading.date }}</b></p>
+		</div>
+		{% endfor %}	
+
+{% endblock %}
+
