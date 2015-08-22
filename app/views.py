@@ -17,6 +17,7 @@ def index():
         { 
             'author': {'name': 'Chris'}, 
             'acc_x': 10 
+            'acc_y': 25
         },
         { 
             'author': {'name': 'Urs'}, 
