@@ -16,12 +16,15 @@ def index():
     readings = [
         { 
             'author': {'name': 'Chris'}, 
-            'acc_x': 10 
-            'acc_y': 25
+            'acc_x': 10, 
+            'acc_y': 25,
+            'acc_z': 50
         },
         { 
             'author': {'name': 'Urs'}, 
-            'acc_x': 11 
+            'acc_x': 11,
+            'acc_y': 48,
+            'acc_z': 57 
         }
     ]
     return render_template('index.html',
