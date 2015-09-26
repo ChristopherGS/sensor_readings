@@ -1,0 +1,9 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Upload complete!</h1>
+
+    <a href="{{ url_for('csv') }}">Upload another file</a>
+    
+{% endblock %}

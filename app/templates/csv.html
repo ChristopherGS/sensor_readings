@@ -1,0 +1,29 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+
+
+{% block content %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".fileUpload2").on("click", function(){
+                console.log("clicked button");
+                $.post('/beam_up', {
+                    a: "test_data",
+                    b: "more_test_data"
+                }, function(data){
+                    console.log(data);
+                });
+
+            });
+        });
+    </script>
+    <h1>Sensor Upload Page</h1>
+
+    <form method=POST enctype=multipart/form-data action="">
+        <input type="file" name="file">
+        <input type="submit"/>
+    </form>
+
+    
+{% endblock %}

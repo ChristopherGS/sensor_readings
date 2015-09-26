@@ -1,8 +1,7 @@
-# -*- coding: utf8 -*-
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-WTF_CSRF_ENABLED = True
+CSRF_ENABLED = True
 SECRET_KEY = 'you-will-never-guess'
 
 OPENID_PROVIDERS = [
@@ -14,3 +13,8 @@ OPENID_PROVIDERS = [
 
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
+
+DEFAULT_FILE_STORAGE = 'filesystem'
+# UPLOAD_FOLDER = os.path.realpath('.')+'/static/'
+# ALLOWED_EXTENSIONS = set(['txt', 'csv']) not working
+FILE_SYSTEM_STORAGE_FILE_VIEW = 'static'
