@@ -1,39 +1,49 @@
-from app import db
+from flask.ext.sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 
-class User(db.Model):
+class Site(db.Model):
+    __tablename__ = 'tracking_site'
+
     id = db.Column(db.Integer, primary_key=True)
-    nickname = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
-    posts = db.relationship('Post', backref='author', lazy='dynamic')
-
-    @property
-    def is_authenticated(self):
-        return True
-
-    @property
-    def is_active(self):
-        return True
-
-    @property
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        try:
-            return unicode(self.id)  # python 2
-        except NameError:
-            return str(self.id)  # python 3
+    base_url = db.Column(db.String)
+    visits = db.relationship('Visit', backref='tracking_site', lazy='select')
 
     def __repr__(self):
-        return '<User %r>' % (self.nickname)
+        return '<Site {:d} {}>'.format(self.id, self.base_url)
+
+    def __str__(self):
+        return self.base_url
 
 
-class Post(db.Model):
+class Visit(db.Model):
+    __tablename__ = 'tracking_visit'
+
     id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String(140))
-    timestamp = db.Column(db.DateTime)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    browser = db.Column(db.String)
+    date = db.Column(db.DateTime)
+    event = db.Column(db.String)
+    url = db.Column(db.String)
+    ip_address = db.Column(db.String)
+    site_id = db.Column(db.Integer, db.ForeignKey('tracking_site.id'))
 
     def __repr__(self):
-        return '<Post %r>' % (self.body)
+        r = '<Visit for site ID {:d}: {} - {:%Y-%m-%d %H:%M:%S}>'
+        return r.format(self.site_id, self.url, self.date)
+
+
+def query_to_list(query, include_field_names=True):
+    """Turns a SQLAlchemy query into a list of data values."""
+    column_names = []
+    for i, obj in enumerate(query.all()):
+        if i == 0:
+            column_names = [c.name for c in obj.__table__.columns]
+            if include_field_names:
+                yield column_names
+        yield obj_to_list(obj, column_names)
+
+
+def obj_to_list(sa_obj, field_order):
+    """Takes a SQLAlchemy object - returns a list of all its data"""
+    return [getattr(sa_obj, field_name, None) for field_name in field_order]

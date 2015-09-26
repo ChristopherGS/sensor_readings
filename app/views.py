@@ -1,13 +1,15 @@
 import os
-from flask import render_template, flash, redirect, session, url_for, request, g, send_from_directory
-from flask.ext.login import login_user, logout_user, current_user, \
-    login_required
 
-from app import app, db, lm, oid
-from .forms import LoginForm
-from .models import User
+from flask import Blueprint, flash, Markup, redirect, render_template, url_for, request
+
+from .forms import SiteForm, VisitForm
+from .models import db, query_to_list, Site, Visit
 
 from werkzeug import secure_filename
+
+
+sensors = Blueprint("sensors", __name__, static_folder='static', template_folder='templates')
+
 
 ALLOWED_EXTENSIONS = set(['txt', 'csv'])
 UPLOAD_FOLDER = os.path.realpath('.')+'/app/uploads'
@@ -17,53 +19,17 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
-@lm.user_loader
-def load_user(id):
-    return User.query.get(int(id))
 
-
-@app.before_request
-def before_request():
-    g.user = current_user
-
-
-@app.route('/')
-@app.route('/index')
-@login_required
+@sensors.route("/")
+@sensors.route("/index")
 def index():
-    user = g.user
-    posts = [
-        {
-            'author': {'nickname': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'nickname': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
-    return render_template('index.html',
-                           title='Home',
-                           user=user,
-                           posts=posts)
+    # site_form = SiteForm()
+    # visit_form = VisitForm()
+    return render_template("index.html")
 
 
-@app.route('/login', methods=['GET', 'POST'])
-@oid.loginhandler
-def login():
-    if g.user is not None and g.user.is_authenticated:
-        return redirect(url_for('index'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        session['remember_me'] = form.remember_me.data
-        return oid.try_login(form.openid.data, ask_for=['nickname', 'email'])
-    return render_template('login.html',
-                           title='Sign In',
-                           form=form,
-                           providers=app.config['OPENID_PROVIDERS'])
 
-
-@app.route('/csv', methods=['GET', 'POST'])
+@sensors.route('/csv', methods=['GET', 'POST'])
 def csv():
     if request.method == 'GET':
         return render_template('csv.html')
@@ -73,42 +39,87 @@ def csv():
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             # TODO save to DB function
-            return redirect(url_for('complete'))
+            return redirect(url_for('sensors.complete'))
+        else:
+            print "error"
     else:
         return '404'
 
-
-@app.route('/csv/<filename>')
-def uploaded_file(filename):
-    print "here"
-    return send_from_directory(UPLOAD_FOLDER, filename)
-
-@app.route('/complete')
+@sensors.route('/complete')
 def complete():
      return render_template('complete.html')
 
-@oid.after_login
-def after_login(resp):
-    if resp.email is None or resp.email == "":
-        flash('Invalid login. Please try again.')
-        return redirect(url_for('login'))
-    user = User.query.filter_by(email=resp.email).first()
-    if user is None:
-        nickname = resp.nickname
-        if nickname is None or nickname == "":
-            nickname = resp.email.split('@')[0]
-        user = User(nickname=nickname, email=resp.email)
-        db.session.add(user)
+"""
+@tracking.route("/site", methods=("POST", ))
+def add_site():
+    form = SiteForm()
+    if form.validate_on_submit():
+        site = Site()
+        form.populate_obj(site)
+        db.session.add(site)
         db.session.commit()
-    remember_me = False
-    if 'remember_me' in session:
-        remember_me = session['remember_me']
-        session.pop('remember_me', None)
-    login_user(user, remember=remember_me)
-    return redirect(request.args.get('next') or url_for('index'))
+        flash("Added site")
+        return redirect(url_for(".index"))
+
+    return render_template("validation_error.html", form=form)
 
 
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('index'))
+@tracking.route("/site/<int:site_id>")
+def view_site_visits(site_id=None):
+    site = Site.query.get_or_404(site_id)
+    query = Visit.query.filter(Visit.site_id == site_id)
+    data = query_to_list(query)
+    title = "visits for {}".format(site.base_url)
+    return render_template("data_list.html", data=data, title=title)
+
+
+@tracking.route("/visit", methods=("POST", ))
+@tracking.route("/site/<int:site_id>/visit", methods=("POST",))
+def add_visit(site_id=None):
+    if site_id is None:
+        # This is only used by the visit_form on the index page.
+        form = VisitForm()
+    else:
+        site = Site.query.get_or_404(site_id)
+        # WTForms does not coerce obj or keyword arguments
+        # (otherwise, we could just pass in `site=site_id`)
+        # CSRF is disabled in this case because we will *want*
+        # users to be able to hit the /site/:id endpoint from other sites.
+        form = VisitForm(csrf_enabled=False, site=site)
+
+    if form.validate_on_submit():
+        visit = Visit()
+        form.populate_obj(visit)
+        visit.site_id = form.site.data.id
+        db.session.add(visit)
+        db.session.commit()
+        flash("Added visit for site {}".format(form.site.data.base_url))
+        return redirect(url_for(".index"))
+
+    return render_template("validation_error.html", form=form)
+
+
+@tracking.route("/sites")
+def view_sites():
+    query = Site.query.filter(Site.id >= 0)
+    data = query_to_list(query)
+
+    # The header row should not be linked
+    results = [next(data)]
+    for row in data:
+        row = [_make_link(cell) if i == 0 else cell
+               for i, cell in enumerate(row)]
+        results.append(row)
+
+    return render_template("data_list.html", data=results, title="Sites")
+
+
+_LINK = Markup('<a href="{url}">{name}</a>')
+
+
+def _make_link(site_id):
+    url = url_for(".view_site_visits", site_id=site_id)
+    return _LINK.format(url=url, name=site_id)
+
+
+"""

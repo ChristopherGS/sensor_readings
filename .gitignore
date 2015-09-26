@@ -1,8 +1,7 @@
 *.pyc
 *.pyo
-app.db
-search.db
-flask
+*.db
+
 uploads
 bower_components
 

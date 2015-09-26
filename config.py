@@ -1,20 +1,7 @@
-import os
-basedir = os.path.abspath(os.path.dirname(__file__))
+from os.path import abspath, dirname, join
 
-CSRF_ENABLED = True
-SECRET_KEY = 'you-will-never-guess'
+_cwd = dirname(abspath(__file__))
 
-OPENID_PROVIDERS = [
-    {'name': 'Google', 'url': 'https://www.google.com/accounts/o8/id'},
-    {'name': 'Yahoo', 'url': 'https://me.yahoo.com'},
-    {'name': 'AOL', 'url': 'http://openid.aol.com/<username>'},
-    {'name': 'Flickr', 'url': 'http://www.flickr.com/<username>'},
-    {'name': 'MyOpenID', 'url': 'https://www.myopenid.com'}]
-
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db')
-SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
-
-DEFAULT_FILE_STORAGE = 'filesystem'
-# UPLOAD_FOLDER = os.path.realpath('.')+'/static/'
-# ALLOWED_EXTENSIONS = set(['txt', 'csv']) not working
-FILE_SYSTEM_STORAGE_FILE_VIEW = 'static'
+SECRET_KEY = 'flask-session-insecure-secret-key'
+SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(_cwd, 'app.db')
+SQLALCHEMY_ECHO = True
