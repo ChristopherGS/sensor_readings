@@ -10,6 +10,7 @@ class BaseConfiguration(object):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(_cwd, 'flask-tracking.db')
     SQLALCHEMY_ECHO = False
     HASH_ROUNDS = 100000
+    UPLOAD_FOLDER = join(_cwd, '/app/uploads')
 
 
 class TestConfiguration(BaseConfiguration):

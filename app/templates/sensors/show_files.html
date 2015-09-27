@@ -1,0 +1,19 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>CSV files currently on the server</h1>
+
+    <p>{{file_url}}</p>
+    
+    <ul>
+    {% for f in file_url %}
+    	<li>{{f.name}}</li>
+
+    {% endfor %}
+
+    </ul>
+
+    <a href="{{ url_for('sensors.csv') }}">Upload another file</a>
+    
+{% endblock %}

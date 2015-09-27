@@ -1,6 +1,8 @@
 import os
 
-from flask import abort, Blueprint, flash, jsonify, Markup, redirect, render_template, request, url_for
+from flask import abort, Blueprint, flash, jsonify, Markup, redirect, render_template, request, \
+url_for
+from random import choice
 from flask.ext.login import current_user, login_required
 
 from .forms import SiteForm, VisitForm
@@ -34,7 +36,7 @@ def index():
 @sensors.route('/csv', methods=['GET', 'POST'])
 def csv():
     if request.method == 'GET':
-        return render_template('csv.html')
+        return render_template('sensors/csv.html')
     elif request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
@@ -49,7 +51,15 @@ def csv():
 
 @sensors.route('/complete')
 def complete():
-     return render_template('complete.html')
+     return render_template('sensors/complete.html')
+
+@sensors.route('/show_files')
+def show_files():
+    names = os.listdir(UPLOAD_FOLDER)
+    print type(names)
+    file_url = url_for('static', filename=os.path.join('uploads', choice(names)))
+    return render_template('sensors/show_files.html', file_url=names)
+    
 
 """
 @tracking.route("/site", methods=("POST", ))

@@ -14,12 +14,12 @@ from ..sensors import views
 class SensorViewsTests(BaseTestCase):
     def test_csv_url(self):
         with self.client:
-            res = self.client.get(url_for("sensors.csv"))
+            res = self.client.get(url_for('sensors.csv'))
             self.assert200(res)
 
     def test_complete_url(self):
         with self.client:
-            res = self.client.get(url_for("sensors.complete"))
+            res = self.client.get(url_for('sensors.complete'))
             self.assert200(res)
 
     def test_csv_upload(self):
@@ -50,6 +50,12 @@ class SensorViewsTests(BaseTestCase):
                     file=(StringIO('Foo bar baz'), filename),
                 ))
             self.assertEqual(rv.status_code, status_code)
+
+
+    def test_show_file_url(self):
+        with self.client:
+            res = self.client.get(url_for('sensors.show_files'))
+            self.assert200(res)
 
 
 class TestingFileStorage(FileStorage):
@@ -95,27 +101,6 @@ class TestingFileStorage(FileStorage):
             self.saved = dst.name
 
 
-
-
-    """
-        file = open('file.csv','r')
-        with self.client:
-            res = self.client.post(url_for("sensors.csv"), {'file': file})
-            print res.status_code
-            print res.data
-            # self.assert200(res)
-    """
-     #   file = open('file.csv','r') 
-     #   res = self.client.post('/csv', {'file': file})
-
-     #res = self.client.post(url_for("sensors.csv"), data=dict(
-     #          upload_var=(StringIO("yo"), 'file.csv'),
-     #      ))
-        
-      #  print res.status_code
-       # print res.data
-        # assert res.status_code == 200
-        # assert 'file saved' in res.data
 
 
 if __name__ == '__main__':
