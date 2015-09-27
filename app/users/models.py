@@ -1,15 +1,16 @@
 from random import SystemRandom
 
 from backports.pbkdf2 import pbkdf2_hmac, compare_digest
+from flask import current_app
 from flask.ext.login import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_property
 
-from app.data import db
+from app.data import CRUDMixin, db
 
 
-class User(UserMixin, db.Model):
+class User(UserMixin, CRUDMixin, db.Model):
     __tablename__ = 'users_user'
-    id = db.Column(db.Integer, primary_key=True)
+
     name = db.Column(db.String(50))
     email = db.Column(db.String(120), unique=True)
     _password = db.Column(db.LargeBinary(120))
@@ -33,7 +34,6 @@ class User(UserMixin, db.Model):
 
     def is_valid_password(self, password):
         """Ensure that the provided password is valid.
-
         We are using this instead of a ``sqlalchemy.types.TypeDecorator``
         (which would let us write ``User.password == password`` and have the incoming
         ``password`` be automatically hashed in a SQLAlchemy query)
@@ -46,7 +46,8 @@ class User(UserMixin, db.Model):
     def _hash_password(self, password):
         pwd = password.encode("utf-8")
         salt = bytes(self._salt)
-        buff = pbkdf2_hmac("sha512", pwd, salt, iterations=100000)
+        rounds = current_app.config.get("HASH_ROUNDS", 100000)
+        buff = pbkdf2_hmac("sha512", pwd, salt, iterations=rounds)
         return bytes(buff)
 
     def __repr__(self):

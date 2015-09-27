@@ -41,9 +41,9 @@ def csv():
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             # TODO save to DB function
-            return redirect(url_for('sensors.complete'))
+            return redirect(url_for('sensors.complete')), 201
         else:
-            print "error"
+            return render_template('index.html'), 400
     else:
         return '404'
 

@@ -6,7 +6,7 @@ from .sensors.views import sensors
 from .users.views import users
 
 app = Flask(__name__)
-app.config.from_object('config')
+app.config.from_object('config.BaseConfiguration')
 
 
 @app.context_processor
