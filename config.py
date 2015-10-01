@@ -7,7 +7,7 @@ class BaseConfiguration(object):
     DEBUG = False
     TESTING = False
     SECRET_KEY = 'flask-session-insecure-secret-key'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(_cwd, 'flask-tracking.db')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(_cwd, 'app.db')
     SQLALCHEMY_ECHO = False
     HASH_ROUNDS = 100000
     UPLOAD_FOLDER = join(_cwd, '/app/uploads')

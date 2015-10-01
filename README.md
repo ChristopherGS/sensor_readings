@@ -1,14 +1,16 @@
-microblog
+Sensor Readings
 =========
 
-A decently featured microblogging web application written in Python and Flask that I'm developing in my Flask Mega-Tutorial series that begins [here](http://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world).
+Flask server for receiving accelerometer data from wearable devices
 
 Installation
 ------------
 
-The tutorial referenced above explains how to setup a virtual environment with all the required modules.
+- pip install -r requirements.txt
 
-The sqlite database must also be created before the application can run, and the `db_create.py` script takes care of that. See the [Database tutorial](http://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iv-database) for the details.
+- Create an uploads folder inside the "app" directory
+
+
 
 Running
 -------

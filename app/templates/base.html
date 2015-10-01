@@ -1,9 +1,9 @@
 <html>
   <head>
     {% if title %}
-    <title>{{ title }} - microblog</title>
+    <title>{{ title }} - Sensor Uploader</title>
     {% else %}
-    <title>microblog</title>
+    <title>Human Motion Recognition</title>
     {% endif %}
 
     <script type=text/javascript src="{{url_for('static', filename='jquery.js') }}"></script>
@@ -14,7 +14,7 @@
   </head>
 
   <body>
-    <div>Microblog:
+    <div>Sensor Data:
         <a href="{{ url_for('sensors.index') }}">Home</a>
         | <a href="{{ url_for('sensors.csv') }}">Upload File</a>
     </div>

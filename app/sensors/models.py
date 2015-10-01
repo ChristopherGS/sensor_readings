@@ -1,5 +1,16 @@
 from app.data import CRUDMixin, db
 
+class Sensor(CRUDMixin, db.Model):
+    __tablename__ = 'tracking_sensor'
+
+    timestamp = db.Column(db.DateTime)
+    accelerometer_x = db.Column(db.Numeric)
+    accelerometer_y = db.Column(db.Numeric)
+    accelerometer_z = db.Column(db.Numeric)
+
+    def __repr__(self):
+        return '<Timestamp {:d}>'.format(self.timestamp)
+
 class Site(CRUDMixin, db.Model):
     __tablename__ = 'tracking_site'
 
