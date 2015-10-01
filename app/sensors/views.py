@@ -43,6 +43,7 @@ def csv():
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
             # TODO save to DB function
+            # Test change for Urs
             return redirect(url_for('sensors.complete')), 201
         else:
             return render_template('index.html'), 400
