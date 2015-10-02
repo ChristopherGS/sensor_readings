@@ -4,3 +4,4 @@ Flask-WTF==0.9.3
 Flask-Login==0.2.7
 backports.pbkdf2==0.1
 Flask-Testing==0.4
+numpy==1.9.3
