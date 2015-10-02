@@ -69,7 +69,7 @@ def csv_route():
                         'accelerometer_y' : i[1],
                         'accelerometer_z' : i[2],
                         'timestamp' : my_timestamp,
-                        'experiment' : u
+                        'experiment' : my_experiment
                     })
                     
                     db.session.add(el_sensor)
