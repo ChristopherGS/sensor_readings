@@ -1,6 +1,7 @@
 import os, csv
 from datetime import datetime
 from numpy import genfromtxt
+import pandas as pd
 
 from flask import abort, Blueprint, flash, jsonify, Markup, redirect, render_template, request, \
 url_for, session
@@ -10,6 +11,7 @@ from flask.ext.login import current_user, login_required
 from .forms import SiteForm, VisitForm
 from .models import Site, Visit, Sensor
 from app.data import query_to_list, db
+from app.science import sql_to_pandas
 
 from werkzeug import secure_filename
 
@@ -25,8 +27,10 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 def Load_Data(file_name):
-    data = genfromtxt(file_name, delimiter=',', skiprows=1, converters={0: lambda s: str(s)})
-    return data.tolist()
+    # data = genfromtxt(file_name, delimiter=',', skiprows=1)
+    data = pd.read_table(file_name, header=None, skiprows=1,delimiter=',') 
+    print data
+    return data.values.tolist()
 
 
 
@@ -55,44 +59,35 @@ def csv_route():
             try:
                 print filename
                 file_name = filename
-                data = Load_Data(os.path.join(UPLOAD_FOLDER, file_name)) 
+                data = Load_Data(os.path.join(UPLOAD_FOLDER, file_name))
+                count = 0 
+                holder = []
                 for i in data:
+                    print type(i[3])
+                    my_timestamp = datetime.strptime(i[3], "%Y-%m-%d %H:%M:%S:%f")
                     record = Sensor(**{
-                        'accelerometer_x' : i[1],
-                        'accelerometer_y' : i[2],
-                        'accelerometer_z' : i[3],
-                    })
-                    db.session.add(record) #Add all the records
+                        'accelerometer_x' : i[0],
+                        'accelerometer_y' : i[1],
+                        'accelerometer_z' : i[2],
+                        'device' : 'Nexus 5',
+                        'timestamp' : my_timestamp
 
-                db.session.commit() #Attempt to commit all the records
+                    })
+                    
+                    db.session.add(record) #Add all the records
+                    count += 1
+                    
+                if ((count % 10 == 0) | (count < 20)):
+                    db.session.commit() #Attempt to commit all the records
+                 
+                print holder
             except Exception as e:
                 print e
-                # db.session.rollback() #Rollback the changes on error
+                db.session.rollback() #Rollback the changes on error
             finally:
                 pass
                 # db.session.close() #Close the connection
             
-            """
-            input_reader = csv.reader('sensor_log.csv', delimiter=',', quotechar="'", quoting=csv.QUOTE_ALL)
-            count = 0
-            holder = [] 
-            for line in input_reader:
-                blah = line[0]
-                obj = Sensor(line[0])
-                holder.append(blah)
-                db.session.add(obj)
-                count += 1
-            
-            db.session.commit()
-            print count
-            print holder
-            """
-
-            # new_stamp = Sensor(accelerometer_x=request.form["ownerName"], accelerometer_y=request.form["roomSize"]\
-            #           , accelerometer_z=request.form["roomDescription"], timestamp=request.form["roomPrice"])
-            
-
-            # TODO save to DB function
             # Test change for Urs
             flash("CSV data saved to DB") 
             return redirect(url_for('sensors.complete')), 201
@@ -105,13 +100,14 @@ def csv_route():
 def complete():
      return render_template('sensors/complete.html')
 
-@sensors.route('/show_files')
-def show_files():
+@sensors.route('/display')
+def display():
+    sql_to_pandas()
     names = os.listdir(UPLOAD_FOLDER)
     print type(names)
     file_url = url_for('static', filename=os.path.join('uploads', choice(names)))
     return render_template('sensors/show_files.html', file_url=names)
-    
+
 
 """
 @tracking.route("/site", methods=("POST", ))

@@ -14,7 +14,7 @@ from ..sensors import views
 class SensorViewsTests(BaseTestCase):
     def test_csv_url(self):
         with self.client:
-            res = self.client.get(url_for('sensors.csv'))
+            res = self.client.get(url_for('sensors.csv_route'))
             self.assert200(res)
 
     def test_complete_url(self):
@@ -45,7 +45,7 @@ class SensorViewsTests(BaseTestCase):
             self.app.request_class = TestingRequest
             test_client = self.app.test_client()
             rv = test_client.post(
-                url_for("sensors.csv"),
+                url_for("sensors.csv_route"),
                 data=dict(
                     file=(StringIO('Foo bar baz'), filename),
                 ))
@@ -54,7 +54,7 @@ class SensorViewsTests(BaseTestCase):
 
     def test_show_file_url(self):
         with self.client:
-            res = self.client.get(url_for('sensors.show_files'))
+            res = self.client.get(url_for('sensors.display'))
             self.assert200(res)
 
 
