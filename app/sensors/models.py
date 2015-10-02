@@ -3,9 +3,11 @@ from app.data import CRUDMixin, db
 class Sensor(CRUDMixin, db.Model):
     __tablename__ = 'tracking_sensor'
 
-    accelerometer_x = db.Column(db.Numeric)
-    accelerometer_y = db.Column(db.Numeric)
-    accelerometer_z = db.Column(db.Numeric)
+
+    id = db.Column(db.Integer, primary_key=True)
+    accelerometer_x = db.Column(db.Text)
+    accelerometer_y = db.Column(db.Text)
+    accelerometer_z = db.Column(db.Text)
     timestamp = db.Column(db.DateTime)
     device = db.Column(db.Text)
 

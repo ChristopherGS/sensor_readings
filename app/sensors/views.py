@@ -28,8 +28,7 @@ def allowed_file(filename):
 
 def Load_Data(file_name):
     # data = genfromtxt(file_name, delimiter=',', skiprows=1)
-    data = pd.read_table(file_name, header=None, skiprows=1,delimiter=',') 
-    print data
+    data = pd.read_table(file_name, header=None, skiprows=1, delimiter=',') 
     return data.values.tolist()
 
 

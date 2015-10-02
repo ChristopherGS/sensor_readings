@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import url_for
 from flask import Request
 from werkzeug import FileStorage
@@ -5,8 +7,9 @@ from werkzeug.datastructures import MultiDict
 from cStringIO import StringIO
 
 from app.test_base import BaseTestCase
+from app.data import CRUDMixin, db
 from app.users.models import User
-from .models import Site, Visit
+from .models import Site, Visit, Sensor
 from ..sensors import views
 
 
@@ -51,6 +54,58 @@ class SensorViewsTests(BaseTestCase):
                 ))
             self.assertEqual(rv.status_code, status_code)
 
+    def test_get_sensor_input(self):
+        """Can we retrieve the Sensor instance created in setUp?"""
+        with self.client:
+            # sensor = Sensor.query.get(107)
+            sensorz = Sensor.query.get(1)
+            assert sensorz is not None
+            self.assertEquals(sensorz.accelerometer_x, '9.10')
+
+    def test_csv2sql(self):
+        with self.client:
+
+            date_str = "2008-11-10 17:53:59:400"
+            dt_obj = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S:%f")
+
+            sensor = Sensor(
+                accelerometer_x = '9.10', 
+                accelerometer_y = '2.20',
+                accelerometer_z = '3.40',
+                timestamp = dt_obj,
+                device = 'Nexus 5'
+            )
+
+            db.session.add(sensor)
+            db.session.commit()
+
+            sensors = Sensor.query.all()
+            print len(sensors)
+
+            self.assertEquals('9.10', sensors[0].accelerometer_x)
+            self.assertTrue(sensors[0].id > 0)
+
+
+    def test_sql_demicals(self):
+        with self.client:
+
+            date_str = "2008-11-10 17:53:59:400"
+            dt_obj = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S:%f")
+
+            sensor = Sensor(
+                accelerometer_x = 9.10, 
+                accelerometer_y = 2.20,
+                accelerometer_z = 3.40,
+                timestamp = dt_obj,
+                device = 'Nexus 5'
+            )
+
+            db.session.add(sensor)
+            db.session.commit()
+
+            sensors = Sensor.query.all()
+
+            # TODO: some decimal checks
 
     def test_show_file_url(self):
         with self.client:
