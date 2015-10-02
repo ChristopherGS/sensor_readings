@@ -52,7 +52,7 @@ def csv_route():
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
 
-            my_experiment = Experiment(hardware='Nexus 5')
+            my_experiment = Experiment(hardware='Nexus5', t_stamp=datetime.now())
             db.session.add(my_experiment)
             db.session.commit()
 
