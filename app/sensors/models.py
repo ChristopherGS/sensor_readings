@@ -1,18 +1,38 @@
+from datetime import datetime
+
 from app.data import CRUDMixin, db
 
+class Experiment(CRUDMixin, db.Model):
+    #  __tablename__ = 'tracking_experiment'
+
+    id = db.Column(db.Integer, primary_key=True)
+    hardware = db.Column(db.String(120))
+    sensors = db.relationship('Sensor', backref='experiment', lazy='dynamic')
+    
+
+    def __init__(self, hardware="unknown"):
+        pass
+        """
+        my_date = datetime.now()
+        self.t_stamp = my_date
+        self.hardware = hardware
+        """
+    def __repr__(self):
+        return '<Timestamp {:d}>'.format(self.t_stamp)
+
 class Sensor(CRUDMixin, db.Model):
-    __tablename__ = 'tracking_sensor'
-
-
+    #__tablename__ = 'tracking_sensor'
     id = db.Column(db.Integer, primary_key=True)
     accelerometer_x = db.Column(db.Text)
     accelerometer_y = db.Column(db.Text)
     accelerometer_z = db.Column(db.Text)
     timestamp = db.Column(db.DateTime)
-    device = db.Column(db.Text)
+    experiment_id = db.Column(db.Integer, db.ForeignKey('experiment.id'))
+    
 
     def __repr__(self):
         return '<Timestamp {:d}>'.format(self.timestamp)
+
 
 class Site(CRUDMixin, db.Model):
     __tablename__ = 'tracking_site'

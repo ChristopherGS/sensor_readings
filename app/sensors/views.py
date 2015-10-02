@@ -9,7 +9,7 @@ from random import choice
 from flask.ext.login import current_user, login_required
 
 from .forms import SiteForm, VisitForm
-from .models import Site, Visit, Sensor
+from .models import Site, Visit, Sensor, Experiment
 from app.data import query_to_list, db
 from app.science import sql_to_pandas
 
@@ -52,34 +52,32 @@ def csv_route():
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
 
-            # need to open the CSV and iterate row by row
-            date = datetime.now()
+            my_experiment = Experiment(hardware='Nexus 5')
+            db.session.add(my_experiment)
+            db.session.commit()
 
             try:
-                print filename
                 file_name = filename
                 data = Load_Data(os.path.join(UPLOAD_FOLDER, file_name))
                 count = 0 
-                holder = []
+
                 for i in data:
-                    print type(i[3])
+                    u = Experiment.query.get(1)
                     my_timestamp = datetime.strptime(i[3], "%Y-%m-%d %H:%M:%S:%f")
-                    record = Sensor(**{
+                    el_sensor = Sensor(**{
                         'accelerometer_x' : i[0],
                         'accelerometer_y' : i[1],
                         'accelerometer_z' : i[2],
-                        'device' : 'Nexus 5',
-                        'timestamp' : my_timestamp
-
+                        'timestamp' : my_timestamp,
+                        'experiment' : u
                     })
                     
-                    db.session.add(record) #Add all the records
+                    db.session.add(el_sensor)
                     count += 1
-                    
+
                 if ((count % 10 == 0) | (count < 20)):
                     db.session.commit() #Attempt to commit all the records
                  
-                print holder
             except Exception as e:
                 print e
                 db.session.rollback() #Rollback the changes on error

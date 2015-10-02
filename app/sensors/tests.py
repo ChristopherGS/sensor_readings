@@ -80,10 +80,11 @@ class SensorViewsTests(BaseTestCase):
             db.session.commit()
 
             sensors = Sensor.query.all()
-            print len(sensors)
 
             self.assertEquals('9.10', sensors[0].accelerometer_x)
             self.assertTrue(sensors[0].id > 0)
+
+            # self.assertTrue(type(sensors[0].accelerometer_x) == str)
 
 
     def test_sql_demicals(self):
@@ -111,6 +112,9 @@ class SensorViewsTests(BaseTestCase):
         with self.client:
             res = self.client.get(url_for('sensors.display'))
             self.assert200(res)
+
+
+    # TODO: check for duplicate files
 
 
 class TestingFileStorage(FileStorage):
