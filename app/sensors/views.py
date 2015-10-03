@@ -1,4 +1,6 @@
 import os, csv
+import json
+from time import mktime
 from datetime import datetime
 from numpy import genfromtxt
 import pandas as pd
@@ -30,6 +32,15 @@ def Load_Data(file_name):
     # data = genfromtxt(file_name, delimiter=',', skiprows=1)
     data = pd.read_table(file_name, header=None, skiprows=1, delimiter=',') 
     return data.values.tolist()
+
+class MyEncoder(json.JSONEncoder):
+
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return int(mktime(obj.timetuple()))
+
+        return json.JSONEncoder.default(self, obj)
+
 
 
 
@@ -131,86 +142,13 @@ def display_graph(id):
     db_index_choice = df2
     experiment_number = pd.unique(df2.experiment_id.values)
 
-    d3_response = db_index_choice.to_json()
+    print df
+
+    d3_json = df[['accelerometer_x', 'accelerometer_y']].to_json(orient='records')
+
+    d3_response = json.dumps(d3_json)
 
 
     return render_template('sensors/file_graph.html', experiment_number=experiment_number[0], 
         db_index_choice=db_index_choice.to_html(), id=id, d3_response = d3_response)
 
-
-
-
-"""
-@tracking.route("/site", methods=("POST", ))
-def add_site():
-    form = SiteForm()
-    if form.validate_on_submit():
-        site = Site()
-        form.populate_obj(site)
-        db.session.add(site)
-        db.session.commit()
-        flash("Added site")
-        return redirect(url_for(".index"))
-
-    return render_template("validation_error.html", form=form)
-
-
-@tracking.route("/site/<int:site_id>")
-def view_site_visits(site_id=None):
-    site = Site.query.get_or_404(site_id)
-    query = Visit.query.filter(Visit.site_id == site_id)
-    data = query_to_list(query)
-    title = "visits for {}".format(site.base_url)
-    return render_template("data_list.html", data=data, title=title)
-
-
-@tracking.route("/visit", methods=("POST", ))
-@tracking.route("/site/<int:site_id>/visit", methods=("POST",))
-def add_visit(site_id=None):
-    if site_id is None:
-        # This is only used by the visit_form on the index page.
-        form = VisitForm()
-    else:
-        site = Site.query.get_or_404(site_id)
-        # WTForms does not coerce obj or keyword arguments
-        # (otherwise, we could just pass in `site=site_id`)
-        # CSRF is disabled in this case because we will *want*
-        # users to be able to hit the /site/:id endpoint from other sites.
-        form = VisitForm(csrf_enabled=False, site=site)
-
-    if form.validate_on_submit():
-        visit = Visit()
-        form.populate_obj(visit)
-        visit.site_id = form.site.data.id
-        db.session.add(visit)
-        db.session.commit()
-        flash("Added visit for site {}".format(form.site.data.base_url))
-        return redirect(url_for(".index"))
-
-    return render_template("validation_error.html", form=form)
-
-
-@tracking.route("/sites")
-def view_sites():
-    query = Site.query.filter(Site.id >= 0)
-    data = query_to_list(query)
-
-    # The header row should not be linked
-    results = [next(data)]
-    for row in data:
-        row = [_make_link(cell) if i == 0 else cell
-               for i, cell in enumerate(row)]
-        results.append(row)
-
-    return render_template("data_list.html", data=results, title="Sites")
-
-
-_LINK = Markup('<a href="{url}">{name}</a>')
-
-
-def _make_link(site_id):
-    url = url_for(".view_site_visits", site_id=site_id)
-    return _LINK.format(url=url, name=site_id)
-
-
-"""

@@ -7,5 +7,5 @@ def sql_to_pandas():
 
 def pandas_cleanup(df):
 	columns = []
-	df_clean = df[['accelerometer_x', 'accelerometer_y', 'accelerometer_z', 'timestamp', 'experiment_id']]
+	df_clean = df[['accelerometer_x', 'accelerometer_y', 'accelerometer_z', 'experiment_id']]
 	return df_clean

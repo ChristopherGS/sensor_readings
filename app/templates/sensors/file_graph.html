@@ -7,11 +7,16 @@
 
     <div id="d3-container" class="col-lg-8"></div>
 
+    <svg id="visualisation" width="1000" height="500"></svg>
+
 
 
     <script type=text/javascript>
-        var data = {{ d3_response|safe }};
-		console.log(data);
+        var arrival_data = {{ d3_response|safe }};
+		console.log(arrival_data);
+		var dataset = JSON.parse(arrival_data);
+		//var data = arrival_data;
+		//console.log(data);
 
 		//=============
 		//D3 setup
@@ -19,13 +24,67 @@
 
 		//D3 Container
 
+		//d3.csv("/static/badboy.csv", function(error, data) {
 
+		console.log(dataset);
+
+		var vis = d3.select("#visualisation"),
+	    WIDTH = 1000,
+	    HEIGHT = 500,
+	    MARGINS = {
+	        top: 20,
+	        right: 20,
+	        bottom: 20,
+	        left: 50
+	    },
+
+	    xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([9,10]),
+	    yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([-5,5]),
+	    
+	    xAxis = d3.svg.axis()
+    		.scale(xScale),
+  
+		yAxis = d3.svg.axis()
+    		.scale(yScale)
+    		.orient("left");
+
+    	vis.append("svg:g")
+    		.attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+    		.call(xAxis);
+
+    	vis.append("svg:g")
+    		.attr("transform", "translate(" + (MARGINS.left) + ",0)")
+    		.call(yAxis);
+
+    	var lineGen = d3.svg.line()
+			.x(function(d) {
+		    	return xScale(d.accelerometer_y);
+		  	})
+			.y(function(d) {
+		    	return yScale(d.accelerometer_x);
+		  	});
+
+		vis.append('svg:path')
+			.attr('d', lineGen(dataset))
+			.attr('stroke', 'green')
+			.attr('stroke-width', 2)
+			.attr('fill', 'none');
+
+
+		//});
+
+
+
+
+	    /*
 			var margin = {top: 20, right: 20, bottom: 30, left: 50}
 			var width = 600 - margin.left - margin.right;
 			var height = 600 - margin.top - margin.bottom;
 
+			var parseDate = d3.time.format("%d-%b-%y").parse;
+
 			//setup axis scale
-			var x = d3.time.scale()
+			var x = d3.scale.linear()
 				.range([0, width]);
 
 			var y = d3.scale.linear()
@@ -41,43 +100,58 @@
 				.scale(y)
 				.orient("left");
 
+			//setup a line
+
+			var line = d3.svg.line()
+			    .x(function(d) {
+			    	//console.log(d); 
+			    	return x(d.accelerometer_y);
+			    })
+			    .y(function(d) { return y(d.accelerometer_x); });
+
+		//d3.csv("/static/badboy.csv", function(error, data) {
+
 			//setup the d3 area
-			var canvas = d3.select("#d3-container").append("svg")
+			var svg = d3.select("#d3-container").append("svg")
 				.attr("width", width + margin.left + margin.right)
 				.attr("height", height + margin.top + margin.bottom)
 				.append("g")
 					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+			for (d in data) {
+				//console.log(d)
+				d.accelerometer_x = +d.accelerometer_x;
+				d.accelerometer_y = +d.accelerometer_y;
+			};
+
+			x.domain(d3.extent(data, function(d) { return d.accelerometer_y; }));
+  			y.domain(d3.extent(data, function(d) { return d.accelerometer_x; }));
+
 			//call the axis
 
-			canvas.append("g")
+			svg.append("g")
 		        .attr("class", "x axis")
 		        .attr("transform", "translate(0," + height + ")")
 		        .call(xAxis);
  
-            canvas.append("g")
-	            .attr("class", "y axis")
-	            .call(yAxis);
+            svg.append("g")
+		      .attr("class", "y axis")
+		      .call(yAxis)
+		    .append("text")
+		      .attr("transform", "rotate(-90)")
+		      .attr("y", 6)
+		      .attr("dy", ".71em")
+		      .style("text-anchor", "end")
+		      .text("Price ($)");
 
+		  svg.append("path")
+		      .datum(data)
+		      .attr("class", "line")
+		      .attr("d", line);
 
-	        //setup a line
+		//});
 
-	        var line = d3.svg.line()
-	            .x(function(d,i) {
-	              console.log(d.x);
-	              return x(d.x);
-	            })
-	            .y(function(d,i) {
-	              console.log(d.y);
-	              return y(d.y);
-	            })
-	            canvas.append("svg:path").attr("class", "line").attr("d", line(data));
-
-
-
-
-
-
+		*/
 
 		/*
 
@@ -130,7 +204,9 @@
 	</script>
 
 
-
+	<br>
+	<br>
+	<br>
 
 
     {{ db_index_choice | safe }}
