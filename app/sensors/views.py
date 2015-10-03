@@ -101,9 +101,39 @@ def complete():
 def display():
     sql_to_pandas()
     names = os.listdir(UPLOAD_FOLDER)
-    print type(names)
+
+    query = db.session.query(Experiment, Sensor)
+    df = pd.read_sql_query(query.statement, query.session.bind)
+
+
+    db_index = pd.unique(df.experiment_id.values)
+    print pd.unique(df.experiment_id.values)
+
+
     file_url = url_for('static', filename=os.path.join('uploads', choice(names)))
-    return render_template('sensors/show_files.html', file_url=names)
+    return render_template('sensors/show_files.html', file_url=names, db_index=db_index)
+
+@sensors.route('/display/<int:id>')
+def display_id(id):
+    sql_to_pandas()
+    names = os.listdir(UPLOAD_FOLDER)
+
+    query = db.session.query(Experiment, Sensor)
+    df = pd.read_sql_query(query.statement, query.session.bind)
+
+    pandas_id = id
+    df2 = df[df.experiment_id == pandas_id]
+
+
+    db_index_choice = df2
+    # db_index_choice = pd.unique(df2.experiment_id.values)
+    print db_index_choice
+
+    file_url = url_for('static', filename=os.path.join('uploads', choice(names)))
+    return render_template('sensors/file_details.html', file_url=names, db_index_choice=db_index_choice.to_html())
+
+
+
 
 
 """

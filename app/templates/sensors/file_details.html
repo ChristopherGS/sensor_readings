@@ -12,12 +12,9 @@
 
     {% endfor %}
 
-    {% for d in db_index %}
-    	<li>{{d}}</li>
+	</ul>
 
-    {% endfor %}
-
-    </ul>
+    {{ db_index_choice | safe }}
 
     
     
