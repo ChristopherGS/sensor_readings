@@ -7,7 +7,7 @@
     <ul>
 
     {% for d in db_index %}
-        <li><a href="/display/{{d}}">{{d}}</a></li>
+        <li><a href="{{ url_for('sensors.display')}}/{{d}}">{{d}}</a></li>
     {% endfor %}
 
     </ul>

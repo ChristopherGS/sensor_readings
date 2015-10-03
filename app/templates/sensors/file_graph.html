@@ -2,11 +2,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Results from Experiment {{experiment_number}}</h1>
-    <a href="{{url_for('sensors.display')}}/{{id}}/graph">Show graph</a>
+    <h1>D3 Graph for Experiment {{experiment_number}}</h1>
+    <a href="{{url_for('sensors.display')}}/{{id}}">Back to table</a>
+
+    <div id="d3-container" class="col-lg-8"></div>
+
+
+
+    <script type=text/javascript>
+        var yol = {{ d3_response|safe }};
+		console.log(yol);
+    
+
+
+	</script>
+
+
+
 
 
     {{ db_index_choice | safe }}
+   
 
     <div>Sensor Data:
         <a href="{{ url_for('sensors.index') }}">Home</a>

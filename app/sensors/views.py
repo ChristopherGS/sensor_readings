@@ -3,7 +3,7 @@ from datetime import datetime
 from numpy import genfromtxt
 import pandas as pd
 
-from flask import abort, Blueprint, flash, jsonify, Markup, redirect, render_template, request, \
+from flask import abort, Blueprint, flash, jsonify, Markup, redirect, render_template, request, Response, \
 url_for, session
 from random import choice
 from flask.ext.login import current_user, login_required
@@ -11,7 +11,7 @@ from flask.ext.login import current_user, login_required
 from .forms import SiteForm, VisitForm
 from .models import Site, Visit, Sensor, Experiment
 from app.data import query_to_list, db
-from app.science import sql_to_pandas
+from app.science import sql_to_pandas, pandas_cleanup
 
 from werkzeug import secure_filename
 
@@ -101,22 +101,41 @@ def complete():
 def display():
     sql_to_pandas() # TODO prep/check function
     names = os.listdir(UPLOAD_FOLDER)
-    query = db.session.query(Experiment, Sensor)
+    query = db.session.query(Sensor)
     df = pd.read_sql_query(query.statement, query.session.bind)
     db_index = pd.unique(df.experiment_id.values)
     return render_template('sensors/show_files.html', file_url=names, db_index=db_index)
 
 @sensors.route('/display/<int:id>')
 def display_id(id):
-    query = db.session.query(Experiment, Sensor)
+    query = db.session.query(Sensor)
     df = pd.read_sql_query(query.statement, query.session.bind)
     pandas_id = id
     df2 = df[df.experiment_id == pandas_id]
     db_index_choice = df2
     experiment_number = pd.unique(df2.experiment_id.values)
     return render_template('sensors/file_details.html', experiment_number=experiment_number[0], 
-        db_index_choice=db_index_choice.to_html())
+        db_index_choice=db_index_choice.to_html(), id=id)
 
+@sensors.route('/display/<int:id>/graph')
+def display_graph(id):
+
+    query = db.session.query(Sensor)
+    temp_df = pd.read_sql_query(query.statement, query.session.bind)
+    
+    # remove duplicate index values for json dump
+    df = pandas_cleanup(temp_df) 
+    
+    pandas_id = id
+    df2 = df[df.experiment_id == pandas_id]
+    db_index_choice = df2
+    experiment_number = pd.unique(df2.experiment_id.values)
+
+    d3_response = db_index_choice.to_json()
+
+
+    return render_template('sensors/file_graph.html', experiment_number=experiment_number[0], 
+        db_index_choice=db_index_choice.to_html(), id=id, d3_response = d3_response)
 
 
 
