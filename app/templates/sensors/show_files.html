@@ -2,23 +2,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>CSV files currently on the server</h1>
+    <h1>Experiments currently in the database</h1>
 
-    <p>{{file_url}}</p>
-    
     <ul>
-    {% for f in file_url %}
-    	<li>{{f.name}}</li>
-
-    {% endfor %}
 
     {% for d in db_index %}
-    	<li>{{d}}</li>
+        <li><a href="/display/{{d}}">{{d}}</a></li>
+    {% endfor %}
+
+    </ul>
+
+    <br>
+
+    <hr>
+
+    <h1>CSV files on the server</h1>
+
+    <ul>
+    {% for f in file_url %}
+    	<li>{{f}}</li>
 
     {% endfor %}
 
     </ul>
 
-    
     
 {% endblock %}

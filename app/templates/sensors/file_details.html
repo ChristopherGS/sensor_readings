@@ -2,20 +2,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>CSV files currently on the server</h1>
+    <h1>Results from Experiment {{experiment_number}}</h1>
 
-    <p>{{file_url}}</p>
-    
-    <ul>
-    {% for f in file_url %}
-    	<li>{{f.name}}</li>
-
-    {% endfor %}
-
-	</ul>
 
     {{ db_index_choice | safe }}
 
-    
-    
+    <div>Sensor Data:
+        <a href="{{ url_for('sensors.index') }}">Home</a>
+        | <a href="{{ url_for('sensors.csv_route') }}">Upload File</a>
+        | <a href="{{ url_for('sensors.display') }}">View Uploads</a>
+    </div>
+
+     
 {% endblock %}
+
+
