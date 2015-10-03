@@ -13,10 +13,7 @@
 
     <script type=text/javascript>
         var arrival_data = {{ d3_response|safe }};
-		console.log(arrival_data);
 		var dataset = JSON.parse(arrival_data);
-		//var data = arrival_data;
-		//console.log(data);
 
 		//=============
 		//D3 setup
@@ -24,45 +21,70 @@
 
 		//D3 Container
 
-		//d3.csv("/static/badboy.csv", function(error, data) {
-
 		console.log(dataset);
 
-		var vis = d3.select("#visualisation"),
-	    WIDTH = 1000,
-	    HEIGHT = 500,
-	    MARGINS = {
+		var vis = d3.select("#visualisation");
+	    var WIDTH = 1000;
+	    var HEIGHT = 500;
+	    var MARGINS = {
 	        top: 20,
 	        right: 20,
 	        bottom: 20,
 	        left: 50
-	    },
+	    };
 
-	    xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([9,10]),
-	    yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([-5,5]),
+	    var timeFormat = d3.time.format("%H:%M:%S%L");
+
+	    //dataset.forEach(function(d) { d.timestamp = new Date(d.timestamp * 1000); });
+
+	    // find data range
+		var xMin = d3.min(dataset, function(d){ return Math.min(d.timestamp); });
+		var xMax = d3.max(dataset, function(d){ return Math.max(d.timestamp); });
+
+		var xScale = d3.time.scale()
+			.domain([xMin, xMax])
+    		.rangeRound([0, WIDTH - MARGINS.left - MARGINS.right]);
+
+	    var yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([-1,1]);
 	    
-	    xAxis = d3.svg.axis()
-    		.scale(xScale),
+	    var xAxis = d3.svg.axis()
+    		.scale(xScale)
+    		.orient('bottom')
+    		.ticks(10)
+			.tickPadding(5)
+			.tickFormat(timeFormat);
   
-		yAxis = d3.svg.axis()
+		var yAxis = d3.svg.axis()
     		.scale(yScale)
     		.orient("left");
 
     	vis.append("svg:g")
     		.attr("transform", "translate(0," + (HEIGHT - MARGINS.bottom) + ")")
+    		.attr("class","axis")
     		.call(xAxis);
 
     	vis.append("svg:g")
     		.attr("transform", "translate(" + (MARGINS.left) + ",0)")
+    		.attr("class","axis")
     		.call(yAxis);
 
     	var lineGen = d3.svg.line()
 			.x(function(d) {
-		    	return xScale(d.accelerometer_y);
+		    	return xScale(d.timestamp);
 		  	})
 			.y(function(d) {
 		    	return yScale(d.accelerometer_x);
-		  	});
+		  	})
+		  	.interpolate("basis");
+
+		var lineGen2 = d3.svg.line()
+			.x(function(d) {
+		    	return xScale(d.accelerometer_y);
+		  	})
+			.y(function(d) {
+		    	return yScale(d.accelerometer_z);
+		  	})
+		  	.interpolate("basis");
 
 		vis.append('svg:path')
 			.attr('d', lineGen(dataset))
@@ -70,147 +92,17 @@
 			.attr('stroke-width', 2)
 			.attr('fill', 'none');
 
-
-		//});
-
-
-
-
-	    /*
-			var margin = {top: 20, right: 20, bottom: 30, left: 50}
-			var width = 600 - margin.left - margin.right;
-			var height = 600 - margin.top - margin.bottom;
-
-			var parseDate = d3.time.format("%d-%b-%y").parse;
-
-			//setup axis scale
-			var x = d3.scale.linear()
-				.range([0, width]);
-
-			var y = d3.scale.linear()
-				.range([height, 0]); 
-
-
-			//setup the axis themselves
-			var xAxis = d3.svg.axis()
-				.scale(x)
-				.orient("bottom");
-
-			var yAxis = d3.svg.axis()
-				.scale(y)
-				.orient("left");
-
-			//setup a line
-
-			var line = d3.svg.line()
-			    .x(function(d) {
-			    	//console.log(d); 
-			    	return x(d.accelerometer_y);
-			    })
-			    .y(function(d) { return y(d.accelerometer_x); });
-
-		//d3.csv("/static/badboy.csv", function(error, data) {
-
-			//setup the d3 area
-			var svg = d3.select("#d3-container").append("svg")
-				.attr("width", width + margin.left + margin.right)
-				.attr("height", height + margin.top + margin.bottom)
-				.append("g")
-					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-			for (d in data) {
-				//console.log(d)
-				d.accelerometer_x = +d.accelerometer_x;
-				d.accelerometer_y = +d.accelerometer_y;
-			};
-
-			x.domain(d3.extent(data, function(d) { return d.accelerometer_y; }));
-  			y.domain(d3.extent(data, function(d) { return d.accelerometer_x; }));
-
-			//call the axis
-
-			svg.append("g")
-		        .attr("class", "x axis")
-		        .attr("transform", "translate(0," + height + ")")
-		        .call(xAxis);
- 
-            svg.append("g")
-		      .attr("class", "y axis")
-		      .call(yAxis)
-		    .append("text")
-		      .attr("transform", "rotate(-90)")
-		      .attr("y", 6)
-		      .attr("dy", ".71em")
-		      .style("text-anchor", "end")
-		      .text("Price ($)");
-
-		  svg.append("path")
-		      .datum(data)
-		      .attr("class", "line")
-		      .attr("d", line);
-
-		//});
-
-		*/
-
 		/*
-
-
-
-
-			var line = d3.svg.line()
-				.x(function(d) { return x(d.timestamp); })
-				.y(function(d) { return y(d.accelerometer_x); });
-
-			
-
-			//need to do the equivalent of looping over the data...
-
-			
-			//parse dates etc.
-
-			x.domain(d3.extent(data, function(d) { return d.timestamp; }));
-  			y.domain(d3.extent(data, function(d) { return d.accelerometer_x; }));
-
-	  		canvas.append("g")
-	  			.attr("class", "x axis")
-	  			.attr("transform", "translate(0," + height + ")")
-	      		.call(xAxis);
-
-	      	canvas.append("g")
-	      		.attr("class", "y axis")
-	      		.call(yAxis)
-	      	  .append("text")
-	      	    .attr("transform", "rotate(-90)")
-	      	    .attr("y", 6)
-	      	    .attr("dy", ".71em")
-	      	    .style("text-anchor", "end")
-	      	    .text("Price ($)");
-
-	      	canvas.selectAll("path")
-	      		.data(data).enter()
-	      		.append("path")
-	      		.attr("d", function(d){ return line(d) })
-	      		.attr("fill", "none")
-        		.attr("stroke", "green")
-        		.attr("stroke-width", 3);
-
-
-	    });
-
+		vis.append('svg:path')
+			.attr('d', lineGen2(dataset))
+			.attr('stroke', 'blue')
+			.attr('stroke-width', 2)
+			.attr('fill', 'none');
 		*/
-
 
 	</script>
 
-
 	<br>
-	<br>
-	<br>
-
-
-    {{ db_index_choice | safe }}
-   
 
     <div>Sensor Data:
         <a href="{{ url_for('sensors.index') }}">Home</a>

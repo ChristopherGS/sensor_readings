@@ -144,7 +144,7 @@ def display_graph(id):
 
     print df
 
-    d3_json = df[['accelerometer_x', 'accelerometer_y']].to_json(orient='records')
+    d3_json = df.to_json(orient='records')
 
     d3_response = json.dumps(d3_json)
 
