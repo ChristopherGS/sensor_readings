@@ -4,10 +4,15 @@
 {% block content %}
     <h1>Experiments currently in the database</h1>
 
-    <ul>
+    <ul class="db_item_container">
 
     {% for d in db_index %}
-        <li><a href="{{ url_for('sensors.display')}}/{{d}}">{{d}}</a></li>
+        <li class="db_item"><a href="{{ url_for('sensors.display')}}/{{d}}">{{d}}</a></li>
+        {% if d.label %}
+            <p>{{d.label}}</p>
+        {% else %}
+            <button data={{d}} class="upload_label">Add label</button>
+        {% endif %}
     {% endfor %}
 
     </ul>
@@ -25,6 +30,22 @@
     {% endfor %}
 
     </ul>
+
+<script type="text/javascript">
+        $(document).ready(function(){
+            $(".upload_label").on("click", function(){
+                var name = prompt("Enter the new label");
+                console.log(name);
+                //$.post("{{ url_for('sensors.display')}}", {
+                //    label: name,
+                //    time: new Date()
+                //}, function(data){
+                //    console.log(data);
+                //});
+            });
+        });
+
+</script>
 
     
 {% endblock %}

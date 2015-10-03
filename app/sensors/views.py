@@ -108,14 +108,20 @@ def csv_route():
 def complete():
      return render_template('sensors/complete.html')
 
-@sensors.route('/display')
+@sensors.route('/display', methods=['GET', 'POST'])
 def display():
-    sql_to_pandas() # TODO prep/check function
-    names = os.listdir(UPLOAD_FOLDER)
-    query = db.session.query(Sensor)
-    df = pd.read_sql_query(query.statement, query.session.bind)
-    db_index = pd.unique(df.experiment_id.values)
-    return render_template('sensors/show_files.html', file_url=names, db_index=db_index)
+    if request.method == 'GET':
+        sql_to_pandas() # TODO prep/check function
+        names = os.listdir(UPLOAD_FOLDER)
+        query = db.session.query(Sensor)
+        df = pd.read_sql_query(query.statement, query.session.bind)
+        db_index = pd.unique(df.experiment_id.values)
+        return render_template('sensors/show_files.html', file_url=names, db_index=db_index)
+    elif request.method == 'POST':
+        print request.method
+        return
+    else:
+        return '404'
 
 @sensors.route('/display/<int:id>')
 def display_id(id):

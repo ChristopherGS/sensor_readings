@@ -8,6 +8,7 @@ class Experiment(CRUDMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     hardware = db.Column(db.Text)
     t_stamp = db.Column(db.DateTime)
+    label = db.Column(db.Text)
     sensors = db.relationship('Sensor', backref='experiment', lazy='dynamic')
     
     def __repr__(self):
