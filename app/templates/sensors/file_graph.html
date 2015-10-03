@@ -10,9 +10,121 @@
 
 
     <script type=text/javascript>
-        var yol = {{ d3_response|safe }};
-		console.log(yol);
-    
+        var data = {{ d3_response|safe }};
+		console.log(data);
+
+		//=============
+		//D3 setup
+		//=============
+
+		//D3 Container
+
+
+			var margin = {top: 20, right: 20, bottom: 30, left: 50}
+			var width = 600 - margin.left - margin.right;
+			var height = 600 - margin.top - margin.bottom;
+
+			//setup axis scale
+			var x = d3.time.scale()
+				.range([0, width]);
+
+			var y = d3.scale.linear()
+				.range([height, 0]); 
+
+
+			//setup the axis themselves
+			var xAxis = d3.svg.axis()
+				.scale(x)
+				.orient("bottom");
+
+			var yAxis = d3.svg.axis()
+				.scale(y)
+				.orient("left");
+
+			//setup the d3 area
+			var canvas = d3.select("#d3-container").append("svg")
+				.attr("width", width + margin.left + margin.right)
+				.attr("height", height + margin.top + margin.bottom)
+				.append("g")
+					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			//call the axis
+
+			canvas.append("g")
+		        .attr("class", "x axis")
+		        .attr("transform", "translate(0," + height + ")")
+		        .call(xAxis);
+ 
+            canvas.append("g")
+	            .attr("class", "y axis")
+	            .call(yAxis);
+
+
+	        //setup a line
+
+	        var line = d3.svg.line()
+	            .x(function(d,i) {
+	              console.log(d.x);
+	              return x(d.x);
+	            })
+	            .y(function(d,i) {
+	              console.log(d.y);
+	              return y(d.y);
+	            })
+	            canvas.append("svg:path").attr("class", "line").attr("d", line(data));
+
+
+
+
+
+
+
+		/*
+
+
+
+
+			var line = d3.svg.line()
+				.x(function(d) { return x(d.timestamp); })
+				.y(function(d) { return y(d.accelerometer_x); });
+
+			
+
+			//need to do the equivalent of looping over the data...
+
+			
+			//parse dates etc.
+
+			x.domain(d3.extent(data, function(d) { return d.timestamp; }));
+  			y.domain(d3.extent(data, function(d) { return d.accelerometer_x; }));
+
+	  		canvas.append("g")
+	  			.attr("class", "x axis")
+	  			.attr("transform", "translate(0," + height + ")")
+	      		.call(xAxis);
+
+	      	canvas.append("g")
+	      		.attr("class", "y axis")
+	      		.call(yAxis)
+	      	  .append("text")
+	      	    .attr("transform", "rotate(-90)")
+	      	    .attr("y", 6)
+	      	    .attr("dy", ".71em")
+	      	    .style("text-anchor", "end")
+	      	    .text("Price ($)");
+
+	      	canvas.selectAll("path")
+	      		.data(data).enter()
+	      		.append("path")
+	      		.attr("d", function(d){ return line(d) })
+	      		.attr("fill", "none")
+        		.attr("stroke", "green")
+        		.attr("stroke-width", 3);
+
+
+	    });
+
+		*/
 
 
 	</script>
