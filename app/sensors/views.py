@@ -1,22 +1,21 @@
-import os, csv
+import csv
 import json
-from time import mktime
+import os
 from datetime import datetime
-from numpy import genfromtxt
-import pandas as pd
-
-from flask import abort, Blueprint, flash, jsonify, Markup, redirect, render_template, request, Response, \
-url_for, session
 from random import choice
+from time import mktime
+
+import pandas as pd
+from flask import (Blueprint, Markup, Response, abort, flash, jsonify,
+                   redirect, render_template, request, session, url_for)
 from flask.ext.login import current_user, login_required
-
-from .forms import SiteForm, VisitForm
-from .models import Site, Visit, Sensor, Experiment
-from app.data import query_to_list, db
-from app.science import sql_to_pandas, pandas_cleanup
-
+from numpy import genfromtxt
 from werkzeug import secure_filename
 
+from app.data import db, query_to_list
+from app.science import pandas_cleanup, sql_to_pandas
+
+from .models import Experiment, Sensor, Site, Visit
 
 sensors = Blueprint("sensors", __name__, static_folder='static', template_folder='templates')
 
@@ -33,22 +32,10 @@ def Load_Data(file_name):
     data = pd.read_table(file_name, header=None, skiprows=1, delimiter=',') 
     return data.values.tolist()
 
-class MyEncoder(json.JSONEncoder):
-
-    def default(self, obj):
-        if isinstance(obj, datetime):
-            return int(mktime(obj.timetuple()))
-
-        return json.JSONEncoder.default(self, obj)
-
-
-
-
 @sensors.route("/")
 @sensors.route("/index")
 def index():
-    # site_form = SiteForm()
-    # visit_form = VisitForm()
+    # import pdb; pdb.set_trace()
     return render_template("index.html")
 
 
@@ -180,3 +167,9 @@ def display_graph(id):
     return render_template('sensors/file_graph.html', experiment_number=experiment_number[0], 
         db_index_choice=db_index_choice.to_html(), id=id, d3_response = d3_response)
 
+"""
+ERROR HANDLING
+"""
+@sensors.errorhandler(404)
+def page_not_found(e):
+    return render_template('sensors/404.html'), 404

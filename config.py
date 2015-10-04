@@ -1,16 +1,19 @@
-from os.path import abspath, dirname, join
+import os
 
-_cwd = dirname(abspath(__file__))
-
+_basedir = os.path.abspath(os.path.dirname(__file__))
 
 class BaseConfiguration(object):
     DEBUG = False
     TESTING = False
     SECRET_KEY = 'flask-session-insecure-secret-key'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + join(_cwd, 'app.db')
+
+    DATABASE = 'app.db'
+    DATABASE_PATH = os.path.join(_basedir, DATABASE)
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DATABASE_PATH
+    
     SQLALCHEMY_ECHO = False
     HASH_ROUNDS = 100000
-    UPLOAD_FOLDER = join(_cwd, '/app/uploads')
+    UPLOAD_FOLDER = os.path.join(_basedir, '/app/uploads')
 
 class DebugConfiguration(BaseConfiguration):
     DEBUG = True
@@ -19,7 +22,9 @@ class TestConfiguration(BaseConfiguration):
     TESTING = True
     WTF_CSRF_ENABLED = False
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'  # + join(_cwd, 'testing.db')
+    DATABASE = 'tests.db'
+    DATABASE_PATH = os.path.join(_basedir, DATABASE)
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'  # + DATABASE_PATH
 
     # Since we want our unit tests to run quickly
     # we turn this down - the hashing is still done

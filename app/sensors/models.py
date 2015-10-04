@@ -2,6 +2,7 @@ from datetime import datetime
 
 from app.data import CRUDMixin, db
 
+
 class Experiment(CRUDMixin, db.Model):
     #  __tablename__ = 'tracking_experiment'
 

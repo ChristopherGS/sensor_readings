@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 
 from .auth import login_manager
 from .data import db
@@ -19,3 +19,11 @@ login_manager.init_app(app)
 
 app.register_blueprint(sensors)
 app.register_blueprint(users)
+
+
+"""
+ERROR HANDLING
+"""
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404

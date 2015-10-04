@@ -2,8 +2,9 @@ from datetime import datetime
 
 from flask.ext.testing import TestCase
 
-from . import app, db
 from app.sensors.models import Sensor
+
+from . import app, db
 
 
 class BaseTestCase(TestCase):

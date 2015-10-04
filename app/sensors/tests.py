@@ -1,17 +1,16 @@
+from cStringIO import StringIO
 from datetime import datetime
 
-from flask import url_for
-from flask import Request
+from flask import Request, url_for
 from werkzeug import FileStorage
 from werkzeug.datastructures import MultiDict
-from cStringIO import StringIO
 
-from app.test_base import BaseTestCase
 from app.data import CRUDMixin, db
+from app.test_base import BaseTestCase
 from app.users.models import User
-from .models import Site, Visit, Sensor
-from ..sensors import views
 
+from ..sensors import views
+from .models import Sensor, Site, Visit
 
 
 class SensorViewsTests(BaseTestCase):

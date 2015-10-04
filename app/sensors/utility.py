@@ -1,11 +1,10 @@
 import os
+import sqlite3
+
+import numpy as np
+import pandas as pd
 
 from app.data import CRUDMixin, db
-
-import sqlite3
-import pandas as pd
-import numpy as np
-
 
 sensors = Blueprint("sensors", __name__, static_folder='static', template_folder='templates')
 

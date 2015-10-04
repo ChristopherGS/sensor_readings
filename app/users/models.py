@@ -1,6 +1,6 @@
 from random import SystemRandom
 
-from backports.pbkdf2 import pbkdf2_hmac, compare_digest
+from backports.pbkdf2 import compare_digest, pbkdf2_hmac
 from flask import current_app
 from flask.ext.login import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_property
