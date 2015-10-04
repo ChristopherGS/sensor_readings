@@ -63,7 +63,7 @@ def csv_route():
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
 
-            my_experiment = Experiment(hardware='Nexus5', t_stamp=datetime.now())
+            my_experiment = Experiment(hardware='Nexus5', t_stamp=datetime.now(), label='unknown')
             db.session.add(my_experiment)
             db.session.commit()
 
@@ -112,14 +112,36 @@ def complete():
 def display():
     if request.method == 'GET':
         sql_to_pandas() # TODO prep/check function
+
+        # get csv files on server
         names = os.listdir(UPLOAD_FOLDER)
+
+        # get sensor records from db
         query = db.session.query(Sensor)
         df = pd.read_sql_query(query.statement, query.session.bind)
         db_index = pd.unique(df.experiment_id.values)
-        return render_template('sensors/show_files.html', file_url=names, db_index=db_index)
+        db_labels = []
+
+        # loop through the given experiment_ids and pull out the labels from Experiment
+        for i in db_index:
+            experiment_labels = Experiment.query.filter_by(id=i).first()
+            db_labels.append(experiment_labels.label)
+
+        db_data = zip(db_index, db_labels)
+        print db_data
+            
+        return render_template('sensors/show_files.html', file_url=names, db_data=db_data)
     elif request.method == 'POST':
-        print request.method
-        return
+        updated_label = request.values['label']
+        db_id = request.values['id']
+
+        # update experiment label in db
+
+        experiment = Experiment.query.filter_by(id=db_id).first()
+        experiment.label = updated_label
+        db.session.commit()
+
+        return updated_label
     else:
         return '404'
 

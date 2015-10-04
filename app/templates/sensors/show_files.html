@@ -6,13 +6,15 @@
 
     <ul class="db_item_container">
 
-    {% for d in db_index %}
-        <li class="db_item"><a href="{{ url_for('sensors.display')}}/{{d}}">{{d}}</a></li>
-        {% if d.label %}
-            <p>{{d.label}}</p>
-        {% else %}
-            <button data={{d}} class="upload_label">Add label</button>
-        {% endif %}
+    {% for index, label in db_data %}
+
+            <li class="db_item"><a id="link{{index}}"class="db_item_link" href="{{ url_for('sensors.display')}}/{{index}}">{{label}}</a></li>
+            {% if label != "unknown" %}
+                <button data-id={{index}} class="upload_label">Update label</button>
+            {% else %}
+                <button data-id={{index}} class="upload_label">Add label</button>
+            {% endif %}
+
     {% endfor %}
 
     </ul>
@@ -33,15 +35,17 @@
 
 <script type="text/javascript">
         $(document).ready(function(){
-            $(".upload_label").on("click", function(){
+            $(".upload_label").on("click", function(e){
                 var name = prompt("Enter the new label");
-                console.log(name);
-                //$.post("{{ url_for('sensors.display')}}", {
-                //    label: name,
-                //    time: new Date()
-                //}, function(data){
-                //    console.log(data);
-                //});
+                var id = $(this).data('id');
+                $.post("{{ url_for('sensors.display')}}", {
+                    label: name,
+                    time: new Date(),
+                    id: id
+                }, function(data){
+                    id_string = "#link"+id;
+                    $(id_string).text(data);
+                });
             });
         });
 

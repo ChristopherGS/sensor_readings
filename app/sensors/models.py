@@ -12,7 +12,7 @@ class Experiment(CRUDMixin, db.Model):
     sensors = db.relationship('Sensor', backref='experiment', lazy='dynamic')
     
     def __repr__(self):
-        return '<Experiment %r>' % (self.hardware)
+        return '<Experiment %r>, <id %r>' % (self.hardware, self.id)
 
 class Sensor(CRUDMixin, db.Model):
     #__tablename__ = 'tracking_sensor'
