@@ -6,7 +6,7 @@ from random import choice
 from time import mktime
 
 import pandas as pd
-from flask import (Blueprint, Markup, Response, abort, flash, jsonify,
+from flask import (Blueprint, current_app, Markup, Response, abort, flash, jsonify,
                    redirect, render_template, request, session, url_for)
 from flask.ext.login import current_user, login_required
 from numpy import genfromtxt
@@ -127,7 +127,9 @@ def display():
 
         experiment = Experiment.query.filter_by(id=db_id).first()
         experiment.label = updated_label
+        current_app.debug('Changing label in on a db object...')
         db.session.commit()
+
 
         return updated_label
     else:
