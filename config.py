@@ -12,6 +12,8 @@ class BaseConfiguration(object):
     HASH_ROUNDS = 100000
     UPLOAD_FOLDER = join(_cwd, '/app/uploads')
 
+class DebugConfiguration(BaseConfiguration):
+    DEBUG = True
 
 class TestConfiguration(BaseConfiguration):
     TESTING = True
@@ -25,5 +27,3 @@ class TestConfiguration(BaseConfiguration):
     HASH_ROUNDS = 1
 
 
-class DebugConfiguration(BaseConfiguration):
-    DEBUG = True

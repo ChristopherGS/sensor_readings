@@ -25,3 +25,9 @@ python -m unittest discover
 
 On OSX the lxml package may need to be manually installed due to a bug with that package
 
+
+TODO
+-------
+
+- Download as a CSV function
+- Organization for when number of experiments is very high

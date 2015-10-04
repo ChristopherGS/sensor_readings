@@ -16,6 +16,7 @@
   </head>
 
   <body>
+    <div class="container">
     <div>Sensor Data:
         <a href="{{ url_for('sensors.index') }}">Home</a>
         | <a href="{{ url_for('sensors.csv_route') }}">Upload File</a>
@@ -31,6 +32,10 @@
     </ul>
     {% endif %}
     {% endwith %}
+    
+    
     {% block content %}{% endblock %}
+
+    </div>
   </body>
 </html>
