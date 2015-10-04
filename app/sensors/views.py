@@ -11,6 +11,7 @@ from flask import (Blueprint, Markup, Response, abort, flash, jsonify,
 from flask.ext.login import current_user, login_required
 from numpy import genfromtxt
 from werkzeug import secure_filename
+from werkzeug.exceptions import default_exceptions, HTTPException
 
 from app.data import db, query_to_list
 from app.science import pandas_cleanup, sql_to_pandas
@@ -167,9 +168,6 @@ def display_graph(id):
     return render_template('sensors/file_graph.html', experiment_number=experiment_number[0], 
         db_index_choice=db_index_choice.to_html(), id=id, d3_response = d3_response)
 
-"""
-ERROR HANDLING
-"""
-@sensors.errorhandler(404)
-def page_not_found(e):
-    return render_template('sensors/404.html'), 404
+
+
+
