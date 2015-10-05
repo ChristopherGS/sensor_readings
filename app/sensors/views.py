@@ -51,6 +51,7 @@ def csv_route():
     elif request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
+            print "allowed_file"
             filename = secure_filename(file.filename)
             file.save(UPLOAD_FOLDER + '/' + filename)
 
@@ -60,8 +61,12 @@ def csv_route():
 
             try:
                 file_name = filename
+                # import pdb; pdb.set_trace()
+                # note that Load_Data expects a correctly formatted file - expects columns
                 data = Load_Data(os.path.join(UPLOAD_FOLDER, file_name))
                 count = 0 
+
+                # need to handle this for when the uploaded file has less than 3 columns
 
                 for i in data:
                     u = Experiment.query.get(1)

@@ -23,8 +23,8 @@ class BaseTestCase(TestCase):
             accelerometer_x = '9.10', 
             accelerometer_y = '2.20',
             accelerometer_z = '3.40',
-            timestamp = dt_obj,
-            device = 'Nexus 5'
+            timestamp = dt_obj
+            # device = 'Nexus 5'
         )
 
         db.session.add(sensor)
