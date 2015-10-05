@@ -20,9 +20,12 @@ from .models import Experiment, Sensor, Site, Visit
 
 sensors = Blueprint("sensors", __name__, static_folder='static', template_folder='templates')
 
+_basedir = os.path.abspath(os.path.dirname(__file__))
+
 
 ALLOWED_EXTENSIONS = set(['txt', 'csv'])
-UPLOAD_FOLDER = os.path.realpath('.')+'/app/uploads'
+UPLOADS = 'uploads'
+UPLOAD_FOLDER = os.path.join(_basedir, UPLOADS)
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -49,7 +52,7 @@ def csv_route():
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            file.save(UPLOAD_FOLDER + '/' + filename)
 
             my_experiment = Experiment(hardware='Nexus5', t_stamp=datetime.now(), label='unknown')
             db.session.add(my_experiment)

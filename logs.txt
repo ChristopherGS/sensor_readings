@@ -233,3 +233,187 @@ Traceback (most recent call last):
   File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
     raise request.routing_exception
 NotFound: 404: Not Found
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 54, in csv_route
+    file.save(os.path.join(UPLOAD_FOLDER, filename))
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/werkzeug/datastructures.py", line 2597, in save
+    dst = open(dst, 'wb')
+IOError: [Errno 2] No such file or directory: '/Users/christophersamiullah/repos/sensor_readings/app/sensors/app/uploads/badboy.csv'
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 54, in csv_route
+    file.save(os.path.join(UPLOAD_FOLDER, filename))
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/werkzeug/datastructures.py", line 2597, in save
+    dst = open(dst, 'wb')
+IOError: [Errno 2] No such file or directory: '/Users/christophersamiullah/repos/sensor_readings/app/sensors/app/uploads/badboy.csv'
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 54, in csv_route
+    file.save(os.path.join(UPLOAD_FOLDER, filename))
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/werkzeug/datastructures.py", line 2597, in save
+    dst = open(dst, 'wb')
+IOError: [Errno 2] No such file or directory: '/Users/christophersamiullah/repos/sensor_readings/app/sensors/app/uploads/badboy.csv'
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 54, in csv_route
+    file.save(os.path.join(UPLOAD_FOLDER, filename))
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/werkzeug/datastructures.py", line 2597, in save
+    dst = open(dst, 'wb')
+IOError: [Errno 2] No such file or directory: '/app/uploads/badboy.csv'
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 54, in csv_route
+    file.save(os.path.join(UPLOAD_FOLDER, filename))
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/werkzeug/datastructures.py", line 2597, in save
+    dst = open(dst, 'wb')
+IOError: [Errno 2] No such file or directory: '/app/uploads/badboy.csv'
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 58, in csv_route
+    file.save(os.path.join(UPLOAD_FOLDER, filename))
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/werkzeug/datastructures.py", line 2597, in save
+    dst = open(dst, 'wb')
+IOError: [Errno 2] No such file or directory: '/app/uploads/badboy.csv'
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 58, in csv_route
+    file.save(UPLOAD_FOLDER, filename)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/werkzeug/datastructures.py", line 2597, in save
+    dst = open(dst, 'wb')
+IOError: [Errno 13] Permission denied: '/uploads'
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 58, in csv_route
+    file.save(UPLOAD_FOLDER, filename)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/werkzeug/datastructures.py", line 2597, in save
+    dst = open(dst, 'wb')
+IOError: [Errno 2] No such file or directory: '/Users/christophersamiullah/repos/sensor_readings/app/sensors/app/uploads'
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 58, in csv_route
+    file.save(UPLOAD_FOLDER, filename)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/werkzeug/datastructures.py", line 2597, in save
+    dst = open(dst, 'wb')
+IOError: [Errno 13] Permission denied: '/uploads'
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 58, in csv_route
+    file.save(UPLOAD_FOLDER, filename)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/werkzeug/datastructures.py", line 2597, in save
+    dst = open(dst, 'wb')
+IOError: [Errno 21] Is a directory: '/Users/christophersamiullah/repos/sensor_readings/app/sensors/uploads'
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Changing label in on a db object...
+Changing label in on a db object...
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found

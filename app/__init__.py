@@ -29,24 +29,24 @@ app.register_blueprint(users)
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html'), 404
+    return render_template('errors/404.html'), 404
 
 @app.errorhandler(400)
 def key_error(e):
     app.logger.warning('Invalid request resulted in KeyError', exc_info=e)
-    return render_template('400.html'), 400
+    return render_template('errors/400.html'), 400
 
 
 @app.errorhandler(500)
 def internal_server_error(e):
     app.logger.warning('An unhandled exception is being displayed to the end user', exc_info=e)
-    return render_template('generic.html'), 500
+    return render_template('errors/generic.html'), 500
 
 
 @app.errorhandler(Exception)
 def unhandled_exception(e):
     app.logger.error('An unhandled exception is being displayed to the end user', exc_info=e)
-    return render_template('generic.html'), 500
+    return render_template('errors/generic.html'), 500
 
 
 errors.init_app(app)
