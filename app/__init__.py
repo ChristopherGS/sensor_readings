@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request
 from werkzeug.exceptions import default_exceptions, HTTPException
 
-from .auth import login_manager
 from .data import db
 from .sensors.views import sensors
 from .sensors import views
@@ -20,7 +19,7 @@ def provide_constants():
 
 db.init_app(app)
 
-login_manager.init_app(app)
+
 
 app.register_blueprint(sensors)
 app.register_blueprint(users)

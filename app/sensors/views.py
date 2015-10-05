@@ -36,6 +36,17 @@ def Load_Data(file_name):
     data = pd.read_table(file_name, header=None, skiprows=1, delimiter=',') 
     return data.values.tolist()
 
+def process_time(unknown_timestamp):
+
+    try:
+        final_timestamp = datetime.strptime(unknown_timestamp, "%Y-%m-%d %H:%M:%S:%f")
+    except Exception as e:
+        current_app.logger.debug('Error changing timestamp {}'.format(e))
+        final_timestamp = unknown_timestamp
+    return final_timestamp
+
+
+
 @sensors.route("/")
 @sensors.route("/index")
 def index():
@@ -61,7 +72,7 @@ def csv_route():
 
             try:
                 file_name = filename
-                # import pdb; pdb.set_trace()
+                
                 # note that Load_Data expects a correctly formatted file - expects columns
                 data = Load_Data(os.path.join(UPLOAD_FOLDER, file_name))
                 count = 0 
@@ -70,7 +81,8 @@ def csv_route():
 
                 for i in data:
                     u = Experiment.query.get(1)
-                    my_timestamp = datetime.strptime(i[3], "%Y-%m-%d %H:%M:%S:%f")
+                    # my_timestamp = datetime.strptime(i[3], "%Y-%m-%d %H:%M:%S:%f")
+                    my_timestamp = process_time(i[3])
                     el_sensor = Sensor(**{
                         'accelerometer_x' : i[0],
                         'accelerometer_y' : i[1],
@@ -81,13 +93,15 @@ def csv_route():
                     
                     db.session.add(el_sensor)
                     count += 1
-
-                if ((count % 10 == 0) | (count < 20)):
-                    db.session.commit() #Attempt to commit all the records
+                
+                # import pdb; pdb.set_trace()
+                current_app.logger.debug('Committing {} records to the database'.format(count))
+                db.session.commit() #Attempt to commit all the records
                  
             except Exception as e:
                 print e
                 db.session.rollback() #Rollback the changes on error
+                # TODO SEND INFO BACK TO DEVICE
             finally:
                 pass
                 # db.session.close() #Close the connection

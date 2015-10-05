@@ -58,3 +58,186 @@ Traceback (most recent call last):
   File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/bdb.py", line 68, in dispatch_line
     if self.quitting: raise BdbQuit
 BdbQuit
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Changing label in on a db object...
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Changing label in on a db object...
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Committing 253 records to the database
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
