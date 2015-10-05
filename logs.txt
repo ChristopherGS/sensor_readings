@@ -241,3 +241,100 @@ Traceback (most recent call last):
   File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
     raise request.routing_exception
 NotFound: 404: Not Found
+Error changing timestamp time data 'fjdj' does not match format '%Y-%m-%d %H:%M:%S:%f'
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Changing label in on a db object...
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Error changing timestamp time data 'wtfwtf' does not match format '%Y-%m-%d %H:%M:%S:%f'
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Error changing timestamp time data 'wtfwtf' does not match format '%Y-%m-%d %H:%M:%S:%f'
+Error changing timestamp time data 'fjdj' does not match format '%Y-%m-%d %H:%M:%S:%f'
+Committing 253 records to the database
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Changing label in on a db object...

@@ -42,7 +42,8 @@ def process_time(unknown_timestamp):
         final_timestamp = datetime.strptime(unknown_timestamp, "%Y-%m-%d %H:%M:%S:%f")
     except Exception as e:
         current_app.logger.debug('Error changing timestamp {}'.format(e))
-        final_timestamp = unknown_timestamp
+        # TODO: THIS IS A RISKY HACK!
+        final_timestamp = datetime.now()
     return final_timestamp
 
 
