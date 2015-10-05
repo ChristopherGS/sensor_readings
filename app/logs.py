@@ -1,5 +1,5 @@
 # app/logs.py
-from logging import ERROR, Filter, Formatter, StreamHandler
+from logging import ERROR, DEBUG, Filter, Formatter, StreamHandler
 from logging.handlers import TimedRotatingFileHandler
 
 from flask import request
@@ -28,7 +28,7 @@ def init_app(app, remove_existing_handlers=False):
     handler = StreamHandler()
 
     # Add a formatter that makes use of our new contextual information
-    log_format = ("%(asctime)s\t%(levelname)s\t%(user_id)s\t"
+    log_format = ("%(asctime)s\t%(levelname)s\t"
                   "%(ip)s\t%(method)s\t%(url)s\t%(message)s")
     formatter = Formatter(log_format)
     handler.setFormatter(formatter)
@@ -40,7 +40,7 @@ def init_app(app, remove_existing_handlers=False):
     if app.config.get("ERROR_LOG_PATH"):
 
     	# Create one file for each day. Delete logs over 7 days old.
-        file_handler = TimedRotatingFileHandler(app.config["ERROR_LOG_PATH"],
+        file_handler = TimedRotatingFileHandler(filename= app.config["ERROR_LOG_PATH"],
                                                 when="D", backupCount=7)
 
         # Use a multi-line format for this logger, for easier scanning
@@ -50,12 +50,11 @@ def init_app(app, remove_existing_handlers=False):
         Method: %(method)s
         Path: %(url)s
         IP: %(ip)s
-        User ID: %(user_id)s
         Message: %(message)s
         ---------------------""")
 
         # Filter out all log messages that are lower than Error.
-        file_handler.setLevel(ERROR)
+        file_handler.setLevel(DEBUG)
 
-        file_handler.addFormatter(file_formatter)
+        #file_handler.addFormatter(file_formatter)
         app.logger.addHandler(file_handler)

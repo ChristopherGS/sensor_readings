@@ -127,7 +127,7 @@ def display():
 
         experiment = Experiment.query.filter_by(id=db_id).first()
         experiment.label = updated_label
-        current_app.debug('Changing label in on a db object...')
+        current_app.logger.debug('Changing label in on a db object...')
         db.session.commit()
 
 

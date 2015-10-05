@@ -1,0 +1,235 @@
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 130, in display
+    current_app.debug('Changing label in on a db object...')
+TypeError: 'bool' object is not callable
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 822, in send_static_file
+    cache_timeout=cache_timeout)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/helpers.py", line 614, in send_from_directory
+    raise NotFound()
+NotFound: 404: Not Found
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 130, in display
+    current_app.debug('Changing label in on a db object...')
+TypeError: 'bool' object is not callable
+Changing label in on a db object...
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found

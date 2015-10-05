@@ -14,6 +14,10 @@ class BaseConfiguration(object):
     SQLALCHEMY_ECHO = False
     HASH_ROUNDS = 100000
     UPLOAD_FOLDER = os.path.join(_basedir, '/app/uploads')
+    _static_folder = os.path.join(_basedir, 'app/static')
+
+
+    ERROR_LOG_PATH = os.path.join(_basedir, 'logs.txt')
 
 class DebugConfiguration(BaseConfiguration):
     DEBUG = True
