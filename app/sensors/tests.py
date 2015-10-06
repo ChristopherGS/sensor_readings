@@ -107,7 +107,7 @@ class SensorViewsTests(BaseTestCase):
 
 
     # TODO: check for duplicate files
-
+    """
     def test_csv_post_mini(self):
         headers = {
         'content-type': 'text/csv',
@@ -124,7 +124,8 @@ class SensorViewsTests(BaseTestCase):
 
         print rv.status_code
         print rv.response
-
+    """
+    
     #def test_file_post(self):
     #    data = """
     #    Source,video1393x2352_high,audiowefxwrwf_low,default2325_none,23234_audio,complete_crap,AUDIO_upper_case_test"""
@@ -135,24 +136,24 @@ class SensorViewsTests(BaseTestCase):
     #                           ), follow_redirects=True)
 
     #    print rv
-        """
-        The origin server MUST create the resource before returning the 201 status code. 
-        If the action cannot be carried out immediately, the server SHOULD respond with 202 (Accepted) response instead.
-        """
+        
+    #    The origin server MUST create the resource before returning the 201 status code. 
+    #    If the action cannot be carried out immediately, the server SHOULD respond with 202 (Accepted) response instead.
+        
     #    print rv.status_code
     #    print rv.response
     #    self.assertEqual(rv.status_code, 201)
 
     def test_live_post_mini(self):
         
-        URL = 'http://localhost:5000/api/csv'
-        #files = {'file': ('file', StringIO('hithere'))}
-        #r = requests.post(URL, files=files)
+        URL = 'http://christophergs.pythonanywhere.com/api/csv'
+        files = {'file': ('file', StringIO('hithere'))}
+        r = requests.post(URL, "HELLO")
         
-        with open('test.csv','rb') as file:
-            headers = {'content-type': 'application/x-www-form-urlencoded'}
-            r = requests.post(URL,
-                      files=file, verify=False)
+        #with open('test.csv','rb') as file:
+        #    headers = {'content-type': 'application/x-www-form-urlencoded'}
+        #    r = requests.post(URL,
+        #              files=file, verify=False, headers=headers)
         
         print 'live test response: {}'.format(r.status_code)
         print 'live test response detail: {}'.format(r.text)
