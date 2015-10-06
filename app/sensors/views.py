@@ -8,7 +8,6 @@ from time import mktime
 import pandas as pd
 from flask import (Blueprint, current_app, Markup, Response, abort, flash, jsonify,
                    redirect, render_template, request, session, url_for)
-from flask.ext.login import current_user, login_required
 from numpy import genfromtxt
 from werkzeug import secure_filename
 from werkzeug.exceptions import default_exceptions, HTTPException
@@ -51,15 +50,14 @@ def process_time(unknown_timestamp):
 @sensors.route("/")
 @sensors.route("/index")
 def index():
-    # import pdb; pdb.set_trace()
     return render_template("index.html")
 
 
-
-@sensors.route('/csv', methods=['GET', 'POST'])
+@sensors.route('/csv')
 def csv_route():
-    if request.method == 'GET':
-        return render_template('sensors/csv.html')
+    #if request.method == 'GET':
+    return render_template('sensors/csv.html')
+    """
     elif request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
@@ -95,7 +93,7 @@ def csv_route():
                     db.session.add(el_sensor)
                     count += 1
                 
-                # import pdb; pdb.set_trace()
+                import pdb; pdb.set_trace()
                 current_app.logger.debug('Committing {} records to the database'.format(count))
                 db.session.commit() #Attempt to commit all the records
                  
@@ -112,8 +110,9 @@ def csv_route():
             return redirect(url_for('sensors.complete')), 201
         else:
             return render_template('index.html'), 400
-    else:
-        return '404'
+        """
+    #else:
+    #    return '404'
 
 @sensors.route('/complete')
 def complete():

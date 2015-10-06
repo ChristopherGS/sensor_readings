@@ -21,6 +21,9 @@ class BaseConfiguration(object):
 
 class DebugConfiguration(BaseConfiguration):
     DEBUG = True
+    # disable csrf checking for the /csv POST route
+    WTF_CSRF_ENABLED = False
+    WTF_CSRF_CHECK_DEFAULT = False
 
 class TestConfiguration(BaseConfiguration):
     TESTING = True

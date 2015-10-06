@@ -6,29 +6,36 @@
 {% block content %}
     <script type="text/javascript">
         $(document).ready(function(){
-            $(".fileUpload2").on("click", function(){
-                console.log("clicked button");
-                $.post('http://christophergs.pythonanywhere.com/csv', {
-                    a: "test_data",
-                    b: "more_test_data"
-                }, function(data){
-                    console.log(data);
+            $("#upload-file-btn").on("click", function(){
+                var form_data = new FormData($('#upload-file')[0])
+                $.ajax({
+                    type: 'POST',
+                    url: '/api/csv',
+                    data: form_data,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    async: false,
+                    success: function(data) {
+                        alert('Form uploaded successfully');
+                        window.location.href = '/display';
+                    },
+                    error: function(error) {
+                        alert('There was an error, please try again');
+
+                    }
                 });
             });
-
-            //$(".postme").on("click", function(e){
-            //    e.preventDefault();
-            //    $('.postform').attr('action', "/csv").submit();
-            //});
-
         });
 
     </script>
     <h1>Sensor Upload Page</h1>
 
-    <form class="postform" method=POST enctype=multipart/form-data action="">
+    <form id="upload-file" class="postform" method=POST enctype=multipart/form-data action="">
         <input type="file" name="file">
-        <input class="postme" type="submit"/>
+        <fieldset>
+            <button id="upload-file-btn" type="button">Upload</button>
+        </fieldset>
     </form>
 
     

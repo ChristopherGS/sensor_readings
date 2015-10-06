@@ -1,3 +1,6 @@
+import requests
+import csv
+
 from cStringIO import StringIO
 from datetime import datetime
 
@@ -98,6 +101,9 @@ class SensorViewsTests(BaseTestCase):
         pass
         # TODO: file checks
 
+    def test_csv_api(self):
+        pass
+
 
     # TODO: check for duplicate files
 
@@ -106,7 +112,7 @@ class SensorViewsTests(BaseTestCase):
         Source,video1393x2352_high,audiowefxwrwf_low,default2325_none,23234_audio,complete_crap,AUDIO_upper_case_test"""
 
         test_client = self.app.test_client()
-        rv = test_client.post('/csv', data=dict(
+        rv = test_client.post('api/csv', data=dict(
                                    file=(StringIO(data), 'test.csv'),
                                ), follow_redirects=True)
 
@@ -115,8 +121,30 @@ class SensorViewsTests(BaseTestCase):
         The origin server MUST create the resource before returning the 201 status code. 
         If the action cannot be carried out immediately, the server SHOULD respond with 202 (Accepted) response instead.
         """
+        print rv.status_code
+        print rv.response
         self.assertEqual(rv.status_code, 201)
 
+
+    def test_live_post(self):
+        pass
+        """
+        URL = 'http://www.christophergs.pythonanywhere.com/csv'
+        with open('test.csv','rb') as payload:
+            client = requests.session()
+            # Retrieve the CSRF token first
+            client.get(URL)  # sets cookie
+            #csrf_token_value = client.cookies['csrf']
+
+            #csrfmiddlewaretoken=csrftoken
+            
+            headers = {'content-type': 'application/x-www-form-urlencoded', 'Referer': URL}
+            r = requests.post('http://www.christophergs.pythonanywhere.com/csv',
+                      data=payload, verify=False, headers=headers)
+
+        print 'live test response: {}'.format(r.status_code)
+        print 'live test response detail: {}'.format(r.text)
+        """
 
 class TestingFileStorage(FileStorage):
     """

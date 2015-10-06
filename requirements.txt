@@ -2,6 +2,7 @@ Flask==0.10.1
 Flask-SQLAlchemy==1.0
 Flask-WTF==0.9.3
 Flask-Login==0.2.7
+flask-restful==0.2.12
 backports.pbkdf2==0.1
 Flask-Testing==0.4
 numpy==1.9.3
