@@ -31,6 +31,9 @@ from time import mktime
 
 from flask import (Blueprint, current_app, Markup, Response, abort, flash, jsonify,
                    redirect, render_template, request, session, url_for)
+
+from flask_restful import reqparse
+
 from numpy import genfromtxt
 from werkzeug import secure_filename
 from werkzeug.exceptions import default_exceptions, HTTPException
@@ -66,7 +69,7 @@ def allowed_file(filename):
 
 def Load_Data(file_name):
     # data = genfromtxt(file_name, delimiter=',', skiprows=1)
-    data = pd.read_table(file_name, header=None, skiprows=1, delimiter=',') 
+    data = pd.read_table(file_name, header=None, skiprows=1, delimiter=',', encoding='iso-8859-1') 
     return data.values.tolist()
 
 
@@ -165,10 +168,17 @@ if app.config.get("ERROR_LOG_PATH"):
 # API views
 
 class CsvSimple(Resource):
+
     def get(self):
         return {"message":"hello"}, 200
     def post(self):
-        file = request.files['file']
+        try:
+            all_data = request.get_data()
+            app.logger.debug('____api received_____ {}'.format(all_data))
+            file = request.files['file']
+        except Exception as e:
+            return {"error": e}, 500
+
         if file and allowed_file(file.filename):
             print "allowed_file"
             filename = secure_filename(file.filename)

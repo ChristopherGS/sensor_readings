@@ -1,5 +1,6 @@
 import requests
 import csv
+import json
 
 from cStringIO import StringIO
 from datetime import datetime
@@ -107,24 +108,55 @@ class SensorViewsTests(BaseTestCase):
 
     # TODO: check for duplicate files
 
-    def test_file_post(self):
-        data = """
-        Source,video1393x2352_high,audiowefxwrwf_low,default2325_none,23234_audio,complete_crap,AUDIO_upper_case_test"""
-
+    def test_csv_post_mini(self):
+        headers = {
+        'content-type': 'text/csv',
+        }
+        csvfile = 'test.csv'
+        url = 'http://localhost/api/csv'
         test_client = self.app.test_client()
-        rv = test_client.post('api/csv', data=dict(
-                                   file=(StringIO(data), 'test.csv'),
-                               ), follow_redirects=True)
+        with open(csvfile) as f:
+            rv = test_client.post(
+                '/api/csv',
+                data=dict(
+                    file=f,
+                ))
 
-        print rv
+        print rv.status_code
+        print rv.response
+
+    #def test_file_post(self):
+    #    data = """
+    #    Source,video1393x2352_high,audiowefxwrwf_low,default2325_none,23234_audio,complete_crap,AUDIO_upper_case_test"""
+
+    #    test_client = self.app.test_client()
+    #    rv = test_client.post('api/csv', data=dict(
+    #                               file=(StringIO(data), 'test.csv'),
+    #                           ), follow_redirects=True)
+
+    #    print rv
         """
         The origin server MUST create the resource before returning the 201 status code. 
         If the action cannot be carried out immediately, the server SHOULD respond with 202 (Accepted) response instead.
         """
-        print rv.status_code
-        print rv.response
-        self.assertEqual(rv.status_code, 201)
+    #    print rv.status_code
+    #    print rv.response
+    #    self.assertEqual(rv.status_code, 201)
 
+    def test_live_post_mini(self):
+        
+        URL = 'http://localhost:5000/api/csv'
+        #files = {'file': ('file', StringIO('hithere'))}
+        #r = requests.post(URL, files=files)
+        
+        with open('test.csv','rb') as file:
+            headers = {'content-type': 'application/x-www-form-urlencoded'}
+            r = requests.post(URL,
+                      files=file, verify=False)
+        
+        print 'live test response: {}'.format(r.status_code)
+        print 'live test response detail: {}'.format(r.text)
+        
 
     def test_live_post(self):
         pass

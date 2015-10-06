@@ -31,7 +31,7 @@ class TestConfiguration(BaseConfiguration):
 
     DATABASE = 'tests.db'
     DATABASE_PATH = os.path.join(_basedir, DATABASE)
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'  # + DATABASE_PATH
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DATABASE_PATH
 
     # Since we want our unit tests to run quickly
     # we turn this down - the hashing is still done
