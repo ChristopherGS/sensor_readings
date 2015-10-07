@@ -54,12 +54,22 @@ class CsvSimple(Resource):
     def get(self):
         return {"message":"hello"}, 200
     def post(self):
+        #import pdb; pdb.set_trace()
+        # first test if the data is anything at all
         try:
             all_data = request.get_data()
             current_app.logger.debug('____api received_____ {}'.format(all_data))
-            file = request.files['file']
+            
         except Exception as e:
             return {"error": e}, 500
+
+        # now test if it is a file or not
+        try:
+            file = request.files['file']
+        except Exception as e:
+            current_app.logger.debug('this is not a file: {}'.format(e))
+            current_app.logger.debug(request.form)
+            return {"error":"hey can you send a file"}, 500
 
         if file and allowed_file(file.filename):
             print "allowed_file"
