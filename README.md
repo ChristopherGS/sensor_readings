@@ -10,6 +10,8 @@ Installation
 
 - Create an uploads folder inside the "app" directory
 
+- install the hmmlearn module: https://github.com/hmmlearn/hmmlearn
+
 
 
 Running
