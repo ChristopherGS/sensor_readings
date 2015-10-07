@@ -1,4 +1,5 @@
 import requests
+import requests
 import csv
 import json
 
@@ -14,7 +15,7 @@ from app.test_base import BaseTestCase
 from app.users.models import User
 
 from ..sensors import views
-from .models import Sensor, Site, Visit
+from .models import Sensor
 
 
 class SensorViewsTests(BaseTestCase):
@@ -144,19 +145,19 @@ class SensorViewsTests(BaseTestCase):
     #    print rv.response
     #    self.assertEqual(rv.status_code, 201)
 
-    def test_live_post_mini(self):
+    #def test_live_post_mini(self):
         
-        URL = 'http://christophergs.pythonanywhere.com/api/csv'
-        files = {'file': ('file', StringIO('hithere'))}
-        r = requests.post(URL, "HELLO")
+    #    URL = 'http://christophergs.pythonanywhere.com/api/csv'
+    #    files = {'file': ('file', StringIO('hithere'))}
+    #    r = requests.post(URL, "HELLO")
         
         #with open('test.csv','rb') as file:
         #    headers = {'content-type': 'application/x-www-form-urlencoded'}
         #    r = requests.post(URL,
         #              files=file, verify=False, headers=headers)
         
-        print 'live test response: {}'.format(r.status_code)
-        print 'live test response detail: {}'.format(r.text)
+    #    print 'live test response: {}'.format(r.status_code)
+    #    print 'live test response detail: {}'.format(r.text)
         
 
     def test_live_post(self):
