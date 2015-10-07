@@ -1,8 +1,7 @@
 # app/science.py
 
-import pandas as pd
 import os
-# from sklearn import hmm
+import pandas as pd
 from hmmlearn.hmm import GaussianHMM
 import numpy as np
 
@@ -10,11 +9,14 @@ _basedir = os.path.abspath(os.path.dirname(__file__))
 UPLOADS = 'api/uploads'
 UPLOAD_FOLDER = os.path.join(_basedir, UPLOADS)
 
-filename = 'badboy3.csv'
+filename = 'badboy_combined.csv'
+unlabelled_filename = 'badboy_unlabelled2.csv'
 
 PLAY_DATA = UPLOAD_FOLDER + '/' + filename
+PLAY_DATA2 = UPLOAD_FOLDER + '/' + unlabelled_filename
 
 df = pd.read_csv(PLAY_DATA)
+df_unlabelled = pd.read_csv(PLAY_DATA2)
 
 print df
 
@@ -28,15 +30,11 @@ def pandas_cleanup(df):
 	return df_clean
 
 
-class HMM:
-	def __init__(self):
-		pass
-
-
-
+#class HMM:
+#	def __init__(self):
+#		pass
 
 def my_hmm():
-	pass
 
 	"""
 	Probability of being in a particular state at step i is known once we know
@@ -46,8 +44,6 @@ def my_hmm():
 	at step i is known once we know what state we were in at step i.
 	"""
 
-	# how many states will we have?
-
 	# => The observed states are the sensor reading sequences
 
 	# => The hidden state is punch / not punch (or eventually any number of motions)
@@ -55,14 +51,6 @@ def my_hmm():
 	# => Emissions encode sensor readings (observed)
 
 	# => states encode motion (hidden)
-
-
-
-	# in each state, how many observations can we take? -- all the sensors
-
-	# what will the transition matrix look like?
-
-	# what will the observation probabilities look like?
 
 	# ---------------------------------------------------
 
@@ -111,83 +99,56 @@ def my_hmm():
 	# --------------------------------------------------
 	# TRAIN MODEL
 
-	"""List of array-like observation sequences, 
+	"""
+	List of array-like observation sequences, 
 	each of which has shape (n_i, n_features), where n_i is the length of the i_th observation.
 	"""
 
-	import datetime
-	from matplotlib.finance import quotes_historical_yahoo_ochl
-	from matplotlib.dates import YearLocator, MonthLocator, DateFormatter
+	# COULD IT BE THAT I HAVE MISUNDERSTOOD THE TRAINING HERE?
 
-	# Downloading the data
-	date1 = datetime.date(1995, 1, 1)  # start date
-	date2 = datetime.date(2012, 1, 6)  # end date
-	# get quotes from yahoo finance
-	quotes = quotes_historical_yahoo_ochl("INTC", date1, date2)
-	if len(quotes) == 0:
-	    raise SystemExit
+	x = df['accelerometer_x'].values
+	y = df['state'].values
 
-	# unpack quotes
-	dates = np.array([q[0] for q in quotes], dtype=int)
-	close_v = np.array([q[2] for q in quotes])
-	volume = np.array([q[5] for q in quotes])[1:]
-
-	# take diff of close value
-	# this makes len(diff) = len(close_t) - 1
-	# therefore, others quantity also need to be shifted
-	diff = close_v[1:] - close_v[:-1]
-	dates = dates[1:]
-	close_v = close_v[1:]
-
-	print diff[1:10]
-	print volume[1:10]
-
-	# pack diff and volume for training
-	X = np.column_stack([diff, volume])
+	X = np.column_stack([x, y])
+	#print X
+	print X.shape
 
 	###############################################################################
 	# Run Gaussian HMM
 	print("fitting to HMM and decoding ...")
 
-	# make an HMM instance and execute fit
-	model = GaussianHMM(n_components=5, covariance_type="diag", n_iter=1000).fit(X)
+	# n_components : Number of states.
+	#_covariance_type : string describing the type of covariance parameters to use. 
+	# Must be one of 'spherical', 'tied', 'diag', 'full'. Defaults to 'diag'.
+	model = GaussianHMM(n_components=2, covariance_type="diag").fit(X)
 
 	# predict the optimal sequence of internal hidden state
-	hidden_states = model.predict(X)
+
+	# Get the unlabelled data
+	z = df_unlabelled['accelerometer_x'].values
+	_y = df_unlabelled['state'].values
+
+	Z = np.column_stack([z, _y])
+
+	# print Z
+	print Z.shape
+
+	hidden_states = model.predict(Z)
 
 	print("done\n")
 
-	print hidden_states[1:25]
+	total = [i for i in hidden_states]
+	print len(total)
 
-	"""
-	X = df['accelerometer_x'].values
-	print X
-	print type(X)
+	print hidden_states[1:50]
 
-	Y = np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0])
+	# 1 = punch
+	# 0 = other
 
-	s1 = np.random.randn(50,1)
-	s2 = np.random.randn(50,1)+5
-
-	print type(s2)
-
-	signal = np.concatenate([s1, s2])
-
-	print type(signal)
-
-	X = np.column_stack([s1, s2])
-	#_x = zip(X, Y)
-	#x = _x.shape
-
-	model2 = hmm.GaussianHMM(2, "full")
-	model2.fit(X)
-	#GaussianHMM(algorithm='viterbi')
-	#Z2 = model2.predict(x)
-
-	#print Z2
-	"""
 
 my_hmm()
+
+
 
 #import numpy as np
 #from copy import copy
