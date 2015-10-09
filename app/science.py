@@ -26,10 +26,10 @@ unlabelled_filename = 'badboy_unlabelled2.csv'
 PLAY_DATA = UPLOAD_FOLDER + '/' + filename
 PLAY_DATA2 = UPLOAD_FOLDER + '/' + unlabelled_filename
 
-df = pd.read_csv(PLAY_DATA)
-df_unlabelled = pd.read_csv(PLAY_DATA2)
+#df = pd.read_csv(PLAY_DATA)
+#df_unlabelled = pd.read_csv(PLAY_DATA2)
 
-print df
+#print df
 
 
 def sql_to_pandas():
@@ -191,7 +191,7 @@ def my_hmm():
     # 0 = other
 
 
-my_hmm()
+#my_hmm()
 
 
 

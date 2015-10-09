@@ -13,7 +13,7 @@ from werkzeug import secure_filename
 from werkzeug.exceptions import default_exceptions, HTTPException
 
 from app.data import db, query_to_list
-from app.science import pandas_cleanup, sql_to_pandas
+from app.science2 import pandas_cleanup, sql_to_pandas, my_svm
 
 from .models import Experiment, Sensor
 
@@ -76,16 +76,28 @@ def display():
     else:
         return '404'
 
-@sensors.route('/display/<int:id>')
+@sensors.route('/display/<int:id>', methods=['GET', 'POST'])
 def display_id(id):
-    query = db.session.query(Sensor)
-    df = pd.read_sql_query(query.statement, query.session.bind)
-    pandas_id = id
-    df2 = df[df.experiment_id == pandas_id]
-    db_index_choice = df2
-    experiment_number = pd.unique(df2.experiment_id.values)
-    return render_template('sensors/file_details.html', experiment_number=experiment_number[0], 
-        db_index_choice=db_index_choice.to_html(), id=id)
+    if request.method == 'GET':
+        query = db.session.query(Sensor)
+        df = pd.read_sql_query(query.statement, query.session.bind)
+        pandas_id = id
+        df2 = df[df.experiment_id == pandas_id]
+        db_index_choice = df2
+        experiment_number = pd.unique(df2.experiment_id.values)
+        return render_template('sensors/file_details.html', experiment_number=experiment_number[0], 
+            db_index_choice=db_index_choice.to_html(), id=id)
+    elif request.method == 'POST':
+        try:
+            updated_df = my_svm(id)
+            # save to DB
+        except Exception as e:
+            current_app.logger.debug('Error running model: {}'.format(e))
+            return {'error': e}, 500
+
+        return 'made a prediction', 200
+    else:
+        return '404'
 
 @sensors.route('/display/<int:id>/graph')
 def display_graph(id):

@@ -55,6 +55,7 @@ class CsvSimple(Resource):
         return {"message":"hello"}, 200
     def post(self):
         #import pdb; pdb.set_trace()
+        print "HERE"
         # first test if the data is anything at all
         try:
             all_data = request.get_data()
@@ -91,12 +92,13 @@ class CsvSimple(Resource):
 
                 for i in data:
                     u = Experiment.query.get(1)
+                    print i[19]
                     # my_timestamp = datetime.strptime(i[3], "%Y-%m-%d %H:%M:%S:%f")
-                    my_timestamp = process_time(i[3])
+                    my_timestamp = process_time(i[19])
                     el_sensor = Sensor(**{
-                        'accelerometer_x' : i[0],
-                        'accelerometer_y' : i[1],
-                        'accelerometer_z' : i[2],
+                        'ACCELEROMETER_X' : i[0],
+                        'ACCELEROMETER_Y' : i[1],
+                        'ACCELEROMETER_Z' : i[2],
                         'timestamp' : my_timestamp,
                         'experiment' : my_experiment
                     })
@@ -115,3 +117,7 @@ class CsvSimple(Resource):
                 db.session.rollback() #Rollback the changes on error
                 # TODO SEND INFO BACK TO DEVICE
                 return {'error': e}, 500
+
+        else:
+            current_app.logger.debug('Not a .txt or .csv file')
+            return {'message':'incorrect file format'}, 500

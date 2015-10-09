@@ -1,3 +1,136 @@
+html {
+  font: 62.5%/1.65 "Open Sans",sans-serif;
+}
+
+
+body {
+  color: #3c4043;
+}
+
+
+.clearfix:before, .clearfix:after {
+  content: " ";
+  display: table;
+}
+
+#global-header {
+  position: relative;
+  min-height: 80px;
+}
+
+#global-header nav {
+  background: #fff;
+  width: 100%;
+  padding: 10px 0;
+  position: absolute;
+  z-index: 700;
+}
+
+.wrapper {
+  max-width: 100%;
+  padding: 0 24px;
+    min-height: 70px;
+    margin: 0 auto;
+}
+
+
+
+.logo{
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  background-image: url("../dglogo350.jpg");
+  background-position: center;
+  background-repeat: none;
+  background-size: 100%;
+  padding-top: 4%;
+  text-indent:-9999px;
+    overflow:hidden;
+}
+
+
+.logo::before {
+  14px;
+}
+
+.logo::after{
+  14px;
+}
+
+
+.main-menu {
+  list-style: none;
+    margin: 0;
+    padding: 0;
+  float: right;
+  border-top: none;
+  position: relative;
+  z-index: 250;
+  top: 9px;
+  padding-top:1%;
+  width: 15%;
+}
+
+
+.main-menu li {
+  float: left;
+  position: relative;
+  font-size: 1.1rem;
+  margin: 2%;
+  display: inline;
+  float: right;
+}
+
+.main-menu .login {
+  height: 31px;
+  min-width: 66px;
+  padding: 5px 5px;
+  border: 1px solid #5ba4e5;
+  color: #5ba4e5;
+  font-size: 1.3em;
+  text-align: center;
+  background: transparent;
+  -webkit-transition: all 0.1s linear;
+  -moz-transition: all 0.1s linear;
+  transition: all 0.1s linear;
+  border-radius: 2px;
+
+}
+
+
+h1 {
+  color: #35393b;
+  font-weight: 800;
+    font-size: 6rem;
+    letter-spacing: -2px;
+}
+
+h2 {
+  padding: 0;
+  margin: 0 0 1.5rem;
+  border: none;
+  font-weight: normal;
+  color: #5ba4e5;
+  letter-spacing: -0.01em;
+  font-size: 3.6rem;
+  line-height: 1.15em;
+}
+
+.home p {
+  max-width: 550px;
+  margin-top: 1.6rem;
+  color: #7d878a;
+  font-size: 2rem;
+  margin: 0 auto 4.5rem auto;
+  line-height: 1.5em;
+  font-weight: 200;
+}
+
+
+
 /* D3 Styles */
 
 .axis line {
@@ -36,4 +169,71 @@
 	display: block;
 }
 
-	
+.sensorTableContainer .dataframe {
+  font-size: 0.8em;
+  text-align: center;
+}
+
+.sensorTableContainer .dataframe th{
+  padding: 5px 5px;
+  font-size: 1em;
+  font-weight: bold;
+}	
+
+.dataScience {
+  margin-bottom: 2%;
+}
+
+.footer-nav {
+  max-width: 1100px;
+  margin: 0 auto 40px auto;
+  border-bottom: #e2edf2 1px solid;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.credit {
+  padding:0;
+}
+
+.global-footer li {
+  list-style: none;
+  display: block;
+  padding: 0;
+  margin: 0;
+  color: #7d878a;
+  text-transform: none;
+  font-size: 0.9em;
+}
+
+/*=============================
+LOADING MODAL STYLES
+===============================*/
+
+
+.modal2 {
+    display:    none;
+    position:   fixed;
+    z-index:    499;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, 0.8 )
+        url("../ajax-loader.gif")
+                50% 50% 
+                no-repeat;
+}
+
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal2 {
+    display: block;
+}
