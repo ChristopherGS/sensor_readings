@@ -38,7 +38,7 @@ def sql_to_pandas():
 
 def pandas_cleanup(df):
     columns = []
-    df_clean = df[['ACCELEROMETER_X', 'ACCELEROMETER_Y', 'ACCELEROMETER_Z', 'timestamp', 'experiment_id']]
+    df_clean = df[['ACCELEROMETER_X', 'ACCELEROMETER_Y', 'ACCELEROMETER_Z', 'timestamp', 'experiment_id', 'Time_since_start']]
     return df_clean
 
 columns = ['ACCELEROMETER_X',
