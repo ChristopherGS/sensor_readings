@@ -63,7 +63,7 @@ class CsvSimple(Resource):
 
         # now test if it is a file or not
         try:
-            file = request.files['file']
+            file = request.files['a_file']
         except Exception as e:
             current_app.logger.debug('this is not a file: {}'.format(e))
             current_app.logger.debug(request.form)
