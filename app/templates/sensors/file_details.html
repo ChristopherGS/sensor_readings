@@ -17,7 +17,11 @@
     </div>
 
     <div class="predictionSummary">
-        <h3>Calculated chance that motion is a punch: <span id="predictionDetail">{{average}}%</span></h3>
+        {% if average == 'n/a' %}
+            <h3>Calculated chance that motion is a punch: <span id="predictionDetail">n/a</span></h3>
+        {% else %}
+            <h3>Calculated chance that motion is a punch: <span id="predictionDetail">{{average}}%</span></h3>
+        {% endif %}
     </div>
 
     <div class="sensorTableContainer">

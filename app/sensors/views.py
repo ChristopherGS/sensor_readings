@@ -93,9 +93,11 @@ def display_id(id):
 
         _info_label = Experiment.query.filter_by(id=id).first()
         info_label = _info_label.label
-        # if prediction has been run, calculate summary stats
 
-        if None in df2.prediction.values:
+        # if prediction has been run, calculate summary stats
+        print df2.prediction.values
+
+        if (('punch' not in df2.prediction.values) & ('other' not in df2.prediction.values)): 
             average = 'n/a'        
         else:
             calc_punches = len(df2[df2['prediction']=='punch'])
