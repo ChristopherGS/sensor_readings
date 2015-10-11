@@ -2,10 +2,7 @@
 
 import os
 import pandas as pd
-from hmmlearn.hmm import GaussianHMM
 import numpy as np
-import pylab as pl
-from yahmm import *
 import random
 import math
 import itertools
