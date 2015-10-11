@@ -10,7 +10,7 @@ outputFileName = os.path.splitext(inputFileName)[0] + "_modified.csv"
 
 f = 'simple.csv'
 
-def prep(filename):
+def prep(inputFileName):
 
 	with open(filename, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
 		r = csv.reader(inFile, delimiter=',', quotechar='|')

@@ -2,9 +2,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Results from Experiment {{experiment_number}}</h1>
+    <h2>Results from Experiment {{experiment_number}}</h2>
     <button><a href="{{url_for('sensors.display')}}/{{id}}/graph">Show graph</a></button>
     <button data-id="{{experiment_number}}" class="dataScience">Detect Motion</button>
+
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select algorithm
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li><a href="#">SVM</a></li>
+            <li><a href="#">HMM</a></li>
+            <li><a href="#">LDS</a></li>
+        </ul>
+    </div>
+
+    <div class="predictionSummary">
+        <h3>Calculated chance that motion is a punch: <span id="predictionDetail">{{average}}%</span></h3>
+    </div>
 
     <div class="sensorTableContainer">
     	{{ db_index_choice | safe }}

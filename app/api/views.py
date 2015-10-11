@@ -23,7 +23,6 @@ from app.science import pandas_cleanup, sql_to_pandas
 
 _basedir = os.path.abspath(os.path.dirname(__file__))
 
-
 ALLOWED_EXTENSIONS = set(['txt', 'csv'])
 UPLOADS = 'uploads'
 UPLOAD_FOLDER = os.path.join(_basedir, UPLOADS)
@@ -33,7 +32,6 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 def Load_Data(file_name):
-    # data = genfromtxt(file_name, delimiter=',', skiprows=1)
     data = pd.read_table(file_name, header=None, skiprows=1, delimiter=',', encoding='iso-8859-1') 
     return data.values.tolist()
 
@@ -54,14 +52,13 @@ class CsvSimple(Resource):
     def get(self):
         return {"message":"hello"}, 200
     def post(self):
-        #import pdb; pdb.set_trace()
-        print "HERE"
         # first test if the data is anything at all
         try:
             all_data = request.get_data()
             current_app.logger.debug('____api received_____ {}'.format(all_data))
             
         except Exception as e:
+            current_app.logger.debug('error: {}'.format(e))
             return {"error": e}, 500
 
         # now test if it is a file or not
@@ -88,12 +85,7 @@ class CsvSimple(Resource):
                 data = Load_Data(os.path.join(UPLOAD_FOLDER, file_name))
                 count = 0 
 
-                # need to handle this for when the uploaded file has less than 3 columns
-
                 for i in data:
-                    u = Experiment.query.get(1)
-                    print i[19]
-                    # my_timestamp = datetime.strptime(i[3], "%Y-%m-%d %H:%M:%S:%f")
                     my_timestamp = process_time(i[19])
                     el_sensor = Sensor(**{
                         'ACCELEROMETER_X' : i[0],
@@ -106,15 +98,14 @@ class CsvSimple(Resource):
                     db.session.add(el_sensor)
                     count += 1
                 
-                # import pdb; pdb.set_trace()
                 current_app.logger.debug('Committing {} records to the database'.format(count))
-                db.session.commit() #Attempt to commit all the records
+                db.session.commit() 
                 flash("CSV data saved to DB") 
                 return {'message': 'data saved to db'}, 201
 
             except Exception as e:
                 print e
-                db.session.rollback() #Rollback the changes on error
+                db.session.rollback()
                 # TODO SEND INFO BACK TO DEVICE
                 return {'error': e}, 500
 

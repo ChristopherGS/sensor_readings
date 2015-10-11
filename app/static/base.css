@@ -123,6 +123,19 @@ h2 {
   line-height: 1.15em;
 }
 
+h3 {
+  margin-top: 1.6rem;
+  color: #7d878a;
+  font-size: 2rem;
+  margin: 2.5rem auto 2.5rem auto;
+  line-height: 1.5em;
+  font-weight: 200;
+}
+
+#predictionDetail{
+  font-weight: 900;
+}
+
 .home p {
   max-width: 550px;
   margin-top: 1.6rem;
@@ -235,7 +248,7 @@ h2 {
 /* TABLE STYLES */
 
 .sensorTableContainer {
-  margin-bottom: 3%;
+  margin: 3% 0;
 }
 
 .conv-nav {
@@ -321,6 +334,14 @@ h2 {
   color: #7d878a;
   text-transform: none;
   font-size: 0.9em;
+}
+
+/* GUIDE PAGE */
+
+ol {
+  display: list-item;
+  list-style-position: inside;
+  list-style-type: circle;
 }
 
 /*=============================

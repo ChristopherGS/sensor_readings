@@ -2,9 +2,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Tool Guide</h1>
+    <h2>Tool Guide</h2>
 
     <p>Work in progress...</p>
+
+    <ul>
+    	<ol>Download the <a href="https://play.google.com/store/apps/details?id=com.fivasim.androsensor&hl=en">Androsensor android app</a></ol>
+    	<ol>Record a motion</ol>
+    	<ol>Export the csv file</ol>
+    	<ol>Clean up the csv file using the <a href="#">prep.py</a> script</ol>
+    	<ol>Upload the prepared file to the web app</ol>
+    	<ol>Run "Detect Motion" on the uploaded data</ol>
+    	<ol>View results - how do they look?</ol>
+    </ul>
 
     <a href="{{ url_for('sensors.csv_route') }}">Upload a file</a>
     

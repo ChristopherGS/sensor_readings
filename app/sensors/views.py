@@ -62,7 +62,6 @@ def display():
             db_labels.append(experiment_labels.label)
 
         db_data = zip(db_index, db_labels)
-        print db_data
             
         return render_template('sensors/show_files.html', file_url=names, db_data=db_data)
     elif request.method == 'POST':
@@ -91,8 +90,27 @@ def display_id(id):
                                 "GYROSCOPE_X", "GYROSCOPE_Y","GYROSCOPE_Z",
                                 "Time_since_start", "state", "timestamp", "prediction"]]
         experiment_number = pd.unique(df2.experiment_id.values)
+
+        # if prediction has been run, calculate summary stats
+
+        if None in df2.prediction.values:
+            average = 'n/a'        
+        else:
+            calc_punches = len(df2[df2['prediction']=='punch'])
+            calc_total = len(df2['prediction'])
+            try:
+                _average = (float(calc_punches)/float(calc_total))*100
+                average = float("{0:.2f}".format(_average))
+                current_app.logger.debug('Data has a {} chance of being a punch'.format(average))
+            except Exception as e:
+                if ((e == ZeroDivisionError) & (calc_punches == 0)):
+                    average = 0
+                else:
+                    return render_template('errors/generic.html'), 500
+
+        print average
         return render_template('sensors/file_details.html', experiment_number=experiment_number[0], 
-            db_index_choice=db_index_choice.to_html(), id=id)
+            db_index_choice=db_index_choice.to_html(), id=id, average=average)
     elif request.method == 'POST':
         try:
             updated_df = my_svm(id)         

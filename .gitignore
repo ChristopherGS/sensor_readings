@@ -11,3 +11,5 @@ venv
 
 logs
 
+.DS_Store
+
