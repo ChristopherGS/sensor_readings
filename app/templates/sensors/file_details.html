@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Results from Experiment {{experiment_number}}</h2>
+    <h2>Results from Experiment: {{info_label}} (experiment {{experiment_number}})</h2>
     <button><a href="{{url_for('sensors.display')}}/{{id}}/graph">Show graph</a></button>
     <button data-id="{{experiment_number}}" class="dataScience">Detect Motion</button>
 
@@ -33,18 +33,6 @@
 <script type="text/javascript">
         $(document).ready(function(){
             $("body").removeClass("loading");
-            var predictions = $('th').filter(function () {
-                return $(this).html() == "prediction"; 
-            }).val();
-
-            console.log(predictions);
-
-            var predictions = $(".sensorTableContainer table").find("th").last().val();
-
-            console.log($(predictions));
-
-            //if (predictions$(predictions).addClass("predictionMade");
-
             $(".dataScience").on("click", function(e){
                 $("body").addClass("loading");
                 var experiment_id = $(this).data('id');
@@ -59,8 +47,6 @@
         });
 
 </script>
-
-
      
 {% endblock %}
 

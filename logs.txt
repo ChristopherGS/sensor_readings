@@ -38,3 +38,114 @@ Preparing to make prediction for experiment: 9
 DF length is: 46, which should match the number of predictions: 46
 Data has a 93.48 chance of being a punch
 Data has a 0.0 chance of being a punch
+Changing label in on a db object...
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 125, in display_id
+    import pdb; pdb.stack_trace()
+AttributeError: 'module' object has no attribute 'stack_trace'
+Data has a 50.0 chance of being a punch
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 126, in display_id
+    print 'delete request received'
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 126, in display_id
+    print 'delete request received'
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/bdb.py", line 49, in trace_dispatch
+    return self.dispatch_line(frame)
+  File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/bdb.py", line 68, in dispatch_line
+    if self.quitting: raise BdbQuit
+BdbQuit
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Request resulted in 404: Not Found
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1453, in dispatch_request
+    self.raise_routing_exception(req)
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1436, in raise_routing_exception
+    raise request.routing_exception
+NotFound: 404: Not Found
+Data has a 50.0 chance of being a punch
+Preparing to make prediction for experiment: 1
+DF length is: 2, which should match the number of predictions: 2
+Data has a 50.0 chance of being a punch
+Deleting experiment: 1
+Data has a 99.51 chance of being a punch
+Data has a 99.51 chance of being a punch
+Deleting experiment: 3
+Deleting experiment: 4
+Data has a 99.51 chance of being a punch
+Preparing to make prediction for experiment: 2
+DF length is: 3444, which should match the number of predictions: 3444
+Data has a 99.51 chance of being a punch
+Deleting experiment: 2
+Data has a 40.0 chance of being a punch
+Deleting experiment: 5
+Data has a 86.49 chance of being a punch
+An unhandled exception is being displayed to the end user
+Traceback (most recent call last):
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/christophersamiullah/repos/sensor_readings/venv/lib/python2.7/site-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/christophersamiullah/repos/sensor_readings/app/sensors/views.py", line 95, in display_id
+    info_label = info_label.label
+UnboundLocalError: local variable 'info_label' referenced before assignment
+Data has a 86.49 chance of being a punch
+Data has a 86.49 chance of being a punch
+Data has a 86.49 chance of being a punch
+Data has a 4.44 chance of being a punch
+Data has a 0.0 chance of being a punch

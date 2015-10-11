@@ -6,7 +6,7 @@ from random import choice
 from time import mktime
 
 import pandas as pd
-from flask import (Blueprint, current_app, Markup, Response, abort, flash, jsonify,
+from flask import (abort, Blueprint, current_app, Markup, Response, abort, flash, jsonify,
                    redirect, render_template, request, session, url_for)
 from numpy import genfromtxt
 from werkzeug import secure_filename
@@ -79,7 +79,7 @@ def display():
     else:
         return '404'
 
-@sensors.route('/display/<int:id>', methods=['GET', 'POST'])
+@sensors.route('/display/<int:id>', methods=['GET', 'POST', 'DELETE'])
 def display_id(id):
     if request.method == 'GET':
         query = db.session.query(Sensor)
@@ -91,6 +91,8 @@ def display_id(id):
                                 "Time_since_start", "state", "timestamp", "prediction"]]
         experiment_number = pd.unique(df2.experiment_id.values)
 
+        _info_label = Experiment.query.filter_by(id=id).first()
+        info_label = _info_label.label
         # if prediction has been run, calculate summary stats
 
         if None in df2.prediction.values:
@@ -110,7 +112,7 @@ def display_id(id):
 
         print average
         return render_template('sensors/file_details.html', experiment_number=experiment_number[0], 
-            db_index_choice=db_index_choice.to_html(), id=id, average=average)
+            db_index_choice=db_index_choice.to_html(), id=id, average=average, info_label=info_label)
     elif request.method == 'POST':
         try:
             updated_df = my_svm(id)         
@@ -120,6 +122,22 @@ def display_id(id):
             return {'error': e}, 500
 
         return 'made a prediction', 200
+
+    elif request.method == 'DELETE':
+        #import pdb; pdb.set_trace()
+        print 'delete request received'
+        try:
+            Experiment.query.filter_by(id=id).delete()
+            Sensor.query.filter_by(experiment_id=id).delete()
+            current_app.logger.debug('Deleting experiment: {}'.format(id))
+            db.session.commit()
+        except Exception as e:
+            current_app.logger.debug('Error deleting experiment: {}, {}'.format(id, e))
+            abort(500)
+        if id:
+            return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+        else:
+            abort(500)
     else:
         return '404'
 

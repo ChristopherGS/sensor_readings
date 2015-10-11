@@ -2,7 +2,6 @@ html {
   font: 62.5%/1.65 "Open Sans",sans-serif;
 }
 
-
 body {
   color: #3c4043;
 }
@@ -338,7 +337,7 @@ h3 {
 
 /* GUIDE PAGE */
 
-ol {
+ol, li {
   display: list-item;
   list-style-position: inside;
   list-style-type: circle;

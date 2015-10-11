@@ -11,8 +11,10 @@
             <li class="db_item"><a id="link{{index}}"class="db_item_link" href="{{ url_for('sensors.display')}}/{{index}}">{{label}}</a></li>
             {% if label != "unknown" %}
                 <button data-id={{index}} class="upload_label">Update label</button>
+                <button data-id={{index}} class="delete_experiment">Delete experiment</button>
             {% else %}
                 <button data-id={{index}} class="upload_label">Add label</button>
+                <button data-id={{index}} class="delete_experiment">Delete experiment</button>
             {% endif %}
 
     {% endfor %}
@@ -35,6 +37,7 @@
 
 <script type="text/javascript">
         $(document).ready(function(){
+            $("body").removeClass(".loading");
             $(".upload_label").on("click", function(e){
                 var name = prompt("Enter the new label");
                 var id = $(this).data('id');
@@ -47,6 +50,31 @@
                     $(id_string).text(data);
                 });
             });
+
+            $(".delete_experiment").on("click", function(e){
+                var result = confirm("Delete experiment from the database?");
+                $("body").addClass(".loading");
+                if (result) {
+                    var id = $(this).data('id');
+                    console.log(id);
+                    $.ajax({
+                        url: "{{ url_for('sensors.display')}}"+"/"+id, 
+                        type: "DELETE", 
+                        success: function(response){
+                            console.log(response);
+                            $("body").removeClass(".loading");
+                            window.location.href = '/display';
+                        }, error (xhr, status, error){
+                            $("body").removeClass(".loading");
+                            alert(xhr.responseText);
+                        }
+                    });
+                } else {
+                    $("body").removeClass(".loading");
+                    console.log('cancelled');
+                }  
+            });
+
         });
 
 </script>
