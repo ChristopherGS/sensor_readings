@@ -8,9 +8,11 @@ import pylab as pl
 from yahmm import *
 import random
 import math
+import itertools
 
 from sklearn import svm
 
+from flask import current_app
 from app.data import db, query_to_list
 from app.sensors.models import Experiment, Sensor
 
@@ -42,7 +44,6 @@ def pandas_cleanup(df):
     df_clean = df[['ACCELEROMETER_X', 'ACCELEROMETER_Y', 'ACCELEROMETER_Z', 'timestamp', 'experiment_id']]
     return df_clean
 
-
 columns = ['ACCELEROMETER_X',
             'ACCELEROMETER_Y',
             'ACCELEROMETER_Z',
@@ -72,11 +73,8 @@ df_punch2 = pd.read_csv(TRAIN_DATA2, skiprows=[0], names=columns)
 df_non_punch = pd.read_csv(TRAIN_DATA3, skiprows=[0], names=columns)
 
 df_train = pd.concat([df_punch, df_punch2, df_non_punch], ignore_index=True)
-print 'train dataframe has length: {}'.format(len(df_train))
-
 df_test = pd.read_csv(TEST_DATA, skiprows=[0], names=columns)
 
-print 'test dataframe has length: {}'.format(len(df_test))
 
 def my_svm(id):
 
@@ -85,7 +83,6 @@ def my_svm(id):
     an array X of size [n_samples, n_features] holding the training samples, 
     and an array y of class labels (strings or integers), size [n_samples]:
     """
-
     #=============================
     #TRAINING - TODO: MOVE THIS!!!
     #=============================
@@ -95,26 +92,21 @@ def my_svm(id):
     x3 = df_train['ACCELEROMETER_Z'].values
 
     y = df_train['state'].values
-
     X = np.column_stack([x1, x2, x3])
 
     clf = svm.SVC()
     clf.fit(X, y)
 
-
     #=============================
-    #RUN DATA AGAINST THE MODEL
+    # RUN DATA AGAINST THE MODEL
     #=============================
 
-    # Load the pandas dataframe from the DB using the id
+    # Load the pandas dataframe from the DB using the experiment id
     pandas_id = id
-    print 'PANDAS ID: {}'.format(pandas_id)
+    current_app.logger.debug('Preparing to make prediction for experiment: {}'.format(pandas_id))
+
     query = db.session.query(Sensor).filter(Sensor.experiment_id == pandas_id)
     df = pd.read_sql_query(query.statement, query.session.bind)
-
-
-    #'SELECT * FROM sensor WHERE experiment_id == 4'
-    print len(df)
 
     _x1 = df['ACCELEROMETER_X'].values
     _x2 = df['ACCELEROMETER_Y'].values
@@ -125,93 +117,18 @@ def my_svm(id):
     my_prediction = clf.predict(_X)
     prediction_df = pd.DataFrame(my_prediction, columns=['prediction'])
 
-    df['prediction'] = my_prediction
+    prediction_df = prediction_df.replace(to_replace="1", value="punch") # 1 = punch
+    prediction_df = prediction_df.replace(to_replace=0, value="other") # to check, why is 0 not a string?
+    df['prediction'] = prediction_df['prediction']
 
-    print len(df)
-    print len(my_prediction)
+    current_app.logger.debug('DF length is: {}, which should match the number of predictions: {}'.format(len(df), len(prediction_df)))
+    prediction_input2 = df.values.tolist()
 
-    df.to_sql('sensor', query.session.bind, flavor='sqlite', index=False, if_exists='replace')
+    for obj, new_value in itertools.izip(query, prediction_input2):
+        obj.prediction = new_value[22] # 22nd column is the prediction
+        db.session.add(obj)
+   
+    db.session.commit()
 
-    return df
-
-    # 1 = punch
-    # 0 = other
-
-
-def non_db_svm(id):
-
-    """
-    As other classifiers, SVC, NuSVC and LinearSVC take as input two arrays:
-    an array X of size [n_samples, n_features] holding the training samples, 
-    and an array y of class labels (strings or integers), size [n_samples]:
-    """
-
-    #=============================
-    #TRAINING - TODO: MOVE THIS!!!
-    #=============================
-
-    x1 = df_train['ACCELEROMETER_X'].values
-    x2 = df_train['ACCELEROMETER_Y'].values
-    x3 = df_train['ACCELEROMETER_Z'].values
-
-    y = df_train['state'].values
-
-    X = np.column_stack([x1, x2, x3])
-
-    clf = svm.SVC()
-    clf.fit(X, y)
-
-
-    #=============================
-    #TRAINING - TODO: MOVE THIS!!!
-    #=============================
-
-    # Load the pandas dataframe from the DB using the id
-
-    _x1 = df_test['ACCELEROMETER_X'].values
-    _x2 = df_test['ACCELEROMETER_Y'].values
-    _x3 = df_test['ACCELEROMETER_Z'].values
-
-    _X = np.column_stack([_x1, _x2, _x3])
-
-    my_prediction = clf.predict(_X)
-
-    # CHECK PREDICTION ACCURACY
-
-    prediction_df = pd.DataFrame(my_prediction, columns=['state'])
-    my_test = df_test['state']
-    my_real_test = pd.DataFrame(my_test, columns=['state'])
-
-    ne = (my_real_test != prediction_df).any(1)
-    ne_stacked = (my_real_test != prediction_df).stack()
-    changed = ne_stacked[ne_stacked]
-    changed.index.names = ['id', 'col']
-
-    print changed
-
-    difference_locations = np.where(my_real_test != prediction_df)
-
-    correct_state = my_real_test.values[difference_locations]
-
-    predicted_state = prediction_df.values[difference_locations]
-
-    summary_df = pd.DataFrame({'correct_state': correct_state, 'predicted_state': predicted_state}, index=changed.index)
-
-    print summary_df
-
-    incorrect = float(len(correct_state))
-    total = float(len(my_prediction))
-
-    print incorrect
-    print total
-    
-    accuracy = float(incorrect/total) * 100
-
-    print 'model accuracy is: {}%'.format(100-accuracy)
-
-
-    # 1 = punch
-    # 0 = other
-
-
+    return 'prediction made'
 

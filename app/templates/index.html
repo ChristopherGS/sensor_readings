@@ -2,12 +2,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Experiments with wearable data...</h1>
 
-    <p>This tool allows you to upload sensor data and run motion analysis on the data</p>
+	<div class="home">
+	    <h1 clas"text-center">Experiments with wearable data...</h1>
 
-    <p>The tool is still work in progress - please see the guide for more information</p>
+	    <p class="text-center">Analyze motion data from sensors</p>
 
-    <p>Github pull requests are welcome!</p>
+	    <button class="green-button"><a href="{{ url_for('sensors.guide') }}">View Guide</button>
+	    <button class="green-button"><a href="{{ url_for('sensors.csv_route') }}">Upload a File</button>
+
+
+	    <p class="text-center">The tool is still work in progress <br> Github pull requests are welcome!</p>
+
+	</div>
     
 {% endblock %}

@@ -38,6 +38,10 @@ def csv_route():
 def complete():
      return render_template('sensors/complete.html')
 
+@sensors.route('/guide')
+def guide():
+     return render_template('sensors/guide.html')
+
 @sensors.route('/display', methods=['GET', 'POST'])
 def display():
     if request.method == 'GET':
@@ -83,13 +87,15 @@ def display_id(id):
         df = pd.read_sql_query(query.statement, query.session.bind)
         pandas_id = id
         df2 = df[df.experiment_id == pandas_id]
-        db_index_choice = df2
+        db_index_choice = df2[["ACCELEROMETER_X", "ACCELEROMETER_Y", "ACCELEROMETER_Z",
+                                "GYROSCOPE_X", "GYROSCOPE_Y","GYROSCOPE_Z",
+                                "Time_since_start", "state", "timestamp", "prediction"]]
         experiment_number = pd.unique(df2.experiment_id.values)
         return render_template('sensors/file_details.html', experiment_number=experiment_number[0], 
             db_index_choice=db_index_choice.to_html(), id=id)
     elif request.method == 'POST':
         try:
-            updated_df = my_svm(id)
+            updated_df = my_svm(id)         
             # save to DB
         except Exception as e:
             current_app.logger.debug('Error running model: {}'.format(e))

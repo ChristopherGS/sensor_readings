@@ -15,26 +15,30 @@
                     contentType: false,
                     cache: false,
                     processData: false,
-                    async: false,
-                    success: function(data) {
-                        alert('Form uploaded successfully');
-                        window.location.href = '/display';
-                    },
-                    error: function(error) {
-                        alert('There was an error, please try again');
-
-                    }
+                    async: false
+                })
+                .always(function(){
+                    console.log('always');
+                })
+                .fail(function(){
+                    alert('There was an error, please try again');
+                })
+                .done(function(){
+                    alert('Form uploaded successfully');
+                    window.location.href = '/display';
                 });
             });
         });
 
     </script>
-    <h1>Sensor Upload Page</h1>
+    <h2>Sensor Upload Page</h2>
 
     <form id="upload-file" class="postform" method=POST enctype=multipart/form-data action="">
-        <input type="file" name="file">
+
+            <input type="file" name="file">
+ 
         <fieldset>
-            <button id="upload-file-btn" type="button">Upload</button>
+            <button class="green-button upload" id="upload-file-btn" type="button">Upload</button>
         </fieldset>
     </form>
 

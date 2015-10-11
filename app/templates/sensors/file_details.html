@@ -10,7 +10,7 @@
     	{{ db_index_choice | safe }}
     </div>
 
-    <div>Sensor Data:
+    <div class="conv-nav">Sensor Data:
         <a href="{{ url_for('sensors.index') }}">Home</a>
         | <a href="{{ url_for('sensors.csv_route') }}">Upload File</a>
         | <a href="{{ url_for('sensors.display') }}">View Uploads</a>
@@ -18,13 +18,28 @@
 
 <script type="text/javascript">
         $(document).ready(function(){
+            $("body").removeClass("loading");
+            var predictions = $('th').filter(function () {
+                return $(this).html() == "prediction"; 
+            }).val();
+
+            console.log(predictions);
+
+            var predictions = $(".sensorTableContainer table").find("th").last().val();
+
+            console.log($(predictions));
+
+            //if (predictions$(predictions).addClass("predictionMade");
+
             $(".dataScience").on("click", function(e){
+                $("body").addClass("loading");
                 var experiment_id = $(this).data('id');
                 $.post("{{ url_for('sensors.display')}}/{{experiment_number}}", {
                     id: experiment_id
                 }, function(data){
-                    console.log(data)
-                    window.location.href = '/display/{{experiment_number}}'
+                    $("body").removeClass("loading");
+                    console.log(data)    
+                    window.location.href = '/display/{{experiment_number}}';
                 });
             });
         });

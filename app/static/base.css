@@ -101,8 +101,12 @@ body {
 }
 
 
+/* HOME */
+
 h1 {
   color: #35393b;
+  margin-bottom: 2% auto;
+  text-align: center;
   font-weight: 800;
     font-size: 6rem;
     letter-spacing: -2px;
@@ -127,6 +131,115 @@ h2 {
   margin: 0 auto 4.5rem auto;
   line-height: 1.5em;
   font-weight: 200;
+}
+
+
+/* BUTTON */
+  .green-button {
+    width: 135px;
+    height: 40px;
+    margin: 2.5% auto;
+    padding: 0 10px;
+    /* float: right; */
+    font-size: 1.4rem;
+    -webkit-transition: background 0.2s;
+    -moz-transition: background 0.2s;
+    transition: background 0.2s;
+    background: #9fbb58;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    min-height: 35px;
+    width: auto;
+    display: block;
+    padding: 0.9em 1.37em;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+    color: #fff;
+    font-size: 11px;
+    line-height: 13px;
+    font-weight: 300;
+    text-align: center;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: none;
+    border-radius: 0.3rem;
+    border: rgba(0,0,0,0.05) 0.1em solid;
+  }
+
+  .upload {
+    float: left;
+  }
+
+  .green-button:hover {
+    background: #677934;
+  }
+
+  .green-button a {
+    color: #fff;
+    cursor: pointer;
+    font-weight: 300; 
+  }
+
+  .green-button a:hover{
+    text-decoration: none
+  }
+
+/* FORM STYLES */
+
+
+#upload-file{
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 0 6rem 0;
+  display: block;
+}
+
+#upload-file fieldset {
+  float: left;
+  width: calc(100% - 135px);
+  margin: 0;
+}
+
+#upload-file label {
+  position: relative;
+  width: calc(50% - 10px);
+  padding: 0;
+  margin: 0;
+  margin-right: 10px;
+  float: left;
+
+}
+
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    min-width: 10%;
+    min-height: 10%;
+    font-size: 1em;
+    text-align: left;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+
+/* TABLE STYLES */
+
+.sensorTableContainer {
+  margin-bottom: 3%;
+}
+
+.conv-nav {
+  margin-bottom: 5%;
 }
 
 
@@ -157,6 +270,10 @@ h2 {
 .axis text {
     font-family: Lato;
     font-size: 13px;
+}
+
+#visualisation {
+  margin-bottom: 10%;
 }
 
 
@@ -220,7 +337,7 @@ LOADING MODAL STYLES
     height:     100%;
     width:      100%;
     background: rgba( 255, 255, 255, 0.8 )
-        url("../ajax-loader.gif")
+        url("../static/ajax-loader.gif")
                 50% 50% 
                 no-repeat;
 }
