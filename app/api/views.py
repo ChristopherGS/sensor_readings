@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 from app.sensors.models import Experiment, Sensor
 from werkzeug import secure_filename
 from datetime import datetime
@@ -31,8 +32,51 @@ def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
-def Load_Data(file_name):
-    data = pd.read_table(file_name, header=None, skiprows=1, delimiter=',', encoding='iso-8859-1') 
+def Load_Data(file_name, android_status):
+    #import pdb; pdb.set_trace()
+    if android_status == True:
+        current_app.logger.debug('processing Android file')
+        df = pd.read_csv(file_name, names=['initial'])
+
+        data = pd.DataFrame(df.index.tolist(), columns=['ACCELEROMETER_X', 'ACCELEROMETER_Y', 'ACCELEROMETER_Z'])
+        data = data.applymap(str)
+        data = data.apply(lambda s: s.str.replace('(', ''))
+        data = data.apply(lambda s: s.str.replace(')', ''))
+
+        current_app.logger.debug(data)
+        #sLength = len(data['initial'])
+        # split the tuples
+
+        print data.index
+
+        #data.loc[:,'ACCELEROMETER_X'] = pd.Series(np.random.randn(sLength), index=data.index)
+        #data.loc[:,'ACCELEROMETER_Y'] = pd.Series(np.random.randn(sLength), index=data.index)
+        #data.loc[:,'ACCELEROMETER_Z'] = pd.Series(np.random.randn(sLength), index=data.index)
+
+        data = data.reindex(columns=['ACCELEROMETER_X',
+            'ACCELEROMETER_Y',
+            'ACCELEROMETER_Z',
+            'GRAVITY_X',
+            'GRAVITY_Y',
+            'GRAVITY_Z',
+            'LINEAR_ACCELERATION_X',
+            'LINEAR_ACCELERATION_Y',
+            'LINEAR_ACCELERATION_Z',
+            'GYROSCOPE_X',
+            'GYROSCOPE_Y',
+            'GYROSCOPE_Z', 
+            'MAGNETIC_FIELD_X',
+            'MAGNETIC_FIELD_Y',
+            'MAGNETIC_FIELD_Z',
+            'ORIENTATION_Z',
+            'ORIENTATION_X',
+            'ORIENTATION_Y',
+            'Time_since_start',
+            'timestamp'])
+
+    else:
+        data = pd.read_table(file_name, header=None, skiprows=1, delimiter=',', encoding='iso-8859-1') 
+
     return data.values.tolist()
 
 
@@ -62,8 +106,18 @@ class CsvSimple(Resource):
             return {"error": e}, 500
 
         # now test if it is a file or not
+        ANDROID = False
         try:
-            file = request.files['a_file']
+            if request.files['android_file']:
+                file = request.files['android_file']
+                ANDROID = True
+            elif request.files['a_file']:
+                file = request.files['a_file']
+                
+            else:
+                current_app.logger.debug('file recognition failed')
+                raise AssertionError("Unexpected value of request files", request.files)
+
         except Exception as e:
             current_app.logger.debug('this is not a file: {}'.format(e))
             current_app.logger.debug(request.form)
@@ -71,6 +125,7 @@ class CsvSimple(Resource):
 
         if file and allowed_file(file.filename):
             print "allowed_file"
+            
             filename = secure_filename(file.filename)
             file.save(UPLOAD_FOLDER + '/' + filename)
 
@@ -82,7 +137,8 @@ class CsvSimple(Resource):
                 file_name = filename
                 
                 # note that Load_Data expects a correctly formatted file - expects columns
-                data = Load_Data(os.path.join(UPLOAD_FOLDER, file_name))
+                data = Load_Data(os.path.join(UPLOAD_FOLDER, file_name), ANDROID)
+                current_app.logger.debug(data)
                 count = 0 
 
                 for i in data:
