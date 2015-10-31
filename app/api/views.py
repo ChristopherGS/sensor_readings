@@ -33,7 +33,7 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 def Load_Data(file_name, android_status):
-    #import pdb; pdb.set_trace()
+    
     if android_status == True:
         current_app.logger.debug('processing Android file')
         df = pd.read_csv(file_name, names=['initial'])
@@ -44,14 +44,6 @@ def Load_Data(file_name, android_status):
         data = data.apply(lambda s: s.str.replace(')', ''))
 
         current_app.logger.debug(data)
-        #sLength = len(data['initial'])
-        # split the tuples
-
-        print data.index
-
-        #data.loc[:,'ACCELEROMETER_X'] = pd.Series(np.random.randn(sLength), index=data.index)
-        #data.loc[:,'ACCELEROMETER_Y'] = pd.Series(np.random.randn(sLength), index=data.index)
-        #data.loc[:,'ACCELEROMETER_Z'] = pd.Series(np.random.randn(sLength), index=data.index)
 
         data = data.reindex(columns=['ACCELEROMETER_X',
             'ACCELEROMETER_Y',
@@ -96,6 +88,7 @@ class CsvSimple(Resource):
     def get(self):
         return {"message":"hello"}, 200
     def post(self):
+        import pdb; pdb.set_trace()
         # first test if the data is anything at all
         try:
             all_data = request.get_data()
