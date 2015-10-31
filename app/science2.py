@@ -213,9 +213,11 @@ def check_sequence(dataframe, index_value):
     # so the idea here is that we must be approaching the end of a punch sequence
     # therefore it is safe to count it
 
-    if ((dataframe.iloc(next_value) == 'straight punch') & (dataframe.iloc(next_next_value) != 'straight punch')):
+    if ((dataframe[next_value] == 'straight punch') & (dataframe[next_next_value] != 'straight punch')):
+        print "YES"
         return True
     else: 
+        print "NO"
         return False
 
 def find_sequence_end(dataframe, start_index):
@@ -243,15 +245,16 @@ def count_calculator(df):
         first_value = df[df == 'straight punch'].index[0]
         print first_value
 
-        # loop through all the indices of punches
-        for value in sp_values:
-            #print 'index: {}, value: {}'.format(value, df[value])
-            tick = check_sequence(value)
-            if tick:
-                counter += 1
     except Exception as e:
         current_app.logger.debug('Error calculating punch numbers: {}'.format(e))
         counter = 0
+
+    # loop through all the indices of punches
+    for value in sp_values:
+        #print 'index: {}, value: {}'.format(value, df[value])
+        tick = check_sequence(df, value)
+        if tick == True:
+            counter += 1
 
     return counter
 
