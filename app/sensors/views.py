@@ -13,7 +13,7 @@ from werkzeug import secure_filename
 from werkzeug.exceptions import default_exceptions, HTTPException
 
 from app.data import db, query_to_list
-from app.science2 import pandas_cleanup, sql_to_pandas, my_svm
+from app.science2 import pandas_cleanup, sql_to_pandas, my_svm, count_calculator
 
 from .models import Experiment, Sensor
 
@@ -97,24 +97,37 @@ def display_id(id):
         # if prediction has been run, calculate summary stats
         print df2.prediction.values
 
-        if (('punch' not in df2.prediction.values) & ('other' not in df2.prediction.values)): 
-            average = 'n/a'        
+        if (('straight punch' not in df2.prediction.values) & ('other' not in df2.prediction.values) & ('hook punch' not in df2.prediction.values)): 
+            average = 'n/a'
+            straight_average = 'n/a'
+            hook_average = 'n/a'
+            punch_count = 0
         else:
-            calc_punches = len(df2[df2['prediction']=='punch'])
+            calc_straight_punch = len(df2[df2['prediction']=='straight punch'])
+            calc_hook_punch = len(df2[df2['prediction']=='hook punch'])
+            calc_punches = calc_straight_punch + calc_hook_punch
             calc_total = len(df2['prediction'])
+            punch_count = count_calculator(df2['prediction'])
             try:
                 _average = (float(calc_punches)/float(calc_total))*100
+                _straight_average = (float(calc_straight_punch)/float(calc_total))*100
+                _hook_average = (float(calc_hook_punch)/float(calc_total))*100
                 average = float("{0:.2f}".format(_average))
+                straight_average = float("{0:.2f}".format(_straight_average))
+                hook_average = float("{0:.2f}".format(_hook_average))
                 current_app.logger.debug('Data has a {} chance of being a punch'.format(average))
             except Exception as e:
                 if ((e == ZeroDivisionError) & (calc_punches == 0)):
                     average = 0
+                    straight_average = 0
+                    hook_average = 0
                 else:
                     return render_template('errors/generic.html'), 500
 
         print average
         return render_template('sensors/file_details.html', experiment_number=experiment_number[0], 
-            db_index_choice=db_index_choice.to_html(), id=id, average=average, info_label=info_label)
+            db_index_choice=db_index_choice.to_html(), id=id, average=average, straight_average=straight_average, 
+            hook_average=hook_average, info_label=info_label, punch_count=punch_count)
     elif request.method == 'POST':
         try:
             updated_df = my_svm(id)         

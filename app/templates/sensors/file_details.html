@@ -21,6 +21,9 @@
             <h3>Calculated chance that motion is a punch: <span id="predictionDetail">n/a</span></h3>
         {% else %}
             <h3>Calculated chance that motion is a punch: <span id="predictionDetail">{{average}}%</span></h3>
+            <h3>Calculated chance that motion is a straight punch: <span class="predictionDetail">{{straight_average}}%</span></h3>
+            <h3>Calculated chance that motion is a hook punch: <span class="predictionDetail">{{hook_average}}%</span></h3>
+            <h3>Number of punches during this workout: <span class="predictionDetail">{{punch_count}}</span></h3>
         {% endif %}
     </div>
 

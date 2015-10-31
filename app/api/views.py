@@ -88,8 +88,8 @@ class CsvSimple(Resource):
     def get(self):
         return {"message":"hello"}, 200
     def post(self):
-        import pdb; pdb.set_trace()
         # first test if the data is anything at all
+        current_app.logger.debug('received post request')
         try:
             all_data = request.get_data()
             current_app.logger.debug('____api received_____ {}'.format(all_data))

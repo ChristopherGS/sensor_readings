@@ -39,9 +39,17 @@ filename3 = 'MBIENT_straightPunchtraining3_chris.csv'
 non_punch_filename = 'MBIENT_trainingGeneralMovement.csv'
 non_punch_filename2 = 'MBIENT_generalMotionTraining_chris.csv'
 
+hook_punch_filename = 'MBIENT_hookPunch_chris.csv'
+hook_punch_filename2 = 'MBIENT_hookpunchTraining_chris.csv'
+hook_punch_filename3 = 'MBIENT_hookpunchTraining2.csv'
+
 TRAIN_DATA = UPLOAD_FOLDER + '/punch/' + filename
 TRAIN_DATA4 = UPLOAD_FOLDER + '/punch/' + filename2
 TRAIN_DATA5 = UPLOAD_FOLDER + '/punch/' + filename3
+TRAIN_DATA6 = UPLOAD_FOLDER + '/punch/' + hook_punch_filename
+TRAIN_DATA7 = UPLOAD_FOLDER + '/punch/' + hook_punch_filename2
+TRAIN_DATA8 = UPLOAD_FOLDER + '/punch/' + hook_punch_filename3
+
 TRAIN_DATA2 = UPLOAD_FOLDER + '/non_punch/' + non_punch_filename
 TRAIN_DATA3 = UPLOAD_FOLDER + '/non_punch/' + non_punch_filename2
 
@@ -99,6 +107,11 @@ def set_non_punch(my_df):
     non_punch_final_df = my_df
     return non_punch_final_df
 
+def set_hook_punch(hook_df):
+    hook_df['state'] = 2
+    hook_punch_final_df = hook_df
+    return hook_punch_final_df
+
 df_punch = pd.read_csv(TRAIN_DATA, skiprows=[0], names=['initial'])
 df_punch = clean_up(df_punch)
 df_punch = set_straight_punch(df_punch)
@@ -111,6 +124,18 @@ df_punch3 = pd.read_csv(TRAIN_DATA5, skiprows=[0], names=['initial'])
 df_punch3 = clean_up(df_punch3)
 df_punch3 = set_straight_punch(df_punch3)
 
+df_hook_punch = pd.read_csv(TRAIN_DATA6, skiprows=[0], names=['initial'])
+df_hook_punch = clean_up(df_hook_punch)
+df_hook_punch = set_hook_punch(df_hook_punch)
+
+df_hook_punch2 = pd.read_csv(TRAIN_DATA7, skiprows=[0], names=['initial'])
+df_hook_punch2 = clean_up(df_hook_punch2)
+df_hook_punch2 = set_hook_punch(df_hook_punch2)
+
+df_hook_punch3 = pd.read_csv(TRAIN_DATA8, skiprows=[0], names=['initial'])
+df_hook_punch3 = clean_up(df_hook_punch3)
+df_hook_punch3 = set_hook_punch(df_hook_punch3)
+
 df_non_punch2 = pd.read_csv(TRAIN_DATA2, skiprows=[0], names=['initial'])
 df_non_punch2 = clean_up(df_non_punch2)
 df_non_punch2 = set_non_punch(df_non_punch2)
@@ -119,7 +144,7 @@ df_non_punch = pd.read_csv(TRAIN_DATA3, skiprows=[0], names=['initial'])
 df_non_punch = clean_up(df_non_punch)
 df_non_punch = set_non_punch(df_non_punch)
 
-df_train = pd.concat([df_punch, df_punch2, df_punch3, df_non_punch2, df_non_punch], ignore_index=True)
+df_train = pd.concat([df_punch, df_punch2, df_punch3, df_hook_punch, df_hook_punch2, df_hook_punch3, df_non_punch2, df_non_punch], ignore_index=True)
 # df_test = pd.read_csv(TEST_DATA, skiprows=[0], names=columns)
 
 def my_svm(id):
@@ -164,7 +189,8 @@ def my_svm(id):
     my_prediction = clf.predict(_X)
     prediction_df = pd.DataFrame(my_prediction, columns=['prediction'])
 
-    prediction_df = prediction_df.replace(to_replace="1", value="punch") # 1 = punch
+    prediction_df = prediction_df.replace(to_replace="1", value="straight punch") # 1 = straight punch
+    prediction_df = prediction_df.replace(to_replace=2, value="hook punch") # 2 = hook punch
     prediction_df = prediction_df.replace(to_replace=0, value="other") # to check, why is 0 not a string?
     df['prediction'] = prediction_df['prediction']
 
@@ -179,4 +205,53 @@ def my_svm(id):
     db.session.commit()
 
     return 'prediction made'
+
+def check_sequence(dataframe, index_value):
+    next_value = index_value + 1
+    next_next_value = index_value + 2
+    
+    # so the idea here is that we must be approaching the end of a punch sequence
+    # therefore it is safe to count it
+
+    if ((dataframe.iloc(next_value) == 'straight punch') & (dataframe.iloc(next_next_value) != 'straight punch')):
+        return True
+    else: 
+        return False
+
+def find_sequence_end(dataframe, start_index):
+    pass
+
+def count_calculator(df):
+    """
+    takes the ML predictions and attempts to distinguish individual
+    motions (in this case punches) from the patterns therein
+    """
+    print type(df)
+    print len(df)
+
+    counter = 0
+
+    # ========================================================
+    # Look for a sequence of 3 straight punches in a row to 
+    # signify the beginning of a single punch
+    # ========================================================
+    try: 
+        sp_values = df[df == 'straight punch'].index
+        print 'number of straight punch values {}'.format(len(sp_values))
+
+        # This gets us the index of the first straight punch value
+        first_value = df[df == 'straight punch'].index[0]
+        print first_value
+
+        # loop through all the indices of punches
+        for value in sp_values:
+            #print 'index: {}, value: {}'.format(value, df[value])
+            tick = check_sequence(value)
+            if tick:
+                counter += 1
+    except Exception as e:
+        current_app.logger.debug('Error calculating punch numbers: {}'.format(e))
+        counter = 0
+
+    return counter
 
