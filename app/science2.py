@@ -207,18 +207,40 @@ def my_svm(id):
     return 'prediction made'
 
 def check_sequence(dataframe, index_value):
-    next_value = index_value + 1
-    next_next_value = index_value + 2
-    
-    # so the idea here is that we must be approaching the end of a punch sequence
-    # therefore it is safe to count it
+    is_punch = []
+    punch = ('straight punch','hook punch')
+    prev_value = index_value - 1
+    n_2 = index_value - 2
+    n_3 = index_value - 3
+    n_4 = index_value - 4
 
-    if ((dataframe[next_value] == 'straight punch') & (dataframe[next_next_value] != 'straight punch')):
-        print "YES"
-        return True
+    next_value = index_value + 1
+    n2 = index_value + 2
+    n3 = index_value + 3
+    n4 = index_value + 4
+    
+
+    forward_chain = [next_value, n2, n3, n4]
+    back_chain = [prev_value, n_2, n_3, n_4]
+
+    for f_value in forward_chain:
+        if (dataframe[f_value] not in punch):
+            is_punch.append(True)
+        else: 
+            is_punch.append(False)
+
+    for b_value in back_chain:
+        if (dataframe[b_value] in punch):
+            is_punch.append(True)
+        else:
+            is_punch.append(False)
+
+    if False in is_punch:
+         return False
     else: 
-        print "NO"
-        return False
+        print 'punch detected for: {}'.format(index_value)
+        return True
+        
 
 def find_sequence_end(dataframe, start_index):
     pass
@@ -251,10 +273,14 @@ def count_calculator(df):
 
     # loop through all the indices of punches
     for value in sp_values:
-        #print 'index: {}, value: {}'.format(value, df[value])
         tick = check_sequence(df, value)
         if tick == True:
             counter += 1
+
+
+    print 'TEST: {}'.format(df[6557])
+    print 'TEST: {}'.format(df[6556])
+    print 'TEST: {}'.format(df[6558])
 
     return counter
 
