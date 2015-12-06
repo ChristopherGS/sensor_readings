@@ -14,6 +14,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException
 
 from app.data import db, query_to_list
 from app.science2 import pandas_cleanup, sql_to_pandas, my_svm, count_calculator
+from app.science3 import run_science
 
 from .models import Experiment, Sensor
 
@@ -28,6 +29,7 @@ UPLOAD_FOLDER = os.path.join(_basedir, UPLOADS)
 @sensors.route("/")
 @sensors.route("/index")
 def index():
+    run_science()
     return render_template("index.html")
 
 @sensors.route('/csv')
