@@ -35,9 +35,11 @@ mix_filename = 'mix_labelled_pt1.csv'
 filename = 'MBIENT_straightPunch_chris.csv'
 filename2 = 'MBIENT_straightPunchtraining2_chris.csv'
 filename3 = 'MBIENT_straightPunchtraining3_chris.csv'
+filename4 = 'MBIENT_straightPunchtraining4_chris.csv'
 
 non_punch_filename = 'MBIENT_trainingGeneralMovement.csv'
 non_punch_filename2 = 'MBIENT_generalMotionTraining_chris.csv'
+non_punch_filename3 = 'MBIENT_gmt3.csv'
 
 hook_punch_filename = 'MBIENT_hookPunch_chris.csv'
 hook_punch_filename2 = 'MBIENT_hookpunchTraining_chris.csv'
@@ -46,12 +48,14 @@ hook_punch_filename3 = 'MBIENT_hookpunchTraining2.csv'
 TRAIN_DATA = UPLOAD_FOLDER + '/punch/' + filename
 TRAIN_DATA4 = UPLOAD_FOLDER + '/punch/' + filename2
 TRAIN_DATA5 = UPLOAD_FOLDER + '/punch/' + filename3
+TRAIN_DATA10 = UPLOAD_FOLDER + '/punch/' + filename4
 TRAIN_DATA6 = UPLOAD_FOLDER + '/punch/' + hook_punch_filename
 TRAIN_DATA7 = UPLOAD_FOLDER + '/punch/' + hook_punch_filename2
 TRAIN_DATA8 = UPLOAD_FOLDER + '/punch/' + hook_punch_filename3
 
 TRAIN_DATA2 = UPLOAD_FOLDER + '/non_punch/' + non_punch_filename
 TRAIN_DATA3 = UPLOAD_FOLDER + '/non_punch/' + non_punch_filename2
+TRAIN_DATA9 = UPLOAD_FOLDER + '/non_punch/' + non_punch_filename3
 
 
 
@@ -124,6 +128,10 @@ df_punch3 = pd.read_csv(TRAIN_DATA5, skiprows=[0], names=['initial'])
 df_punch3 = clean_up(df_punch3)
 df_punch3 = set_straight_punch(df_punch3)
 
+df_punch4 = pd.read_csv(TRAIN_DATA10, skiprows=[0], names=['initial'])
+df_punch4 = clean_up(df_punch4)
+df_punch4 = set_straight_punch(df_punch4)
+
 df_hook_punch = pd.read_csv(TRAIN_DATA6, skiprows=[0], names=['initial'])
 df_hook_punch = clean_up(df_hook_punch)
 df_hook_punch = set_hook_punch(df_hook_punch)
@@ -140,11 +148,15 @@ df_non_punch2 = pd.read_csv(TRAIN_DATA2, skiprows=[0], names=['initial'])
 df_non_punch2 = clean_up(df_non_punch2)
 df_non_punch2 = set_non_punch(df_non_punch2)
 
+df_non_punch3 = pd.read_csv(TRAIN_DATA9, skiprows=[0], names=['initial'])
+df_non_punch3 = clean_up(df_non_punch3)
+df_non_punch3 = set_non_punch(df_non_punch3)
+
 df_non_punch = pd.read_csv(TRAIN_DATA3, skiprows=[0], names=['initial'])
 df_non_punch = clean_up(df_non_punch)
 df_non_punch = set_non_punch(df_non_punch)
 
-df_train = pd.concat([df_punch, df_punch2, df_punch3, df_hook_punch, df_hook_punch2, df_hook_punch3, df_non_punch2, df_non_punch], ignore_index=True)
+df_train = pd.concat([df_punch, df_punch2, df_punch3, df_punch4, df_hook_punch, df_hook_punch2, df_hook_punch3, df_non_punch2, df_non_punch3, df_non_punch], ignore_index=True)
 # df_test = pd.read_csv(TEST_DATA, skiprows=[0], names=columns)
 
 def my_svm(id):
@@ -218,9 +230,15 @@ def check_sequence(dataframe, index_value):
     n2 = index_value + 2
     n3 = index_value + 3
     n4 = index_value + 4
+    n5 = index_value + 5
+    n6 = index_value + 6
+    n7 = index_value + 7
+    n8 = index_value + 8
+    n9 = index_value + 9
+    n10 = index_value + 10
     
 
-    forward_chain = [next_value, n2, n3, n4]
+    forward_chain = [next_value, n2, n3, n4, n5, n6, n7, n8, n9, n10]
     back_chain = [prev_value, n_2, n_3, n_4]
 
     for f_value in forward_chain:
@@ -241,9 +259,6 @@ def check_sequence(dataframe, index_value):
         print 'punch detected for: {}'.format(index_value)
         return True
         
-
-def find_sequence_end(dataframe, start_index):
-    pass
 
 def count_calculator(df):
     """
@@ -276,11 +291,6 @@ def count_calculator(df):
         tick = check_sequence(df, value)
         if tick == True:
             counter += 1
-
-
-    print 'TEST: {}'.format(df[6557])
-    print 'TEST: {}'.format(df[6556])
-    print 'TEST: {}'.format(df[6558])
 
     return counter
 
