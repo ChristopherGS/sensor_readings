@@ -13,7 +13,7 @@ class BaseConfiguration(object):
     
     SQLALCHEMY_ECHO = False
     HASH_ROUNDS = 100000
-    UPLOAD_FOLDER = os.path.join(_basedir, '/app/uploads')
+    UPLOAD_FOLDER = os.path.join(_basedir, '/app/api/uploads/')
     _static_folder = os.path.join(_basedir, 'app/static')
 
 

@@ -11,7 +11,7 @@ from datetime import datetime
 from time import mktime
 
 from flask import (Blueprint, current_app, Markup, Response, abort, flash, jsonify,
-                   redirect, render_template, request, session, url_for)
+                   make_response, redirect, render_template, request, session, url_for)
 
 from flask_restful import reqparse, Resource
 
@@ -82,6 +82,51 @@ def process_time(unknown_timestamp):
     return final_timestamp
 
 # API views
+
+class DownloadCsv(Resource):
+    def get(self):
+        return{"message":"hello"}, 200
+    def post(self):
+        query = db.session.query(Sensor)
+        df = pd.read_sql_query(query.statement, query.session.bind)
+        pandas_id = 36
+        df2 = df[df.experiment_id == pandas_id]
+
+        df2.to_csv(os.path.join(FOLDER, 'oi.csv'))
+        filename = 'oi.csv'
+        return send_from_directory(directory=FOLDER, filename=filename)
+"""
+@sensors.route('/display/download', methods=['GET', 'POST'])
+def download():
+    if request.method == 'GET':
+        print 'generating csv for experiment: {}'.format(id)
+        query = db.session.query(Sensor)
+        df = pd.read_sql_query(query.statement, query.session.bind)
+        pandas_id = 36
+        df2 = df[df.experiment_id == pandas_id]
+
+        filename = 'mbient_{}.csv'.format(id)
+        columns = df2.columns
+        csv = df2.to_csv('oi.csv')
+        response = make_response(csv)
+        response.headers["Content-Disposition"] = "attachment; filename=oi.csv"
+        return response
+    elif request.method == 'POST':
+        print 'generating csv for experiment: {}'.format(id)
+        query = db.session.query(Sensor)
+        df = pd.read_sql_query(query.statement, query.session.bind)
+        pandas_id = id
+        df2 = df[df.experiment_id == pandas_id]
+
+        filename = 'mbient_{}.csv'.format(id)
+        columns = df2.columns
+        csv = df2.to_csv('oi.csv', columns=columns)
+        response = make_response(csv)
+        response.headers["Content-Disposition"] = "attachment; filename=books.csv"
+        return response
+    else: 
+        abort(500)
+"""
 
 class CsvSimple(Resource):
 

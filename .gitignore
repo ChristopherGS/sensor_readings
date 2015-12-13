@@ -11,6 +11,7 @@ venv
 
 logs
 logs.txt
+logs.txt*
 
 .DS_Store
 

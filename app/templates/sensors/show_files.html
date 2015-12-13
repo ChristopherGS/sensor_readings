@@ -12,9 +12,11 @@
             {% if label != "unknown" %}
                 <button data-id={{index}} class="upload_label">Update label</button>
                 <button data-id={{index}} class="delete_experiment">Delete experiment</button>
+                <button data-id={{index}} class="download_experiment">Download as csv2</button>
             {% else %}
                 <button data-id={{index}} class="upload_label">Add label</button>
                 <button data-id={{index}} class="delete_experiment">Delete experiment</button>
+                <button data-id={{index}} class="download_experiment2">Download as csv</button>
             {% endif %}
 
     {% endfor %}
@@ -49,6 +51,23 @@
                     id_string = "#link"+id;
                     $(id_string).text(data);
                 });
+            });
+
+            $(".download_experiment").on("click", function(e){
+                console.log('download csv');
+                var id = $(this).data('id');
+                $("body").addClass(".loading");
+                $.ajax({
+                        url: "/api/download", 
+                        type: "POST", 
+                        success: function(response){
+                            console.log(response);
+                            $("body").removeClass(".loading");
+                        }, error (xhr, status, error){
+                            $("body").removeClass(".loading");
+                            alert(xhr.responseText);
+                        }
+                    });
             });
 
             $(".delete_experiment").on("click", function(e){

@@ -109,6 +109,7 @@ if app.config.get("ERROR_LOG_PATH"):
 
 
 # Initalize all Flask API views
-from api.views import CsvSimple
+from api.views import CsvSimple, DownloadCsv
 
 flask_api.add_resource(CsvSimple, '/api/csv')
+flask_api.add_resource(DownloadCsv, '/api/download')

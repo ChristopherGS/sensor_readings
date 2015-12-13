@@ -4,13 +4,16 @@ import os
 from datetime import datetime
 from random import choice
 from time import mktime
+from cStringIO import StringIO
 
 import pandas as pd
-from flask import (abort, Blueprint, current_app, Markup, Response, abort, flash, jsonify,
-                   redirect, render_template, request, session, url_for)
+from flask import (abort, Blueprint, current_app, Markup, Response, abort, flash, jsonify, make_response,
+                   redirect, render_template, request, session, send_from_directory, url_for, stream_with_context)
 from numpy import genfromtxt
 from werkzeug import secure_filename
 from werkzeug.exceptions import default_exceptions, HTTPException
+from werkzeug.datastructures import Headers
+#from werkzeug.wrappers import Response
 
 from app.data import db, query_to_list
 from app.science2 import pandas_cleanup, sql_to_pandas, my_svm, count_calculator
@@ -26,10 +29,11 @@ ALLOWED_EXTENSIONS = set(['txt', 'csv'])
 UPLOADS = '../api/uploads'
 UPLOAD_FOLDER = os.path.join(_basedir, UPLOADS)
 
+
 @sensors.route("/")
 @sensors.route("/index")
 def index():
-    run_science()
+    
     return render_template("index.html")
 
 @sensors.route('/csv')
@@ -42,7 +46,9 @@ def complete():
 
 @sensors.route('/guide')
 def guide():
+     run_science()
      return render_template('sensors/guide.html')
+
 
 @sensors.route('/display', methods=['GET', 'POST'])
 def display():
@@ -80,6 +86,20 @@ def display():
         return updated_label
     else:
         return '404'
+
+
+#INITIAL!
+@sensors.route('/display/blah')
+def blah():
+    query = db.session.query(Sensor)
+    df = pd.read_sql_query(query.statement, query.session.bind)
+    pandas_id = 36
+    df2 = df[df.experiment_id == pandas_id]
+
+    df2.to_csv(os.path.join(FOLDER, 'oi.csv'))
+    filename = 'oi.csv'
+    return send_from_directory(directory=FOLDER, filename=filename)
+
 
 @sensors.route('/display/<int:id>', methods=['GET', 'POST', 'DELETE'])
 def display_id(id):
