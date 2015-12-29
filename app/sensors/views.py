@@ -56,6 +56,7 @@ def display():
         sql_to_pandas() # TODO prep/check function
 
         # get csv files on server
+        # TODO: first check if there are any files
         names = os.listdir(UPLOAD_FOLDER)
 
         # get sensor records from db

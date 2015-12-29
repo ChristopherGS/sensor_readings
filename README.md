@@ -19,6 +19,8 @@ Running
 
 To run the application in the development web server just execute `run.py` with the Python interpreter from the flask virtual environment.
 
+When deploying to a server, you will need to create an uploads folder in app/api/uploads
+
 
 Testing
 -------
