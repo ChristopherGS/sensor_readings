@@ -8,6 +8,7 @@ import csv
 import json
 import os
 from datetime import datetime
+import dateutil.parser
 from time import mktime
 
 from flask import (Blueprint, current_app, Markup, Response, abort, flash, jsonify,
@@ -33,44 +34,34 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 def Load_Data(file_name, android_status):
+    #import pdb; pdb.set_trace();
     
     if android_status == True:
         current_app.logger.debug('processing Android file')
-        df = pd.read_csv(file_name, names=['initial'])
+        df = pd.read_csv(file_name, index_col=False, skipinitialspace=True, encoding='utf-8')
 
-        data = pd.DataFrame(df.index.tolist(), columns=['ACCELEROMETER_X', 'ACCELEROMETER_Y', 'ACCELEROMETER_Z'])
-        data = data.applymap(str)
-        data = data.apply(lambda s: s.str.replace('(', ''))
-        data = data.apply(lambda s: s.str.replace(')', ''))
+        data = df
+        data['X_AXIS'] = data['X_AXIS'].astype(str)
+        data['Y_AXIS'] = data['Y_AXIS'].astype(str)
+        data['Z_AXIS'] = data['Z_AXIS'].astype(str)
+        data['TIMESTAMP'] = data['TIMESTAMP'].astype(str)
+        data['TIMESTAMP'] = data['TIMESTAMP'].apply(lambda s: s.replace('-', ''))
+ 
+        data['X_AXIS'] = data['X_AXIS'].apply(lambda s: s.replace('(', ''))
+        data['X_AXIS'] = data['X_AXIS'].apply(lambda s: s.replace(')', ''))
+        data['Y_AXIS'] = data['Y_AXIS'].apply(lambda s: s.replace('(', ''))
+        data['Y_AXIS'] = data['Y_AXIS'].apply(lambda s: s.replace(')', ''))
+        data['Z_AXIS'] = data['Z_AXIS'].apply(lambda s: s.replace('(', ''))
+        data['Z_AXIS'] = data['Z_AXIS'].apply(lambda s: s.replace(')', ''))
+        
+        #data['TIMESTAMP'] = pd.to_datetime(data['TIMESTAMP'], unit='ms', errors='coerce')
+        data['TIMESTAMP'] = data['TIMESTAMP'].apply(lambda x:datetime.strptime(x,"%Y%m%d%H%M%S%f"))
 
         current_app.logger.debug(data)
-
-        data = data.reindex(columns=['ACCELEROMETER_X',
-            'ACCELEROMETER_Y',
-            'ACCELEROMETER_Z',
-            'GRAVITY_X',
-            'GRAVITY_Y',
-            'GRAVITY_Z',
-            'LINEAR_ACCELERATION_X',
-            'LINEAR_ACCELERATION_Y',
-            'LINEAR_ACCELERATION_Z',
-            'GYROSCOPE_X',
-            'GYROSCOPE_Y',
-            'GYROSCOPE_Z', 
-            'MAGNETIC_FIELD_X',
-            'MAGNETIC_FIELD_Y',
-            'MAGNETIC_FIELD_Z',
-            'ORIENTATION_Z',
-            'ORIENTATION_X',
-            'ORIENTATION_Y',
-            'Time_since_start',
-            'timestamp'])
-
     else:
         data = pd.read_table(file_name, header=None, skiprows=1, delimiter=',', encoding='iso-8859-1') 
 
     return data.values.tolist()
-
 
 def process_time(unknown_timestamp):
     try:
@@ -145,23 +136,26 @@ class CsvSimple(Resource):
 
         # now test if it is a file or not
         ANDROID = False
+        
         try:
-            if request.files['android_file']:
-                file = request.files['android_file']
-                ANDROID = True
-            elif request.files['a_file']:
-                file = request.files['a_file']
-                
-            else:
-                current_app.logger.debug('file recognition failed')
-                raise AssertionError("Unexpected value of request files", request.files)
+            for my_file in request.files:
 
+                if my_file == 'android_file':
+                    file = request.files['android_file']
+                    ANDROID = True
+                elif my_file == 'a_file':
+                    file = request.files['a_file']
+                    ANDROID = True
+                else:
+                    current_app.logger.debug('file recognition failed')
+                    raise AssertionError("Unexpected value of request files", request.files)
         except Exception as e:
             current_app.logger.debug('this is not a file: {}'.format(e))
             current_app.logger.debug(request.form)
             return {"error":"hey can you send a file"}, 500
-
+        
         if file and allowed_file(file.filename):
+            
             print "allowed_file"
             
             filename = secure_filename(file.filename)
@@ -173,19 +167,21 @@ class CsvSimple(Resource):
 
             try:
                 file_name = filename
-                
                 # note that Load_Data expects a correctly formatted file - expects columns
                 data = Load_Data(os.path.join(UPLOAD_FOLDER, file_name), ANDROID)
+                
                 current_app.logger.debug(data)
                 count = 0 
 
                 for i in data:
-                    my_timestamp = process_time(i[19])
+                    #my_timestamp = process_time(i[19])
                     el_sensor = Sensor(**{
-                        'ACCELEROMETER_X' : i[0],
-                        'ACCELEROMETER_Y' : i[1],
-                        'ACCELEROMETER_Z' : i[2],
-                        'timestamp' : my_timestamp,
+                        'SENSOR_TYPE' : i[0],
+                        'X_AXIS' : i[1],
+                        'Y_AXIS' : i[2],
+                        'Z_AXIS' : i[3],
+                        'Time_since_start' : i[4],
+                        'timestamp' : i[5],
                         'experiment' : my_experiment
                     })
                     
@@ -196,6 +192,7 @@ class CsvSimple(Resource):
                 db.session.commit() 
                 flash("CSV data saved to DB") 
                 return {'message': 'data saved to db'}, 201
+                
 
             except Exception as e:
                 print e
@@ -206,3 +203,4 @@ class CsvSimple(Resource):
         else:
             current_app.logger.debug('Not a .txt or .csv file')
             return {'message':'incorrect file format'}, 500
+        
