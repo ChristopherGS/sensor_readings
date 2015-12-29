@@ -108,8 +108,9 @@ def display_id(id):
         df = pd.read_sql_query(query.statement, query.session.bind)
         pandas_id = id
         df2 = df[df.experiment_id == pandas_id]
-        db_index_choice = df2[["ACCELEROMETER_X", "ACCELEROMETER_Y", "ACCELEROMETER_Z",
-                                "GYROSCOPE_X", "GYROSCOPE_Y","GYROSCOPE_Z",
+        # add more columns here to display them
+        db_index_choice = df2[["SENSOR_TYPE", "X_AXIS", "Y_AXIS",
+                                "Z_AXIS",
                                 "Time_since_start", "state", "timestamp", "prediction"]]
         experiment_number = pd.unique(df2.experiment_id.values)
 
