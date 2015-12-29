@@ -1,6 +1,0 @@
-/build
-/dist
-/pylds/*.c
-/pylds/*.so
-MANIFEST
-*.pyc

@@ -4,10 +4,6 @@ import os
 import pandas as pd
 import numpy as np
 from scipy import stats, integrate
-import matplotlib
-matplotlib.use('TkAgg') # attempt to fix Seaborn error
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier
