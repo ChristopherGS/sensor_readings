@@ -88,17 +88,48 @@ def display():
         return '404'
 
 
-#INITIAL!
-@sensors.route('/display/blah')
-def blah():
-    query = db.session.query(Sensor)
-    df = pd.read_sql_query(query.statement, query.session.bind)
-    pandas_id = 36
-    df2 = df[df.experiment_id == pandas_id]
+# TEMP: In production, you don't want to server static files using the flask server.
+@sensors.route('/display/download/<int:id>', methods=['GET', 'POST'])
+def blah(id=2):
+    if request.method == 'GET':
+        print 'generating csv for experiment: {}'.format(id)
+        try: 
+            print id
+            query = db.session.query(Sensor)
+            df = pd.read_sql_query(query.statement, query.session.bind)
+            pandas_id = id
+            df2 = df[df.experiment_id == pandas_id]
+            filename = 'mbient_{}.csv'.format(id)
+            columns = df2.columns
+            df2.to_csv(os.path.join(UPLOAD_FOLDER, filename))
+            #csv = df2.to_csv(filename, columns=columns)
+            return send_from_directory(directory=UPLOAD_FOLDER, filename=filename, as_attachment=True)
+        except Exception as e:
+            current_app.logger.debug('error: {}'.format(e))
+            abort(500)
+        else:
+            abort(500)
+        return{"message":id}, 200
 
-    df2.to_csv(os.path.join(FOLDER, 'oi.csv'))
-    filename = 'oi.csv'
-    return send_from_directory(directory=FOLDER, filename=filename)
+    elif request.method == 'POST':
+        #import pdb; pdb.set_trace()
+        print 'generating csv for experiment: {}'.format(id)
+        try: 
+            print id
+            query = db.session.query(Sensor)
+            df = pd.read_sql_query(query.statement, query.session.bind)
+            pandas_id = id
+            df2 = df[df.experiment_id == pandas_id]
+            filename = 'mbient_{}.csv'.format(id)
+            columns = df2.columns
+            df2.to_csv(os.path.join(UPLOAD_FOLDER, filename))
+            #csv = df2.to_csv(filename, columns=columns)
+            return send_from_directory(directory=UPLOAD_FOLDER, filename=filename, as_attachment=True)
+        except Exception as e:
+            current_app.logger.debug('error: {}'.format(e))
+            abort(500)
+        else:
+            abort(500)
 
 
 @sensors.route('/display/<int:id>', methods=['GET', 'POST', 'DELETE'])

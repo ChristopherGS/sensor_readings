@@ -12,11 +12,11 @@
             {% if label != "unknown" %}
                 <button data-id={{index}} class="upload_label">Update label</button>
                 <button data-id={{index}} class="delete_experiment">Delete experiment</button>
-                <button data-id={{index}} class="download_experiment">Download as csv2</button>
+                <button data-id={{index}} class="download_experiment2"><a href="{{ url_for('sensors.display')}}/download/{{index}}">Download as csv</a></button>
             {% else %}
                 <button data-id={{index}} class="upload_label">Add label</button>
                 <button data-id={{index}} class="delete_experiment">Delete experiment</button>
-                <button data-id={{index}} class="download_experiment2">Download as csv</button>
+                <button data-id={{index}} class="download_experiment2"><a href="{{ url_for('sensors.display')}}/download/{{index}}">Download as csv</a></button>
             {% endif %}
 
     {% endfor %}
@@ -28,6 +28,11 @@
     <hr>
 
     <h2>CSV files on the server</h2>
+
+    <form action="/display/blah" method="POST" id="myForm">
+      <input type="text" name="field1" id="field1"><br>
+      <input type="submit" value="Submit">
+    </form>
 
     <ul>
     {% for f in file_url %}
@@ -51,23 +56,6 @@
                     id_string = "#link"+id;
                     $(id_string).text(data);
                 });
-            });
-
-            $(".download_experiment").on("click", function(e){
-                console.log('download csv');
-                var id = $(this).data('id');
-                $("body").addClass(".loading");
-                $.ajax({
-                        url: "/api/download", 
-                        type: "POST", 
-                        success: function(response){
-                            console.log(response);
-                            $("body").removeClass(".loading");
-                        }, error (xhr, status, error){
-                            $("body").removeClass(".loading");
-                            alert(xhr.responseText);
-                        }
-                    });
             });
 
             $(".delete_experiment").on("click", function(e){
