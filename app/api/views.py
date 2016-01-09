@@ -38,6 +38,7 @@ def Load_Data(file_name, android_status):
     
     if android_status == True:
         current_app.logger.debug('processing Android file')
+        current_app.logger.debug(file_name)
         df = pd.read_csv(file_name, index_col=False, skipinitialspace=True, encoding='utf-8')
 
         data = df
