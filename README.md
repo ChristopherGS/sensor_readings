@@ -1,7 +1,7 @@
 Sensor Readings
 =========
 
-Flask server for receiving accelerometer data from wearable devices
+Flask server for receiving accelerometer and gyroscope timestamp data from metawear boards.
 
 Installation
 ------------
@@ -24,6 +24,7 @@ When deploying to a server, you will need to create an uploads folder in app/api
 
 Testing
 -------
+No tests available yet
 
 python -m unittest discover
 
@@ -32,6 +33,4 @@ On OSX the lxml package may need to be manually installed due to a bug with that
 
 TODO
 -------
-
-- Download as a CSV function
-- Organization for when number of experiments is very high
+- Indexing for when number of experiments is very high
