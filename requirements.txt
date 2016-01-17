@@ -10,3 +10,4 @@ pandas==0.16.2
 scipy==0.16.0
 scikit-learn==0.16.1
 matplotlib==1.5.0
+keras==0.1.3

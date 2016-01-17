@@ -374,8 +374,8 @@ def trial(df_train, test_data):
     print_full(rf_pred2)
 
 
-test_model(training_data)
-trial(training_data, test_data2)
+#test_model(training_data)
+#trial(training_data, test_data2)
 
 """
 Notes
