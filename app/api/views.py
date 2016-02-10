@@ -42,18 +42,18 @@ def Load_Data(file_name, android_status):
         df = pd.read_csv(file_name, index_col=False, skipinitialspace=True, encoding='utf-8')
 
         data = df
-        data['X_AXIS'] = data['X_AXIS'].astype(str)
-        data['Y_AXIS'] = data['Y_AXIS'].astype(str)
-        data['Z_AXIS'] = data['Z_AXIS'].astype(str)
+        data['x_acceleration'] = data['x_acceleration'].astype(str)
+        data['y_acceleration'] = data['y_acceleration'].astype(str)
+        data['z_acceleration'] = data['z_acceleration'].astype(str)
         data['TIMESTAMP'] = data['TIMESTAMP'].astype(str)
         data['TIMESTAMP'] = data['TIMESTAMP'].apply(lambda s: s.replace('-', ''))
  
-        data['X_AXIS'] = data['X_AXIS'].apply(lambda s: s.replace('(', ''))
-        data['X_AXIS'] = data['X_AXIS'].apply(lambda s: s.replace(')', ''))
-        data['Y_AXIS'] = data['Y_AXIS'].apply(lambda s: s.replace('(', ''))
-        data['Y_AXIS'] = data['Y_AXIS'].apply(lambda s: s.replace(')', ''))
-        data['Z_AXIS'] = data['Z_AXIS'].apply(lambda s: s.replace('(', ''))
-        data['Z_AXIS'] = data['Z_AXIS'].apply(lambda s: s.replace(')', ''))
+        data['x_acceleration'] = data['x_acceleration'].apply(lambda s: s.replace('(', ''))
+        data['x_acceleration'] = data['x_acceleration'].apply(lambda s: s.replace(')', ''))
+        data['y_acceleration'] = data['y_acceleration'].apply(lambda s: s.replace('(', ''))
+        data['y_acceleration'] = data['y_acceleration'].apply(lambda s: s.replace(')', ''))
+        data['z_acceleration'] = data['z_acceleration'].apply(lambda s: s.replace('(', ''))
+        data['z_acceleration'] = data['z_acceleration'].apply(lambda s: s.replace(')', ''))
         
         #data['TIMESTAMP'] = pd.to_datetime(data['TIMESTAMP'], unit='ms', errors='coerce')
         data['TIMESTAMP'] = data['TIMESTAMP'].apply(lambda x:datetime.strptime(x,"%Y%m%d%H%M%S%f"))
