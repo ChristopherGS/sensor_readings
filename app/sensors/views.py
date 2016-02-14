@@ -54,7 +54,6 @@ def guide():
 def display():
     if request.method == 'GET':
         sql_to_pandas() # TODO prep/check function
-
         # get csv files on server
         # TODO: first check if there are any files
         names = os.listdir(UPLOAD_FOLDER)
@@ -231,3 +230,9 @@ def display_graph(id):
 
     return render_template('sensors/file_graph.html', experiment_number=experiment_number[0], 
         db_index_choice=db_index_choice.to_html(), id=id, d3_response = d3_response)
+
+@sensors.route('/analyze')
+def analyze(id):
+    print id
+    prediction = flask_api.url_for(analyze, experiment_id=id)
+    print prediction

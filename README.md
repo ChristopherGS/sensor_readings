@@ -10,8 +10,7 @@ Installation
 
 - Create an uploads folder inside the "app" directory
 
-- install the hmmlearn module: https://github.com/hmmlearn/hmmlearn
-
+- install keras for RNN work (GPU is recommended for speed)
 
 
 Running

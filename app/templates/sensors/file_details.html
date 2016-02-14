@@ -42,13 +42,27 @@
             $("body").removeClass("loading");
             $(".dataScience").on("click", function(e){
                 $("body").addClass("loading");
-                var experiment_id = $(this).data('id');
-                $.post("{{ url_for('sensors.display')}}/{{experiment_number}}", {
-                    id: experiment_id
-                }, function(data){
+                var experiment_id = $(this).data('id').toString();
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/analyze/'+experiment_id,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    async: false
+                })
+                .always(function(){
+                    //na
+                })
+                .fail(function(){
                     $("body").removeClass("loading");
-                    console.log(data)    
-                    window.location.href = '/display/{{experiment_number}}';
+                    alert('There was an error, please try again');
+                })
+                .done(function(data, textStatus, jqXHR){
+                    $("body").removeClass("loading");
+                    alert(jqXHR.responseText);
+                    console.log(jqXHR);
+                    //window.location.href = '/display';
                 });
             });
         });

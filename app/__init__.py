@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request
 from werkzeug.exceptions import default_exceptions, HTTPException
+import os
 
 from flask_wtf.csrf import CsrfProtect
 from flask_restful import Resource, Api
+from sklearn.externals import joblib
 
 
 from .data import db
@@ -13,6 +15,7 @@ from .users.views import users
 
 import app.errors
 # import app.logs
+
 
 app = Flask(__name__)
 app.config.from_object('config.DebugConfiguration')
@@ -28,7 +31,6 @@ flask_api = Api(app, decorators=[csrf_protect.exempt])
 
 app.register_blueprint(sensors)
 app.register_blueprint(users)
-
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -110,6 +112,16 @@ if app.config.get("ERROR_LOG_PATH"):
 
 # Initalize all Flask API views
 from api.views import CsvSimple
+from api.views import DataAnalysis
 
 flask_api.add_resource(CsvSimple, '/api/csv')
+flask_api.add_resource(DataAnalysis, '/api/analyze/<string:experiment_id>', endpoint = 'analyze')
 #flask_api.add_resource(DownloadCsv, '/api/download/<int:id>')
+
+from app.machine_learning.wrangle import api_serialize, api_test
+
+# prepare the pickled file of fitted model
+if (os.path.exists('pickle/training.pkl')):
+    print 'found serialized training data, if you have made changes reserialize using api_serialize()'
+else:
+    api_serialize()

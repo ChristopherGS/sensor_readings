@@ -8,6 +8,7 @@ bower_components
 db_respository
 
 venv
+pickle
 
 logs
 logs.txt

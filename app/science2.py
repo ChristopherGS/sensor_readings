@@ -217,7 +217,6 @@ def my_svm(id):
         obj.prediction = new_value[22] # 22nd column is the prediction
         db.session.add(obj)
    
-    #import pdb; pdb.set_trace()
     db.session.commit()
 
     return 'prediction made'
