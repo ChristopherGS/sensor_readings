@@ -31,10 +31,10 @@ _basedir = os.path.abspath(os.path.dirname(__file__))
 ALLOWED_EXTENSIONS = set(['txt', 'csv'])
 UPLOADS = 'uploads'
 UPLOAD_FOLDER = os.path.join(_basedir, UPLOADS)
-PICKLE = os.path.abspath(os.path.join(_basedir, '../pickle/training.pkl'))
+PICKLE = os.path.join(_basedir, '../machine_learning/pickle/training.pkl')
 
 if (os.path.exists(PICKLE)):
-    algorithm = joblib.load('pickle/training.pkl')
+    algorithm = joblib.load(PICKLE)
 else:
     print "Model fitting in progress"
 

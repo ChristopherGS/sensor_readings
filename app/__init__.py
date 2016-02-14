@@ -122,7 +122,7 @@ flask_api.add_resource(DataAnalysis, '/api/analyze/<string:experiment_id>', endp
 from app.machine_learning.wrangle import api_serialize, api_test
 
 # prepare the pickled file of fitted model
-PICKLE = os.path.abspath(os.path.join(_basedir, '../pickle/training.pkl'))
+PICKLE = os.path.abspath(os.path.join(_basedir, 'machine_learning/pickle/training.pkl'))
 
 if (os.path.exists(PICKLE)):
     print 'found serialized training data, if you have made changes reserialize using api_serialize()'

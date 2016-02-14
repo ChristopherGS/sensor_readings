@@ -22,8 +22,9 @@ from utilities import (format_time, print_full, combine_csv, blank_filter, conca
 from feature_engineering import create_rm_feature
 
 _basedir = os.path.abspath(os.path.dirname(__file__))
-PICKLE = os.path.abspath(os.path.join(_basedir, '../../pickle/training.pkl'))
+PICKLE = os.path.join(_basedir, 'pickle/training.pkl')
 
+print PICKLE
 """
 This file preps the jiu-jitsu motion data for analysis:
 
