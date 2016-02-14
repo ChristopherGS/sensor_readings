@@ -21,6 +21,9 @@ from utilities import (format_time, print_full, combine_csv, blank_filter, conca
                         resolve_acc_gyro_db)
 from feature_engineering import create_rm_feature
 
+_basedir = os.path.abspath(os.path.dirname(__file__))
+PICKLE = os.path.abspath(os.path.join(_basedir, '../../pickle/training.pkl'))
+
 """
 This file preps the jiu-jitsu motion data for analysis:
 
@@ -218,7 +221,7 @@ def api_serialize():
         print "Found NaN values"
 
     rf.fit(X_train, y_train)
-    joblib.dump(rf, 'pickle/training.pkl', compress=3) 
+    joblib.dump(rf, PICKLE, compress=3) 
 
 def api_test(experiment_id_number):
     """Prepare an experiment already uploaded to the db
