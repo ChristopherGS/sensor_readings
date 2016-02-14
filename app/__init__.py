@@ -16,6 +16,7 @@ from .users.views import users
 import app.errors
 # import app.logs
 
+_basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 app.config.from_object('config.DebugConfiguration')
@@ -121,7 +122,9 @@ flask_api.add_resource(DataAnalysis, '/api/analyze/<string:experiment_id>', endp
 from app.machine_learning.wrangle import api_serialize, api_test
 
 # prepare the pickled file of fitted model
-if (os.path.exists('pickle/training.pkl')):
+PICKLE = os.path.abspath(os.path.join(_basedir, '../pickle/training.pkl'))
+
+if (os.path.exists(PICKLE)):
     print 'found serialized training data, if you have made changes reserialize using api_serialize()'
 else:
     api_serialize()

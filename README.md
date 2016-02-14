@@ -1,16 +1,24 @@
-Sensor Readings
-=========
+Sensor Readings (WIP)
+=====================
 
 Flask server for receiving accelerometer and gyroscope timestamp data from metawear boards.
+
+Uses sklearn for machine learning tasks, data is serialized on the server with joblib. The first time you run the server
+it take time as the data is trained and serialized. 
+
+A sandbox is provided which works without the rest of the flask application - easiest for quick experimentation
+
 
 Installation
 ------------
 
-- pip install -r requirements.txt
+- pip install -r requirements.txt (TODO: some are missing)
+
+- Create a "pickle" folder in the root directory to store the .pkl serialized data 
 
 - Create an uploads folder inside the "app" directory
 
-- install keras for RNN work (GPU is recommended for speed)
+- (optional) Install keras for RNN work (GPU is recommended for speed)
 
 
 Running
@@ -32,4 +40,8 @@ On OSX the lxml package may need to be manually installed due to a bug with that
 
 TODO
 -------
+- Upload more training data
+- Enable easy algorithm switching
+- RNN implementation
 - Indexing for when number of experiments is very high
+- Optimize speed from Android upload (probably some kind of chunking)
