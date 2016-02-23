@@ -64,7 +64,7 @@ def Load_Data(file_name, android_status):
         data['z_acceleration'] = data['z_acceleration'].apply(lambda s: s.replace(')', ''))
         
         #data['TIMESTAMP'] = pd.to_datetime(data['TIMESTAMP'], unit='ms', errors='coerce')
-        data['TIMESTAMP'] = data['TIMESTAMP'].apply(lambda x:datetime.strptime(x,"%Y%m%d %H%M%S%f"))
+        data['TIMESTAMP'] = data['TIMESTAMP'].apply(lambda x:datetime.strptime(x,"%Y%m%d%H%M%S%f"))
 
         current_app.logger.debug(data)
     else:
@@ -143,7 +143,7 @@ class CsvSimple(Resource):
                 data = Load_Data(os.path.join(UPLOAD_FOLDER, file_name), ANDROID)
                 
                 current_app.logger.debug(data)
-                count = 0 
+                count = 0
 
                 if ANDROID == True:
                     for i in data:
