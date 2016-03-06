@@ -182,7 +182,7 @@ class CsvSimple(Resource):
                 flash("CSV data saved to DB")
                 print 'HERE IS THE EXPERIMENT NUMBER'
                 print my_experiment.id
-                return {'message': my_experiment.id}, 201
+                return {"id": my_experiment.id}, 201
                 
 
             except Exception as e:
