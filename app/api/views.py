@@ -179,8 +179,10 @@ class CsvSimple(Resource):
                 
                 current_app.logger.debug('Committing {} records to the database'.format(count))
                 db.session.commit() 
-                flash("CSV data saved to DB") 
-                return {'message': 'data saved to db'}, 201
+                flash("CSV data saved to DB")
+                print 'HERE IS THE EXPERIMENT NUMBER'
+                print my_experiment.id
+                return {'message': my_experiment.id}, 201
                 
 
             except Exception as e:
@@ -196,6 +198,7 @@ class CsvSimple(Resource):
 
 class DataAnalysis(Resource):
     def get(self, experiment_id):
+        current_app.logger.debug('RECEIVED ANALYSIS REQUEST: {}'.format(experiment_id))
         print experiment_id
         test_data = api_test(experiment_id)
         predictions = algorithm.predict(test_data)

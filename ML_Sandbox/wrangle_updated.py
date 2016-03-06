@@ -37,7 +37,7 @@ DIR = os.path.dirname(os.path.realpath(__file__))
 pd.set_option('display.width', 1200)
 
 FEATURE_COUNT = 0
-TIME_SEQUENCE_LENGTH = 30
+TIME_SEQUENCE_LENGTH = 25
 
 #================================================================================
 # DATA PREPARATION
@@ -146,7 +146,7 @@ def test_model(df_train):
 
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
-                min_samples_leaf=1, min_samples_split=2,
+                min_samples_leaf=50, min_samples_split=2,
                 min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
                 oob_score=False, random_state=None, verbose=0,
                 warm_start=False)
@@ -178,7 +178,7 @@ def trial(df_train, test_data):
 
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
-                min_samples_leaf=1, min_samples_split=2,
+                min_samples_leaf=50, min_samples_split=2,
                 min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
                 oob_score=False, random_state=None, verbose=0,
                 warm_start=False)
@@ -302,6 +302,39 @@ Opponent Side Control: 0.0
 Opponent Closed Guard: 0.294117647059
 Opponent Back Control: 0.0
 OTHER: 0.0980392156863
+
+@min_leaf = 5
+Your Mount: 0.12
+Your Side Control: 0.02
+Your Closed Guard: 0.38
+Your Back Control: 0.0
+Opponent Mount: 0.16
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.22
+Opponent Back Control: 0.02
+OTHER: 0.08
+
+@min_leaf = 10
+Your Mount: 0.16
+Your Side Control: 0.02
+Your Closed Guard: 0.36
+Your Back Control: 0.02
+Opponent Mount: 0.18
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.16
+Opponent Back Control: 0.0
+OTHER: 0.1
+
+@min_leaf = 15
+Your Mount: 0.1
+Your Side Control: 0.02
+Your Closed Guard: 0.36
+Your Back Control: 0.0
+Opponent Mount: 0.18
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.22
+Opponent Back Control: 0.02
+OTHER: 0.1
 
 @ rolling_max features
 rf prediction: 0.81568627451
