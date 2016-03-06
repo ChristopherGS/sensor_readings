@@ -146,7 +146,7 @@ def test_model(df_train):
 
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
-                min_samples_leaf=50, min_samples_split=2,
+                min_samples_leaf=10, min_samples_split=2,
                 min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
                 oob_score=False, random_state=None, verbose=0,
                 warm_start=False)
@@ -178,7 +178,7 @@ def trial(df_train, test_data):
 
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
-                min_samples_leaf=50, min_samples_split=2,
+                min_samples_leaf=10, min_samples_split=2,
                 min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
                 oob_score=False, random_state=None, verbose=0,
                 warm_start=False)
@@ -210,9 +210,9 @@ def start():
 
     test_model(training_data)
     trial(training_data, test_data1)
-    #trial(training_data, test_data2)
-    #trial(training_data, test_data3)
-    #trial(training_data, test_data4)
+    trial(training_data, test_data2)
+    trial(training_data, test_data3)
+    trial(training_data, test_data4)
 
 if __name__ == "__main__":
     start()
@@ -335,6 +335,17 @@ Opponent Side Control: 0.0
 Opponent Closed Guard: 0.22
 Opponent Back Control: 0.02
 OTHER: 0.1
+
+@min_leaf = 50
+Your Mount: 0.08
+Your Side Control: 0.0
+Your Closed Guard: 0.34
+Your Back Control: 0.0
+Opponent Mount: 0.18
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.24
+Opponent Back Control: 0.02
+OTHER: 0.14
 
 @ rolling_max features
 rf prediction: 0.81568627451

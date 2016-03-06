@@ -198,15 +198,21 @@ class CsvSimple(Resource):
 
 class DataAnalysis(Resource):
     def get(self, experiment_id):
-        current_app.logger.debug('RECEIVED ANALYSIS REQUEST: {}'.format(experiment_id))
-        print experiment_id
-        test_data = api_test(experiment_id)
-        predictions = algorithm.predict(test_data)
-        converted_predictions = convert_to_words(predictions)
-        stats = get_position_stats(converted_predictions)
-        print stats
-        print type(stats)
-        my_predictions = json.dumps(converted_predictions)
-        return {'message':my_predictions, 'stats':stats}, 200
-        
+        try: 
+            current_app.logger.debug('RECEIVED ANALYSIS REQUEST: {}'.format(experiment_id))
+            print experiment_id
+            test_data = api_test(experiment_id)
+            current_app.logger.debug(test_data)
+            predictions = algorithm.predict(test_data)
+            current_app.logger.debug(predictions)
+            converted_predictions = convert_to_words(predictions)
+            stats = get_position_stats(converted_predictions)
+            current_app.logger.debug(predictions)
+            my_predictions = json.dumps(converted_predictions)
+            current_app.logger.debug(my_predictions)
+            return {'message':my_predictions, 'stats':stats}, 200
+        except Exception as e:
+            current_app.logger.debug(e)
+            return {'error': e}, 500
+            
         
