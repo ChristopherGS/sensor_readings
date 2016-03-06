@@ -18,7 +18,7 @@ from app.data import db, query_to_list
 from app.sensors.models import Experiment, Sensor
 
 from utilities import (format_time, print_full, combine_csv, blank_filter, concat_data, resolve_acc_gyro,
-                        resolve_acc_gyro_db)
+                        resolve_acc_gyro_db, convert_to_words, get_position_stats)
 from feature_engineering import create_rm_feature
 
 _basedir = os.path.abspath(os.path.dirname(__file__))
@@ -69,8 +69,10 @@ def set_state(df, state):
         df['state'] = 6
     elif state =='opponent_closed_guard':
         df['state'] = 7
-    elif state =='non_jj':
+    elif state == 'opponent_back_control':
         df['state'] = 8
+    elif state =='non_jj':
+        df['state'] = 9
 
     return df
 
@@ -105,10 +107,14 @@ def prep():
     osc_td = combine_setState_createFeatures('opponent_side_control_raw_data', 'opponent_side_control')
     #7 Opponent closed guard control
     ocg_td = combine_setState_createFeatures('opponent_closed_guard_raw_data', 'opponent_closed_guard')
-    #8 "Non jiu-jitsu" motion
+    #8 Opponent back control
+    obc_td = combine_setState_createFeatures('opponent_back_control_raw_data', 'opponent_back_control')
+    #9 "Non jiu-jitsu" motion
     nonjj_td = combine_setState_createFeatures('non_jj_raw_data', 'non_jj')
 
-    training_data = concat_data([ymount_td, ysc_td, ycg_td, ybc_td, omount_td, osc_td, ocg_td, nonjj_td])
+    training_data = concat_data([ymount_td, ysc_td, ycg_td, ybc_td, omount_td, osc_td, 
+        ocg_td, obc_td, nonjj_td])
+
     # remove NaN
     training_data = blank_filter(training_data)
     return training_data
@@ -151,7 +157,7 @@ def test_model(df_train):
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
                 min_samples_leaf=1, min_samples_split=2,
-                min_weight_fraction_leaf=0.0, n_estimators=1000, n_jobs=1,
+                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
                 oob_score=False, random_state=None, verbose=0,
                 warm_start=False)
 
@@ -173,10 +179,8 @@ def test_model(df_train):
 
 
 def trial(df_train, test_data):
-    """test with *mixed state* data - file name shows the move sequence
-    test 1: YSC_YMOUNT_YCG: Expect to see 2s, followed by 1s, followed by 3s
-    test 2: YMOUNT_YCG_YBC: Expect to see 1s followed by 3s, followed by 4s
-    test 3: OSC_OMOUNT_YCG_YMOUNT: Expect to see 6s, 5s, 3s, 1s 
+    """
+    Test 1: 1s followed by 3s
     """
     y = df_train['state'].values
     X = df_train.drop(['state', 'index'], axis=1)
@@ -185,7 +189,7 @@ def trial(df_train, test_data):
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
                 min_samples_leaf=1, min_samples_split=2,
-                min_weight_fraction_leaf=0.0, n_estimators=1500, n_jobs=1,
+                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
                 oob_score=False, random_state=None, verbose=0,
                 warm_start=False)
 
@@ -193,6 +197,12 @@ def trial(df_train, test_data):
 
     else: 
         print "Found NaN values"
+
+    rf.fit(X_train, y_train)
+    rf_pred2 = rf.predict(test_data)
+    final_prediction = convert_to_words(rf_pred2)
+    print_full(final_prediction)
+    get_position_stats(final_prediction)
 
     rf.fit(X_train, y_train)
     rf_pred2 = rf.predict(test_data)
@@ -212,7 +222,7 @@ def api_serialize():
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
                 min_samples_leaf=1, min_samples_split=2,
-                min_weight_fraction_leaf=0.0, n_estimators=1000, n_jobs=1,
+                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
                 oob_score=False, random_state=None, verbose=0,
                 warm_start=False)
 
@@ -251,127 +261,15 @@ def start():
     print 'Finished preparing training data, total length: {}'.format(len(training_data))
     print training_data
 
-    test_data1 = prep_test('TEST1_YSC_YMOUNT_YCG.csv')
-    test_data2 = prep_test('TEST2_YMOUNT_YCG_YBC.csv')
-    test_data3 = prep_test('TEST3_OSC_OMOUNT_YCG_YMOUNT.csv')
+    test_data1 = prep_test('test1_ymount_ycg.csv')
+    test_data2 = prep_test('test2_ysc_ymount_ybc.csv')
+    test_data3 = prep_test('test3_omount_ycg_ymount_ocg_obc.csv')
+    test_data4 = prep_test('test4_osc_omount_ycg.csv')
 
     test_model(training_data)
-    trial(training_data, test_data2)
+    #trial(training_data, test_data2)
 
 if __name__ == "__main__":
     start()
 
-"""
-Notes
-
-@2 reading time interval = 0.08 seconds
-rf prediction: 0.93972179289
-Random Forest Accuracy: 0.89 (+/- 0.09)
-
-test 1 (very bad at detecting side control)
-[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
- 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 2 2 2 2 3 3 2 1 3 3 3
- 3 3 2 3 3 2 2 2 2 2 1 2 2 1 1 1 1 2 2 1 1 1 1 1 1 1 1 3 3 3 3 3 3 3 3 3 3
- 3 3 3 3 1 3 3 3 2 2 2 2 2 2 2 2 3 1 1 1 3 3 3 3 3 3 2 2 2 2 2 3 1 1 1 1 3
- 3 3 3 3 3 3 3 2 1 3 2 2 2 3 2 2 1 1 3 1 1 1 1 1 3 3 1 2 2 1 1 2 3 2 3 3 2
- 3 3 1 1 2 2 1 2 1 1 1 1 1 1 1 1 3 3 1 1 1 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
- 3 3 3 3 3 3 1 3 1 3 1 1 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
- 1]
-
- test2 (very accurate)
-
- [3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
- 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
- 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
- 3 3 3 1 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 2 2 3 2 2 1 2
- 2 2 2 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 2 2 2 1 1 1 2 2 2 2 2 2 2
- 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 3 2
- 2 2 2 2 2 2 2 2 2 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
- 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
- 2 2 2 2 2 2 2 2 2 2 2 2 2]
-
-
-@5 reading time interval = 0.2 seconds
-
-rf prediction: 0.899581589958
-Random Forest Accuracy: 0.88 (+/- 0.11)
-
-test1 (very bad at detecting side control)
-[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 3 3 3 3 3 2 1 2 1 1 1 1 1
- 3 3 3 3 3 3 2 2 2 2 1 3 3 3 2 2 1 1 1 3 3 1 2 2 3 1 1 3 2 1 3 1 1 1 1 1 1
- 1 1 3 3 3 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1]
-
-test2 (very accurate)
-[3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
- 3 3 3 3 3 1 3 3 3 3 3 3 3 3 3 3 2 1 2 2 2 3 3 2 2 2 2 2 2 2 2 2 2 3 3 3 3
- 3 3 3 3 3 3 3 3 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
- 2 2 2]
-
-
-@10 reading time interval = 0.4 seconds
-rf prediction: 0.909090909091
-Random Forest Accuracy: 0.88 (+/- 0.11)
-BUT trial is ***RIDICULOUSLY*** more accurate
-
-test1 (so-so)
-[1 1 1 1 2 2 2 2 2 2 1 3 3 1 1 3 3 3 2 3 3 2 1 3 3 1 1 2 1 2 1 3 3 3 3 3 3
- 1 1 1 1]
-
-test2 (very good)
-[3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 2 2 3 2 2 2 2 2 3 3 3 3 3 2 2
- 2 2 2 2 2 2 2 2 2 2 2]
-
-
-
-@15 reading time intervals = 0.6 seconds
-rf prediction: 0.934426229508
-Random Forest Accuracy: 0.89 (+/- 0.11)
-
-test1 (so-so)
-[1 1 1 2 2 2 2 2 3 1 1 3 2 3 3 3 3 3 1 1 3 3 3 1 1 1 1]
-test2 came in perfect
-
-@20 reading time intervals = 0.8 second
-rf prediction: 0.85
-Random Forest Accuracy: 0.88 (+/- 0.14)
-
-test1 (pretty good)
-[2 2 2 2 3 1 3 3 3 3 1 1 3 3 1 1]
-
-test2: (1-2 errors)
-[3 3 3 3 3 3 3 3 3 3 2 2 3 3 2 2 2 2]
-
-@25 reading time intervals = 1 second
-rf prediction: 0.928571428571
-Random Forest Accuracy: 0.90 (+/- 0.08)
-
-test1 (pretty good)
-[1 2 2 2 3 3 3 1 1 3 1 1]
-
-
-test2 (perfect)
-[3 3 3 3 3 3 3 3 3 3 3 2 2 2]
-
-@30 reading time intervas = 1.2 seconds
-rf prediction: 0.95
-Random Forest Accuracy: 0.88 (+/- 0.19)
-
-test1 (so-so)
-[1 1 1 2 3 3 3 1 1 3 1]
-
-test2 (not good)
-[3 3 3 3 3 3 2 3]
-
-
-@35 reading time intervals = 1.4 seconds
-rf prediction: 0.846153846154
-Random Forest Accuracy: 0.89 (+/- 0.13)
-
-test1 (pretty good)
-[2 3 3 1 1 2]
-
-test2(not good)
-[3 3 3 3 3 3 2]
-
-"""
 

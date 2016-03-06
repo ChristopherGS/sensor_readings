@@ -25,6 +25,7 @@ from sklearn.externals import joblib
 from app.data import db, query_to_list
 from app.science import pandas_cleanup, sql_to_pandas
 from app.machine_learning.wrangle import api_serialize, api_test
+from app.machine_learning.utilities import convert_to_words, get_position_stats
 
 _basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -74,10 +75,10 @@ def Load_Data(file_name, android_status):
         df = pd.read_csv(file_name, index_col=False, skipinitialspace=True, encoding='utf-8')
 
         data = df
-        data['x_acceleration'] = data['x_acceleration'].astype(str)
-        data['y_acceleration'] = data['y_acceleration'].astype(str)
-        data['z_acceleration'] = data['z_acceleration'].astype(str)
-        data['TIMESTAMP'] = data['TIMESTAMP'].apply(lambda x:datetime.strptime(x,"%Y-%m-%d %H:%M:%S.%f"))
+        data['X_AXIS'] = data['X_AXIS'].astype(str)
+        data['Y_AXIS'] = data['Y_AXIS'].astype(str)
+        data['Z_AXIS'] = data['Z_AXIS'].astype(str)
+        data['timestamp'] = data['timestamp'].apply(lambda x:datetime.strptime(x,"%Y-%m-%d %H:%M:%S.%f"))
 
     return data.values.tolist()
 
@@ -198,8 +199,11 @@ class DataAnalysis(Resource):
         print experiment_id
         test_data = api_test(experiment_id)
         predictions = algorithm.predict(test_data)
-        print predictions
-        my_predictions = json.dumps(predictions.tolist())
-        return {'message':my_predictions}, 200
+        converted_predictions = convert_to_words(predictions)
+        stats = get_position_stats(converted_predictions)
+        print stats
+        print type(stats)
+        my_predictions = json.dumps(converted_predictions)
+        return {'message':my_predictions, 'stats':stats}, 200
         
         

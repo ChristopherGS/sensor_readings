@@ -7,7 +7,10 @@ def rolling_average(df):
     return pd.rolling_mean(df, window=10, center=True).mean()
 
 def rolling_median(df):
-    return pd.rolling_median(df, window=2, center=True).mean()
+    return pd.rolling_median(df, window=10, center=True).mean()
+
+def rolling_max(df):
+    return pd.rolling_max(df, window=10, center=True).mean()
 
 def create_rm_feature(df, sequence_length):
     features = []
@@ -22,8 +25,7 @@ def create_rm_feature(df, sequence_length):
     i = original_x.index.values
     time_sequence = [i] * sequence_length
 
-    #TODO: curretly an ugly hack - need to connect to the sequence_length
-    # for now, the acutal number of 'i' values in the np.array is the sequence_length
+    # The acutal number of 'i' values in the np.array is the sequence_length
 
     idx = np.array(time_sequence).T.flatten()[:len(original_x)]
     x = original_x.groupby(idx).mean()
@@ -49,7 +51,9 @@ def create_rm_feature(df, sequence_length):
     gz = original_gz.groupby(idx).mean()
     gz.name = 'GYRO_Z'
     features.append(gz)
-    #rolling avg x
+    
+    #rolling median
+
     x_ra = df['ACCEL_X'].groupby(idx).apply(rolling_median)
     x_ra.name = 'rolling_median_x'
     features.append(x_ra)
@@ -73,6 +77,32 @@ def create_rm_feature(df, sequence_length):
     gz_ra = df['GYRO_Z'].groupby(idx).apply(rolling_median)
     gz_ra.name = 'rolling_median_gz'
     features.append(gz_ra)
+
+    #rolling max
+
+    x_rm = df['ACCEL_X'].groupby(idx).apply(rolling_max)
+    x_rm.name = 'rolling_max_x'
+    features.append(x_rm)
+
+    y_rm = df['ACCEL_Y'].groupby(idx).apply(rolling_max)
+    y_rm.name = 'rolling_max_y'
+    features.append(y_rm)
+
+    z_rm = df['ACCEL_Z'].groupby(idx).apply(rolling_max)
+    z_rm.name = 'rolling_max_z'
+    features.append(z_rm)
+
+    gx_rm = df['GYRO_X'].groupby(idx).apply(rolling_max)
+    gx_rm.name = 'rolling_max_gx'
+    features.append(gx_rm)
+
+    gy_rm = df['GYRO_Y'].groupby(idx).apply(rolling_max)
+    gy_rm.name = 'rolling_max_gy'
+    features.append(gy_rm)
+
+    gz_rm = df['GYRO_Z'].groupby(idx).apply(rolling_max)
+    gz_rm.name = 'rolling_max_gz'
+    features.append(gz_rm)
 
     data = pd.concat(features, axis=1)
     return data

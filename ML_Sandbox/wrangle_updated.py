@@ -12,7 +12,8 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
 from sklearn.grid_search import GridSearchCV
 
-from utilities import format_time, print_full, combine_csv, blank_filter, concat_data, resolve_acc_gyro
+from utilities import (format_time, print_full, combine_csv, blank_filter, concat_data, 
+    resolve_acc_gyro, convert_to_words, get_position_stats)
 from feature_engineering import create_rm_feature
 
 """
@@ -36,7 +37,7 @@ DIR = os.path.dirname(os.path.realpath(__file__))
 pd.set_option('display.width', 1200)
 
 FEATURE_COUNT = 0
-TIME_SEQUENCE_LENGTH = 20
+TIME_SEQUENCE_LENGTH = 30
 
 #================================================================================
 # DATA PREPARATION
@@ -59,8 +60,10 @@ def set_state(df, state):
         df['state'] = 6
     elif state =='opponent_closed_guard':
         df['state'] = 7
-    elif state =='non_jj':
+    elif state == 'opponent_back_control':
         df['state'] = 8
+    elif state =='non_jj':
+        df['state'] = 9
 
     return df
 
@@ -95,10 +98,13 @@ def prep():
     osc_td = combine_setState_createFeatures('opponent_side_control_raw_data', 'opponent_side_control')
     #7 Opponent closed guard control
     ocg_td = combine_setState_createFeatures('opponent_closed_guard_raw_data', 'opponent_closed_guard')
-    #8 "Non jiu-jitsu" motion
+    #8 Opponent back control
+    obc_td = combine_setState_createFeatures('opponent_back_control_raw_data', 'opponent_back_control')
+    #9 "Non jiu-jitsu" motion
     nonjj_td = combine_setState_createFeatures('non_jj_raw_data', 'non_jj')
 
-    training_data = concat_data([ymount_td, ysc_td, ycg_td, ybc_td, omount_td, osc_td, ocg_td, nonjj_td])
+    training_data = concat_data([ymount_td, ysc_td, ycg_td, ybc_td, omount_td, osc_td, 
+        ocg_td, obc_td, nonjj_td])
     # remove NaN
     training_data = blank_filter(training_data)
     return training_data
@@ -141,7 +147,7 @@ def test_model(df_train):
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
                 min_samples_leaf=1, min_samples_split=2,
-                min_weight_fraction_leaf=0.0, n_estimators=1000, n_jobs=1,
+                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
                 oob_score=False, random_state=None, verbose=0,
                 warm_start=False)
 
@@ -163,10 +169,8 @@ def test_model(df_train):
 
 
 def trial(df_train, test_data):
-    """test with *mixed state* data - file name shows the move sequence
-    test 1: YSC_YMOUNT_YCG: Expect to see 2s, followed by 1s, followed by 3s
-    test 2: YMOUNT_YCG_YBC: Expect to see 1s followed by 3s, followed by 4s
-    test 3: OSC_OMOUNT_YCG_YMOUNT: Expect to see 6s, 5s, 3s, 1s 
+    """
+    Test 1: 1s followed by 3s
     """
     y = df_train['state'].values
     X = df_train.drop(['state', 'index'], axis=1)
@@ -175,7 +179,7 @@ def trial(df_train, test_data):
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
                 min_samples_leaf=1, min_samples_split=2,
-                min_weight_fraction_leaf=0.0, n_estimators=1500, n_jobs=1,
+                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
                 oob_score=False, random_state=None, verbose=0,
                 warm_start=False)
 
@@ -186,9 +190,9 @@ def trial(df_train, test_data):
 
     rf.fit(X_train, y_train)
     rf_pred2 = rf.predict(test_data)
-    print_full(rf_pred2)
-
-
+    final_prediction = convert_to_words(rf_pred2)
+    print_full(final_prediction)
+    get_position_stats(final_prediction)
 
 
 def start():
@@ -199,12 +203,16 @@ def start():
     print 'Finished preparing training data, total length: {}'.format(len(training_data))
     print training_data
 
-    test_data1 = prep_test('TEST1_YSC_YMOUNT_YCG.csv')
-    test_data2 = prep_test('TEST2_YMOUNT_YCG_YBC.csv')
-    test_data3 = prep_test('TEST3_OSC_OMOUNT_YCG_YMOUNT.csv')
+    test_data1 = prep_test('test1_ymount_ycg.csv')
+    test_data2 = prep_test('test2_ysc_ymount_ybc.csv')
+    test_data3 = prep_test('test3_omount_ycg_ymount_ocg_obc.csv')
+    test_data4 = prep_test('test4_osc_omount_ycg.csv')
 
     test_model(training_data)
-    trial(training_data, test_data2)
+    trial(training_data, test_data1)
+    #trial(training_data, test_data2)
+    #trial(training_data, test_data3)
+    #trial(training_data, test_data4)
 
 if __name__ == "__main__":
     start()
@@ -212,114 +220,255 @@ if __name__ == "__main__":
 """
 Notes
 
+KEY VARIABLES
+
+1) Frequency: 25Hz vs. 50Hz (or others?)
+
+2) Amount of time to concatenate
+
+3) Algorithm type
+
+4) Number of positions to attempt to detect
+
+5) Feature engineering - number of features and their type
+
+6) Quantity of data
+
+7) Number of sample users for test data
+
+8) location? Altitude effect?
+
+9) Sensor location on the rashguard
+
+10) Additional readings from the board (e.g. free fall) - links to features
+
+11) Number of sensors
+
+Data collection constants to consider (for a given training set):
+
+- users
+- Frequency
+- sensor location
+- sensor test
+- sensor immobilization 
+
 @2 reading time interval = 0.08 seconds
 rf prediction: 0.93972179289
 Random Forest Accuracy: 0.89 (+/- 0.09)
 
-test 1 (very bad at detecting side control)
-[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
- 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 2 2 2 2 3 3 2 1 3 3 3
- 3 3 2 3 3 2 2 2 2 2 1 2 2 1 1 1 1 2 2 1 1 1 1 1 1 1 1 3 3 3 3 3 3 3 3 3 3
- 3 3 3 3 1 3 3 3 2 2 2 2 2 2 2 2 3 1 1 1 3 3 3 3 3 3 2 2 2 2 2 3 1 1 1 1 3
- 3 3 3 3 3 3 3 2 1 3 2 2 2 3 2 2 1 1 3 1 1 1 1 1 3 3 1 2 2 1 1 2 3 2 3 3 2
- 3 3 1 1 2 2 1 2 1 1 1 1 1 1 1 1 3 3 1 1 1 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
- 3 3 3 3 3 3 1 3 1 3 1 1 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
- 1]
+test1 @ 10 (with rolling_max features)
 
- test2 (very accurate)
+Your Mount: 0.112
+Your Side Control: 0.016
+Your Closed Guard: 0.344
+Your Back Control: 0.024
+Opponent Mount: 0.192
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.232
+Opponent Back Control: 0.0
+OTHER: 0.08
 
- [3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
- 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
- 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
- 3 3 3 1 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 2 2 3 2 2 1 2
- 2 2 2 2 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 2 2 2 1 1 1 2 2 2 2 2 2 2
- 2 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 2 2 2 2 2 3 2
- 2 2 2 2 2 2 2 2 2 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
- 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
- 2 2 2 2 2 2 2 2 2 2 2 2 2]
+test 1 @ 25
+
+Not good at distinguishing between opponent closed guard and your mount 
+(if you remove opponent closed guard, detection capability goes up massively)
+
+Also (more minor) confusion between your closed guard and opponent mount
 
 
-@5 reading time interval = 0.2 seconds
+@1500 n_estimators
 
-rf prediction: 0.899581589958
-Random Forest Accuracy: 0.88 (+/- 0.11)
+rf prediction: 0.816593886463
+Random Forest Accuracy: 0.81 (+/- 0.16)
 
-test1 (very bad at detecting side control)
-[1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 3 3 3 3 3 2 1 2 1 1 1 1 1
- 3 3 3 3 3 3 2 2 2 2 1 3 3 3 2 2 1 1 1 3 3 1 2 2 3 1 1 3 2 1 3 1 1 1 1 1 1
- 1 1 3 3 3 3 3 3 3 3 3 3 3 3 1 1 1 1 1 1 1 1 1]
-
-test2 (very accurate)
-[3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
- 3 3 3 3 3 1 3 3 3 3 3 3 3 3 3 3 2 1 2 2 2 3 3 2 2 2 2 2 2 2 2 2 2 3 3 3 3
- 3 3 3 3 3 3 3 3 3 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
- 2 2 2]
-
-
-@10 reading time interval = 0.4 seconds
-rf prediction: 0.909090909091
-Random Forest Accuracy: 0.88 (+/- 0.11)
-BUT trial is ***RIDICULOUSLY*** more accurate
-
-test1 (so-so)
-[1 1 1 1 2 2 2 2 2 2 1 3 3 1 1 3 3 3 2 3 3 2 1 3 3 1 1 2 1 2 1 3 3 3 3 3 3
- 1 1 1 1]
-
-test2 (very good)
-[3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 2 2 3 2 2 2 2 2 3 3 3 3 3 2 2
- 2 2 2 2 2 2 2 2 2 2 2]
+Your Mount: 0.078431372549
+Your Side Control: 0.0
+Your Closed Guard: 0.352941176471
+Your Back Control: 0.0
+Opponent Mount: 0.196078431373
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.294117647059
+Opponent Back Control: 0.0196078431373
+OTHER: 0.0588235294118
 
 
+@5000 n_estimators
+Your Mount: 0.0196078431373
+Your Side Control: 0.0196078431373
+Your Closed Guard: 0.352941176471
+Your Back Control: 0.0196078431373
+Opponent Mount: 0.196078431373
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.294117647059
+Opponent Back Control: 0.0
+OTHER: 0.0980392156863
 
-@15 reading time intervals = 0.6 seconds
-rf prediction: 0.934426229508
-Random Forest Accuracy: 0.89 (+/- 0.11)
-
-test1 (so-so)
-[1 1 1 2 2 2 2 2 3 1 1 3 2 3 3 3 3 3 1 1 3 3 3 1 1 1 1]
-test2 came in perfect
-
-@20 reading time intervals = 0.8 second
-rf prediction: 0.85
-Random Forest Accuracy: 0.88 (+/- 0.14)
-
-test1 (pretty good)
-[2 2 2 2 3 1 3 3 3 3 1 1 3 3 1 1]
-
-test2: (1-2 errors)
-[3 3 3 3 3 3 3 3 3 3 2 2 3 3 2 2 2 2]
-
-@25 reading time intervals = 1 second
-rf prediction: 0.928571428571
-Random Forest Accuracy: 0.90 (+/- 0.08)
-
-test1 (pretty good)
-[1 2 2 2 3 3 3 1 1 3 1 1]
+@ rolling_max features
+rf prediction: 0.81568627451
+Random Forest Accuracy: 0.76 (+/- 0.14)
+Your Mount: 0.14
+Your Side Control: 0.0
+Your Closed Guard: 0.36
+Your Back Control: 0.0
+Opponent Mount: 0.18
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.22
+Opponent Back Control: 0.02
+OTHER: 0.08
 
 
-test2 (perfect)
-[3 3 3 3 3 3 3 3 3 3 3 2 2 2]
+@6000 n_estimators
+rf prediction: 0.760784313725
+Random Forest Accuracy: 0.74 (+/- 0.17)
 
-@30 reading time intervas = 1.2 seconds
-rf prediction: 0.95
-Random Forest Accuracy: 0.88 (+/- 0.19)
+Your Mount: 0.137254901961
+Your Side Control: 0.0
+Your Closed Guard: 0.352941176471
+Your Back Control: 0.0196078431373
+Opponent Mount: 0.196078431373
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.21568627451
+Opponent Back Control: 0.0
+OTHER: 0.078431372549
 
-test1 (so-so)
-[1 1 1 2 3 3 3 1 1 3 1]
 
-test2 (not good)
-[3 3 3 3 3 3 2 3]
+test 1 @ 30
+worse than 35
+
+@1500 n_estimators
+Your Mount: 0.047619047619
+Your Side Control: 0.0
+Your Closed Guard: 0.309523809524
+Your Back Control: 0.0238095238095
+Opponent Mount: 0.238095238095
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.309523809524
+Opponent Back Control: 0.0
+OTHER: 0.0714285714286
 
 
-@35 reading time intervals = 1.4 seconds
-rf prediction: 0.846153846154
-Random Forest Accuracy: 0.89 (+/- 0.13)
+@2000 n_estimators
+Your Mount: 0.0714285714286
+Your Side Control: 0.0
+Your Closed Guard: 0.333333333333
+Your Back Control: 0.0238095238095
+Opponent Mount: 0.214285714286
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.285714285714
+Opponent Back Control: 0.0
+OTHER: 0.0714285714286
 
-test1 (pretty good)
-[2 3 3 1 1 2]
+@2500 n_estimators
+Your Mount: 0.119047619048
+Your Side Control: 0.0
+Your Closed Guard: 0.357142857143
+Your Back Control: 0.0238095238095
+Opponent Mount: 0.190476190476
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.214285714286
+Opponent Back Control: 0.0
+OTHER: 0.0952380952381
 
-test2(not good)
-[3 3 3 3 3 3 2]
+@5000 n_estimators
+Your Mount: 0.142857142857
+Your Side Control: 0.0
+Your Closed Guard: 0.357142857143
+Your Back Control: 0.0238095238095
+Opponent Mount: 0.190476190476
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.190476190476
+Opponent Back Control: 0.0
+OTHER: 0.0952380952381
+
+@ rolling_max
+Your Mount: 0.0952380952381
+Your Side Control: 0.0
+Your Closed Guard: 0.357142857143
+Your Back Control: 0.0238095238095
+Opponent Mount: 0.190476190476
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.238095238095
+Opponent Back Control: 0.0
+OTHER: 0.0952380952381
+
+
+@6000 n_estimators
+Your Mount: 0.119047619048
+Your Side Control: 0.0
+Your Closed Guard: 0.357142857143
+Your Back Control: 0.0238095238095
+Opponent Mount: 0.190476190476
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.238095238095
+Opponent Back Control: 0.0
+OTHER: 0.0714285714286
+
+
+@10000 n_estimators
+Your Mount: 0.119047619048
+Your Side Control: 0.0
+Your Closed Guard: 0.333333333333
+Your Back Control: 0.0238095238095
+Opponent Mount: 0.214285714286
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.214285714286
+Opponent Back Control: 0.0
+OTHER: 0.0952380952381
+
+
+test 1 @ 35
+
+better
+
+@1500 n_estimators
+rf prediction: 0.807692307692
+Random Forest Accuracy: 0.76 (+/- 0.15)
+
+Your Mount: 0.0833333333333
+Your Side Control: 0.0277777777778
+Your Closed Guard: 0.388888888889
+Your Back Control: 0.0
+Opponent Mount: 0.166666666667
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.25
+Opponent Back Control: 0.0
+OTHER: 0.0833333333333
+
+
+@6000 n_estimators
+rf prediction: 0.785714285714
+Random Forest Accuracy: 0.76 (+/- 0.16)
+
+Your Mount: 0.111111111111
+Your Side Control: 0.0277777777778
+Your Closed Guard: 0.388888888889
+Your Back Control: 0.0
+Opponent Mount: 0.166666666667
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.222222222222
+Opponent Back Control: 0.0
+OTHER: 0.0833333333333
+
+test 1 @ 40
+
+worse
+
+rf prediction: 0.81875
+Random Forest Accuracy: 0.76 (+/- 0.16)
+
+Your Mount: 0.0625
+Your Side Control: 0.03125
+Your Closed Guard: 0.375
+Your Back Control: 0.0
+Opponent Mount: 0.1875
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.21875
+Opponent Back Control: 0.0
+OTHER: 0.125
 
 """
+
+
+
+
 

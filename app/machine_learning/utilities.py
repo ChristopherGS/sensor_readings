@@ -1,3 +1,4 @@
+from __future__ import division
 import numpy as np
 import pandas as pd
 import os
@@ -118,3 +119,79 @@ def blank_filter(df):
     #print df.isnull().values.any()
     # check columns
     #print df.isnull().any()
+
+def convert_to_words(df):
+
+    updated_df = ['your_mount' if v == 1 
+                    else 'your_side_control' if v == 2
+                    else 'your_closed_guard' if v == 3
+                    else 'your_back_control' if v == 4
+                    else 'opponent_mount' if v == 5
+                    else 'opponent_side_control' if v == 6
+                    else 'opponent_closed_guard' if v == 7
+                    else 'opponent_back_control' if v == 8
+                    else 'OTHER' if v == 9
+                    else 'UNKNOWN' for v in df]
+
+    return updated_df
+
+def get_position_stats(df):
+    total = len(df)
+
+    try: 
+        ymount = (df.count('your_mount'))/total
+    except ZeroDivisionError:
+        ymount = 0
+
+    try: 
+        ysc = (df.count('your_side_control'))/total
+    except ZeroDivisionError:
+        ysc = 0
+
+    try: 
+        ycg = (df.count('your_closed_guard'))/total
+    except ZeroDivisionError:
+        ycg = 0
+
+    try: 
+        ybc = (df.count('your_back_control'))/total
+    except ZeroDivisionError:
+        ybc = 0
+
+    try: 
+        omount = (df.count('opponent_mount'))/total
+    except ZeroDivisionError:
+        omount = 0
+
+    try: 
+        osc = (df.count('opponent_side_control'))/total
+    except ZeroDivisionError:
+        osc = 0
+
+    try: 
+        ocg = (df.count('opponent_closed_guard'))/total
+    except ZeroDivisionError:
+        ocg = 0
+
+    try: 
+        obc = (df.count('opponent_back_control'))/total
+    except ZeroDivisionError:
+        obc = 0
+
+    try: 
+        OTHER = (df.count('OTHER'))/total
+    except ZeroDivisionError:
+        OTHER = 0
+
+
+    return ('Your Mount: {:0.2f}\n'
+            'Your Side Control: {:1.2f}\n'
+            'Your Closed Guard: {:2.2f}\n'
+            'Your Back Control: {:3.2f}\n'
+            'Opponent Mount: {:4.2f}\n'
+            'Opponent Side Control: {:5.2f}\n'
+            'Opponent Closed Guard: {:6.2f}\n'
+            'Opponent Back Control: {:7.2f}\n'
+            'OTHER: {:8.2f}\n'
+            .format(ymount, ysc, ycg, ybc,
+                omount, osc, ocg, obc, OTHER))
