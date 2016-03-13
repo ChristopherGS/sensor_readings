@@ -6,6 +6,8 @@ import glob
 from dateutil import parser
 from datetime import datetime
 
+import config
+
 
 DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -74,6 +76,7 @@ def combine_csv(directory_description):
     
 
     allFiles = glob.glob(DIR + '/data/'+ directory_description + '/*.csv')
+    print allFiles
     df = pd.DataFrame()
     list_ = []
     for file_ in allFiles:
@@ -104,11 +107,10 @@ def convert_to_words(df):
                     else 'your_side_control' if v == 2
                     else 'your_closed_guard' if v == 3
                     else 'your_back_control' if v == 4
-                    else 'opponent_mount' if v == 5
-                    else 'opponent_side_control' if v == 6
-                    else 'opponent_closed_guard' if v == 7
-                    else 'opponent_back_control' if v == 8
-                    else 'OTHER' if v == 9
+                    else 'opponent_mount_or_sc' if v == 5
+                    else 'opponent_closed_guard' if v == 6
+                    else 'opponent_back_control' if v == 7
+                    else 'OTHER' if v == 8
                     else 'UNKNOWN' for v in df]
 
     return updated_df
@@ -137,14 +139,9 @@ def get_position_stats(df):
         ybc = 0
 
     try: 
-        omount = (df.count('opponent_mount'))/total
+        omountsc = (df.count('opponent_mount_or_sc'))/total
     except ZeroDivisionError:
-        omount = 0
-
-    try: 
-        osc = (df.count('opponent_side_control'))/total
-    except ZeroDivisionError:
-        osc = 0
+        omountsc = 0
 
     try: 
         ocg = (df.count('opponent_closed_guard'))/total
@@ -166,10 +163,9 @@ def get_position_stats(df):
             'Your Side Control: {1}\n'
             'Your Closed Guard: {2}\n'
             'Your Back Control: {3}\n'
-            'Opponent Mount: {4}\n'
-            'Opponent Side Control: {5}\n'
-            'Opponent Closed Guard: {6}\n'
-            'Opponent Back Control: {7}\n'
-            'OTHER: {8}\n'
+            'Opponent Mount or Opponent Side Control: {4}\n'
+            'Opponent Closed Guard: {5}\n'
+            'Opponent Back Control: {6}\n'
+            'OTHER: {7}\n'
             .format(ymount, ysc, ycg, ybc,
-                omount, osc, ocg, obc, OTHER))
+                omountsc, ocg, obc, OTHER))

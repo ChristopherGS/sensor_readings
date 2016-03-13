@@ -204,10 +204,6 @@ def trial(df_train, test_data):
     print_full(final_prediction)
     get_position_stats(final_prediction)
 
-    rf.fit(X_train, y_train)
-    rf_pred2 = rf.predict(test_data)
-    print_full(rf_pred2)
-
 
 ##############
 #API METHODS

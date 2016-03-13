@@ -10,11 +10,16 @@ from sklearn import cross_validation
 from sklearn.cross_validation import KFold
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
-from sklearn.grid_search import GridSearchCV
+from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
+from sklearn.preprocessing import PolynomialFeatures
+from time import time
+from scipy.stats import randint as sp_randint
 
 from utilities import (format_time, print_full, combine_csv, blank_filter, concat_data, 
     resolve_acc_gyro, convert_to_words, get_position_stats)
 from feature_engineering import create_rm_feature
+
+import config
 
 """
 This file preps the jiu-jitsu motion data for analysis:
@@ -37,7 +42,14 @@ DIR = os.path.dirname(os.path.realpath(__file__))
 pd.set_option('display.width', 1200)
 
 FEATURE_COUNT = 0
-TIME_SEQUENCE_LENGTH = 25
+TIME_SEQUENCE_LENGTH = config.TIME_SEQUENCE_LENGTH
+
+"""
+If I just want to only get the interaction features(not x^2, then it is enough to pass interaction_only=True
+and include_bias=False. 
+If you want to get higher order Polynomial features(say nth degree), pass degree=n optional parameter to Polynomial Features.
+"""
+polynomial_features = PolynomialFeatures(interaction_only=False, include_bias=True, degree=2)
 
 #================================================================================
 # DATA PREPARATION
@@ -54,16 +66,14 @@ def set_state(df, state):
         df['state'] = 3
     elif state =='your_back_control':
         df['state'] = 4
-    elif state =='opponent_mount':
+    elif state =='opponent_mount_or_sc':
         df['state'] = 5
-    elif state =='opponent_side_control':
-        df['state'] = 6
     elif state =='opponent_closed_guard':
-        df['state'] = 7
+        df['state'] = 6
     elif state == 'opponent_back_control':
-        df['state'] = 8
+        df['state'] = 7
     elif state =='non_jj':
-        df['state'] = 9
+        df['state'] = 8
 
     return df
 
@@ -92,19 +102,16 @@ def prep():
     ycg_td = combine_setState_createFeatures('your_closed_guard_raw_data', 'your_closed_guard')
     #4 Your back control
     ybc_td = combine_setState_createFeatures('your_back_control_raw_data', 'your_back_control')
-    #5 Opponent mount
-    omount_td = combine_setState_createFeatures('opponent_mount_raw_data', 'opponent_mount')
-    #6 Opponent side control
-    osc_td = combine_setState_createFeatures('opponent_side_control_raw_data', 'opponent_side_control')
-    #7 Opponent closed guard control
+    #5 Opponent mount or opponent side control
+    omountsc_td = combine_setState_createFeatures('opponent_mount_and_opponent_side_control_raw_data', 'opponent_mount_or_sc')
+    #6 Opponent closed guard
     ocg_td = combine_setState_createFeatures('opponent_closed_guard_raw_data', 'opponent_closed_guard')
-    #8 Opponent back control
+    #7 Opponent back control
     obc_td = combine_setState_createFeatures('opponent_back_control_raw_data', 'opponent_back_control')
-    #9 "Non jiu-jitsu" motion
+    #8 "Non jiu-jitsu" motion
     nonjj_td = combine_setState_createFeatures('non_jj_raw_data', 'non_jj')
 
-    training_data = concat_data([ymount_td, ysc_td, ycg_td, ybc_td, omount_td, osc_td, 
-        ocg_td, obc_td, nonjj_td])
+    training_data = concat_data([ymount_td, ysc_td, ycg_td, ybc_td, omountsc_td, ocg_td, obc_td, nonjj_td])
     # remove NaN
     training_data = blank_filter(training_data)
     return training_data
@@ -125,16 +132,25 @@ def prep_test(el_file):
 # MACHINE LEARNING
 #================================================================================
 
-"""
-Things to try:
 
-- Adjust random forest number of trees
-- Adjust data time intervals
-- Adjust general jj data quantity
-- Add features - not sure whether to create them before or after time sequence creation
+# specify parameters and distributions to sample from
+param_dist = {"max_depth": [3, None],
+              "max_features": sp_randint(1, 11),
+              "min_samples_split": sp_randint(1, 11),
+              "min_samples_leaf": sp_randint(1, 11),
+              "bootstrap": [True, False],
+              "criterion": ["gini", "entropy"]}
 
-"""
-
+# Utility function to report best scores
+def report(grid_scores, n_top=3):
+    top_scores = sorted(grid_scores, key=itemgetter(1), reverse=True)[:n_top]
+    for i, score in enumerate(top_scores):
+        print("Model with rank: {0}".format(i + 1))
+        print("Mean validation score: {0:.3f} (std: {1:.3f})".format(
+              score.mean_validation_score,
+              np.std(score.cv_validation_scores)))
+        print("Parameters: {0}".format(score.parameters))
+        print("")
 
 
 def test_model(df_train):
@@ -142,6 +158,11 @@ def test_model(df_train):
 
     y = df_train['state'].values
     X = df_train.drop(['state', 'index'], axis=1)
+
+    param_grid = [
+      {'C': [1, 10, 100, 1000], 'kernel': ['linear']},
+      {'C': [1, 10, 100, 1000], 'gamma': [0.001, 0.0001], 'kernel': ['rbf']},
+     ]
     if X.isnull().values.any() == False: 
 
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
@@ -150,6 +171,9 @@ def test_model(df_train):
                 min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
                 oob_score=False, random_state=None, verbose=0,
                 warm_start=False)
+
+        
+        #X = polynomial_features.fit_transform(X)
 
         X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1)
 
@@ -163,9 +187,29 @@ def test_model(df_train):
     print 'rf prediction: {}'.format(accuracy_score(y_test, rf_pred))
     print("Random Forest Accuracy: %0.2f (+/- %0.2f)" % (rf_scores.mean(), rf_scores.std() * 2))
 
+    # run randomized search
+    n_iter_search = 20
+    random_search = RandomizedSearchCV(rf, param_distributions=param_dist,
+                                       n_iter=n_iter_search)
+
+    start = time()
+    random_search.fit(X, y)
+    print("RandomizedSearchCV took %.2f seconds for %d candidates"
+          " parameter settings." % ((time() - start), n_iter_search))
+    report(random_search.grid_scores_)
+
+    # run grid search
+    #grid_search = GridSearchCV(rf, param_grid=param_grid)
+    #start = time()
+    #grid_search.fit(X, y)
+
+    #print("GridSearchCV took %.2f seconds for %d candidate parameter settings."
+    #  % (time() - start, len(grid_search.grid_scores_)))
+    #report(grid_search.grid_scores_)
+
     # Determine feature importance
-    featImp = rf.feature_importances_
-    print(pd.Series(featImp, index=X.columns).sort(inplace=False,ascending=False))
+    #featImp = rf.feature_importances_
+    #print(pd.Series(featImp, index=X.columns).sort(inplace=False,ascending=False))
 
 
 def trial(df_train, test_data):
@@ -183,16 +227,25 @@ def trial(df_train, test_data):
                 oob_score=False, random_state=None, verbose=0,
                 warm_start=False)
 
-        X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.4)
+        #X = polynomial_features.fit_transform(X)
+
+        X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1)
 
     else: 
         print "Found NaN values"
 
     rf.fit(X_train, y_train)
+
+    test_data = polynomial_features.fit_transform(test_data)
     rf_pred2 = rf.predict(test_data)
+    print rf_pred2
     final_prediction = convert_to_words(rf_pred2)
     print_full(final_prediction)
     get_position_stats(final_prediction)
+    #print 'parameter list: {}'.format(polynomial_features.get_params())
+
+
+
 
 
 def start():
@@ -206,7 +259,7 @@ def start():
     test_data1 = prep_test('test1_ymount_ycg.csv')
     test_data2 = prep_test('test2_ysc_ymount_ybc.csv')
     test_data3 = prep_test('test3_omount_ycg_ymount_ocg_obc.csv')
-    test_data4 = prep_test('test4_osc_omount_ycg.csv')
+    test_data4 = prep_test('test4_osc_omount_ycg.csv') # I THINK THIS IS AN ERROR AND THAT THE LAST POSITION IS OCG
 
     test_model(training_data)
     trial(training_data, test_data1)
@@ -218,7 +271,7 @@ if __name__ == "__main__":
     start()
 
 """
-Notes
+Rambling Notes
 
 KEY VARIABLES
 
@@ -300,8 +353,8 @@ Your Back Control: 0.0196078431373
 Opponent Mount: 0.196078431373
 Opponent Side Control: 0.0
 Opponent Closed Guard: 0.294117647059
-Opponent Back Control: 0.0
-OTHER: 0.0980392156863
+Opponent Back Control: 0.
+
 
 @min_leaf = 5
 Your Mount: 0.12
@@ -324,6 +377,61 @@ Opponent Side Control: 0.0
 Opponent Closed Guard: 0.16
 Opponent Back Control: 0.0
 OTHER: 0.1
+
+
+
+===============
+ADD DATA
+===============
+Your Mount: 0.1
+Your Side Control: 0.02
+Your Closed Guard: 0.36
+Your Back Control: 0.02
+Opponent Mount: 0.18
+Opponent Side Control: 0.0
+Opponent Closed Guard: 0.18
+Opponent Back Control: 0.0
+OTHER: 0.140
+OTHER: 0.0980392156863
+
+Your Mount: 0.0806451612903
+Your Side Control: 0.0322580645161
+Your Closed Guard: 0.225806451613
+Your Back Control: 0.0
+Opponent Mount or Opponent Side Control: 0.322580645161
+Opponent Closed Guard: 0.225806451613
+Opponent Back Control: 0.0
+OTHER: 0.112903225806
+
+Your Mount: 0.0645161290323
+Your Side Control: 0.0322580645161
+Your Closed Guard: 0.209677419355
+Your Back Control: 0.0
+Opponent Mount or Opponent Side Control: 0.338709677419
+Opponent Closed Guard: 0.241935483871
+Opponent Back Control: 0.0
+OTHER: 0.112903225806
+
+Your Mount: 0.0806451612903
+Your Side Control: 0.0322580645161
+Your Closed Guard: 0.338709677419
+Your Back Control: 0.0
+Opponent Mount or Opponent Side Control: 0.209677419355
+Opponent Closed Guard: 0.177419354839
+Opponent Back Control: 0.0
+OTHER: 0.161290322581
+
+Your Mount: 0.1
+Your Side Control: 0.02
+Your Closed Guard: 0.36
+Your Back Control: 0.02
+Opponent Mount or Opponent Side Control: 0.18
+Opponent Closed Guard: 0.22
+Opponent Back Control: 0.0
+OTHER: 0.1
+
+
+=====================
 
 @min_leaf = 15
 Your Mount: 0.1
@@ -509,6 +617,23 @@ Opponent Side Control: 0.0
 Opponent Closed Guard: 0.21875
 Opponent Back Control: 0.0
 OTHER: 0.125
+
+
+
+
+
+
+
+Feature engineering ideas:
+
+- Check for pauses for positions where you are pinned?
+
+- Check for being bridged (you can't be bridged when you are in someone's guard) - i.e. possible in one but not the other
+    --> Has a bridge occured within the last x seconds?
+
+- Consider using polynomial features: http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html#sklearn.preprocessing.PolynomialFeatures
+
+- For NaNs, replace using imputation: http://scikit-learn.org/stable/modules/preprocessing.html#imputation-of-missing-values
 
 """
 

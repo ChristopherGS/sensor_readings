@@ -1,16 +1,19 @@
 import numpy as np
 import pandas as pd
 import os
+from sklearn.preprocessing import PolynomialFeatures
+
+import config
 
 
 def rolling_average(df):
-    return pd.rolling_mean(df, window=10, center=True).mean()
+    return pd.rolling_mean(df, window=config.TIME_SEQUENCE_LENGTH-2, center=True).mean()
 
 def rolling_median(df):
-    return pd.rolling_median(df, window=10, center=True).mean()
+    return pd.rolling_median(df, window=config.TIME_SEQUENCE_LENGTH-2, center=True).mean()
 
 def rolling_max(df):
-    return pd.rolling_max(df, window=10, center=True).mean()
+    return pd.rolling_max(df, window=config.TIME_SEQUENCE_LENGTH-2, center=True).mean()
 
 def create_rm_feature(df, sequence_length):
     features = []
