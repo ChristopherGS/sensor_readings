@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import os
-from sklearn.preprocessing import PolynomialFeatures
+
 
 import config
 
@@ -83,29 +83,29 @@ def create_rm_feature(df, sequence_length):
 
     #rolling max
 
-    x_rm = df['ACCEL_X'].groupby(idx).apply(rolling_max)
-    x_rm.name = 'rolling_max_x'
-    features.append(x_rm)
+    #x_rm = df['ACCEL_X'].groupby(idx).apply(rolling_max)
+    #x_rm.name = 'rolling_max_x'
+    #features.append(x_rm)
 
-    y_rm = df['ACCEL_Y'].groupby(idx).apply(rolling_max)
-    y_rm.name = 'rolling_max_y'
-    features.append(y_rm)
+    #y_rm = df['ACCEL_Y'].groupby(idx).apply(rolling_max)
+    #y_rm.name = 'rolling_max_y'
+    #features.append(y_rm)
 
-    z_rm = df['ACCEL_Z'].groupby(idx).apply(rolling_max)
-    z_rm.name = 'rolling_max_z'
-    features.append(z_rm)
+    #z_rm = df['ACCEL_Z'].groupby(idx).apply(rolling_max)
+    #z_rm.name = 'rolling_max_z'
+    #features.append(z_rm)
 
-    gx_rm = df['GYRO_X'].groupby(idx).apply(rolling_max)
-    gx_rm.name = 'rolling_max_gx'
-    features.append(gx_rm)
+    #gx_rm = df['GYRO_X'].groupby(idx).apply(rolling_max)
+    #gx_rm.name = 'rolling_max_gx'
+    #features.append(gx_rm)
 
-    gy_rm = df['GYRO_Y'].groupby(idx).apply(rolling_max)
-    gy_rm.name = 'rolling_max_gy'
-    features.append(gy_rm)
+    #gy_rm = df['GYRO_Y'].groupby(idx).apply(rolling_max)
+    #gy_rm.name = 'rolling_max_gy'
+    #features.append(gy_rm)
 
-    gz_rm = df['GYRO_Z'].groupby(idx).apply(rolling_max)
-    gz_rm.name = 'rolling_max_gz'
-    features.append(gz_rm)
+    #gz_rm = df['GYRO_Z'].groupby(idx).apply(rolling_max)
+    #gz_rm.name = 'rolling_max_gz'
+    #features.append(gz_rm)
 
     data = pd.concat(features, axis=1)
     return data

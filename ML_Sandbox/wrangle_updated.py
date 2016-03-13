@@ -14,6 +14,7 @@ from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
 from sklearn.preprocessing import PolynomialFeatures
 from time import time
 from scipy.stats import randint as sp_randint
+from operator import itemgetter
 
 from utilities import (format_time, print_full, combine_csv, blank_filter, concat_data, 
     resolve_acc_gyro, convert_to_words, get_position_stats)
@@ -134,12 +135,14 @@ def prep_test(el_file):
 
 
 # specify parameters and distributions to sample from
-param_dist = {"max_depth": [3, None],
-              "max_features": sp_randint(1, 11),
-              "min_samples_split": sp_randint(1, 11),
-              "min_samples_leaf": sp_randint(1, 11),
-              "bootstrap": [True, False],
-              "criterion": ["gini", "entropy"]}
+param_dist = {"criterion": ["gini", "entropy"],
+                "bootstrap": [True, False]}
+#"max_depth": [3, None],
+              #"max_features": sp_randint(1, 11),
+              #"min_samples_split": sp_randint(1, 11),
+              #"min_samples_leaf": sp_randint(1, 11),
+              #"bootstrap": [True, False],
+              #"criterion": ["gini", "entropy"]}
 
 # Utility function to report best scores
 def report(grid_scores, n_top=3):
@@ -188,7 +191,7 @@ def test_model(df_train):
     print("Random Forest Accuracy: %0.2f (+/- %0.2f)" % (rf_scores.mean(), rf_scores.std() * 2))
 
     # run randomized search
-    n_iter_search = 20
+    n_iter_search = 3
     random_search = RandomizedSearchCV(rf, param_distributions=param_dist,
                                        n_iter=n_iter_search)
 
