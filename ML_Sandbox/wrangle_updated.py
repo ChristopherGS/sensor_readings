@@ -50,7 +50,7 @@ If I just want to only get the interaction features(not x^2, then it is enough t
 and include_bias=False. 
 If you want to get higher order Polynomial features(say nth degree), pass degree=n optional parameter to Polynomial Features.
 """
-polynomial_features = PolynomialFeatures(interaction_only=False, include_bias=True, degree=2)
+polynomial_features = PolynomialFeatures(interaction_only=False, include_bias=True, degree=3)
 
 #================================================================================
 # DATA PREPARATION
@@ -135,17 +135,17 @@ def prep_test(el_file):
 
 
 # specify parameters and distributions to sample from
-param_dist = {"criterion": ["gini", "entropy"],
-                "bootstrap": [True, False]}
-#"max_depth": [3, None],
-              #"max_features": sp_randint(1, 11),
-              #"min_samples_split": sp_randint(1, 11),
-              #"min_samples_leaf": sp_randint(1, 11),
-              #"bootstrap": [True, False],
-              #"criterion": ["gini", "entropy"]}
+param_dist = {
+              "n_estimators": [5000, 5500],
+              "max_depth": [3, None],
+              "max_features": sp_randint(1, 11),
+              "min_samples_split": sp_randint(1, 11),
+              "min_samples_leaf": sp_randint(1, 11),
+              "bootstrap": [True, False],
+              "criterion": ["gini", "entropy"]}
 
 # Utility function to report best scores
-def report(grid_scores, n_top=3):
+def report(grid_scores, n_top=10):
     top_scores = sorted(grid_scores, key=itemgetter(1), reverse=True)[:n_top]
     for i, score in enumerate(top_scores):
         print("Model with rank: {0}".format(i + 1))
@@ -162,17 +162,26 @@ def test_model(df_train):
     y = df_train['state'].values
     X = df_train.drop(['state', 'index'], axis=1)
 
-    param_grid = [
-      {'C': [1, 10, 100, 1000], 'kernel': ['linear']},
-      {'C': [1, 10, 100, 1000], 'gamma': [0.001, 0.0001], 'kernel': ['rbf']},
-     ]
+    #param_grid = [
+    #  {'C': [1, 10, 100, 1000], 'kernel': ['linear']},
+    #  {'C': [1, 10, 100, 1000], 'gamma': [0.001, 0.0001], 'kernel': ['rbf']},
+    # ]
+
+    param_grid = {
+            "n_estimators"     : [5000, 5500],
+           "criterion"         : ["gini", "entropy"],
+           "max_features"      : ['auto', 'sqrt', 'log2'],
+           "max_depth"         : [15, 25],
+           "min_samples_split" : [2, 10] ,
+           "bootstrap": [True, False]}
+
     if X.isnull().values.any() == False: 
 
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
-                min_samples_leaf=10, min_samples_split=2,
-                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
-                oob_score=False, random_state=None, verbose=0,
+                min_samples_leaf=8, min_samples_split=4,
+                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=-1,
+                oob_score=False, random_state=None, verbose=2,
                 warm_start=False)
 
         
@@ -183,12 +192,7 @@ def test_model(df_train):
     else: 
         print "Found NaN values"
 
-    rf.fit(X_train, y_train)
-    rf_pred = rf.predict(X_test)
-    rf_scores = cross_validation.cross_val_score(
-        rf, X, df_train.state, cv=10, scoring='accuracy')
-    print 'rf prediction: {}'.format(accuracy_score(y_test, rf_pred))
-    print("Random Forest Accuracy: %0.2f (+/- %0.2f)" % (rf_scores.mean(), rf_scores.std() * 2))
+    
 
     # run randomized search
     n_iter_search = 3
@@ -201,6 +205,15 @@ def test_model(df_train):
           " parameter settings." % ((time() - start), n_iter_search))
     report(random_search.grid_scores_)
 
+    # Get the prediction accuracy
+
+    rf.fit(X_train, y_train)
+    rf_pred = rf.predict(X_test)
+    rf_scores = cross_validation.cross_val_score(
+        rf, X, df_train.state, cv=10, scoring='accuracy')
+    print 'rf prediction: {}'.format(accuracy_score(y_test, rf_pred))
+    print("Random Forest Accuracy: %0.2f (+/- %0.2f)" % (rf_scores.mean(), rf_scores.std() * 2))
+
     # run grid search
     #grid_search = GridSearchCV(rf, param_grid=param_grid)
     #start = time()
@@ -211,8 +224,8 @@ def test_model(df_train):
     #report(grid_search.grid_scores_)
 
     # Determine feature importance
-    #featImp = rf.feature_importances_
-    #print(pd.Series(featImp, index=X.columns).sort(inplace=False,ascending=False))
+    featImp = rf.feature_importances_
+    print(pd.Series(featImp, index=X.columns).sort(inplace=False,ascending=False))
 
 
 def trial(df_train, test_data):
@@ -225,12 +238,12 @@ def trial(df_train, test_data):
 
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
-                min_samples_leaf=10, min_samples_split=2,
-                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
+                min_samples_leaf=8, min_samples_split=4,
+                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=-1,
                 oob_score=False, random_state=None, verbose=0,
                 warm_start=False)
 
-        #X = polynomial_features.fit_transform(X)
+        X = polynomial_features.fit_transform(X)
 
         X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1)
 
@@ -262,13 +275,19 @@ def start():
     test_data1 = prep_test('test1_ymount_ycg.csv')
     test_data2 = prep_test('test2_ysc_ymount_ybc.csv')
     test_data3 = prep_test('test3_omount_ycg_ymount_ocg_obc.csv')
-    test_data4 = prep_test('test4_osc_omount_ycg.csv') # I THINK THIS IS AN ERROR AND THAT THE LAST POSITION IS OCG
+    test_data4 = prep_test('GL_TEST1_CS.csv')
+    test_data5 = prep_test('GL_TEST2_CS.csv')
+    test_data6 = prep_test('GL_TEST3_CS_very_still.csv')
+    test_data7 = prep_test('GL_TEST1_UrsWearing.csv')
 
     test_model(training_data)
     trial(training_data, test_data1)
-    trial(training_data, test_data2)
-    trial(training_data, test_data3)
+    #trial(training_data, test_data2)
+    #trial(training_data, test_data3)
     trial(training_data, test_data4)
+    #trial(training_data, test_data5)
+    trial(training_data, test_data6)
+    trial(training_data, test_data7)
 
 if __name__ == "__main__":
     start()
@@ -571,6 +590,20 @@ Opponent Back Control: 0.0
 OTHER: 0.0952380952381
 
 
+====================
+NEW DATA
+====================
+
+Your Mount: 0.121951219512
+Your Side Control: 0.0
+Your Closed Guard: 0.268292682927
+Your Back Control: 0.0243902439024
+Opponent Mount or Opponent Side Control: 0.268292682927
+Opponent Closed Guard: 0.219512195122
+Opponent Back Control: 0.0
+OTHER: 0.0975609756098
+
+
 test 1 @ 35
 
 better
@@ -627,6 +660,8 @@ OTHER: 0.125
 
 
 
+
+
 Feature engineering ideas:
 
 - Check for pauses for positions where you are pinned?
@@ -637,6 +672,116 @@ Feature engineering ideas:
 - Consider using polynomial features: http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html#sklearn.preprocessing.PolynomialFeatures
 
 - For NaNs, replace using imputation: http://scikit-learn.org/stable/modules/preprocessing.html#imputation-of-missing-values
+
+
+
+=======
+=======
+
+
+TO DELETE
+
+1) 2 polynomial
+
+[8 8 8 1 1 1 6 6 1 1 6 6 8 1 6 8 6 2 4 5 3 5 3 3 3 5 3 3 5 3 3 3 3 5 3 5 5
+ 5 5 5 5]
+
+['OTHER', 'OTHER', 'OTHER', 'your_mount', 'your_mount', 'your_mount', 'opponent_closed_guard', 'opponent_closed_guard', 'your_mount', 'your_mount', 'opponent_closed_guard', 'opponent_closed_guard', 'OTHER', 'your_mount', 'opponent_closed_guard', 'OTHER', 'opponent_closed_guard', 'your_side_control', 'your_back_control', 'opponent_mount_or_sc', 'your_closed_guard', 'opponent_mount_or_sc', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'your_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc']
+Your Mount: 0.146341463415
+Your Side Control: 0.0243902439024
+Your Closed Guard: 0.268292682927
+Your Back Control: 0.0243902439024
+Opponent Mount or Opponent Side Control: 0.268292682927
+Opponent Closed Guard: 0.146341463415
+Opponent Back Control: 0.0
+OTHER: 0.121951219512
+
+[8 8 7 7 7 7 4 3 8 6 1 1 6 1 1 1 1 2 2 2 2 7 2 2 2 2 1 1 3 5 5 3 3 3 5 3 3
+ 4 5 3 3 5 3 1 1 1 6 6 6 2 1 6 1 6 3 5 5 5 5 5 5 5 5 5 5 5 5 5 4 7 5 7 7 7
+ 7 7 4 7 7 2 1]
+['OTHER', 'OTHER', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'your_back_control', 'your_closed_guard', 'OTHER', 'opponent_closed_guard', 'your_mount', 'your_mount', 'opponent_closed_guard', 'your_mount', 'your_mount', 'your_mount', 'your_mount', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'opponent_back_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_mount', 'your_mount', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'your_closed_guard', 'your_closed_guard', 'your_back_control', 'opponent_mount_or_sc', 'your_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'your_closed_guard', 'your_mount', 'your_mount', 'your_mount', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'your_side_control', 'your_mount', 'opponent_closed_guard', 'your_mount', 'opponent_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_back_control', 'opponent_back_control', 'opponent_mount_or_sc', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'your_back_control', 'opponent_back_control', 'opponent_back_control', 'your_side_control', 'your_mount']
+Your Mount: 0.172839506173
+Your Side Control: 0.123456790123
+Your Closed Guard: 0.135802469136
+Your Back Control: 0.0493827160494
+Opponent Mount or Opponent Side Control: 0.234567901235
+Opponent Closed Guard: 0.0864197530864
+Opponent Back Control: 0.16049382716
+OTHER: 0.037037037037
+
+[8 8 7 7 7 7 7 4 4 4 1 1 6 8 1 8 1 6 1 2 2 2 2 2 2 2 2 7 5 5 5 5 5 3 3 5 5
+ 2 1 1 1 8 1 1 6 6 8 3 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 4 7 7 7 5 7 7 7 7 7 4
+ 2 1 6 8]
+
+['OTHER', 'OTHER', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'your_back_control', 'your_back_control', 'your_back_control', 'your_mount', 'your_mount', 'opponent_closed_guard', 'OTHER', 'your_mount', 'OTHER', 'your_mount', 'opponent_closed_guard', 'your_mount', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'opponent_back_control', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_side_control', 'your_mount', 'your_mount', 'your_mount', 'OTHER', 'your_mount', 'your_mount', 'opponent_closed_guard', 'opponent_closed_guard', 'OTHER', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_mount_or_sc', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'your_back_control', 'your_side_control', 'your_mount', 'opponent_closed_guard', 'OTHER']
+Your Mount: 0.141025641026
+Your Side Control: 0.128205128205
+Your Closed Guard: 0.0384615384615
+Your Back Control: 0.0641025641026
+Opponent Mount or Opponent Side Control: 0.294871794872
+Opponent Closed Guard: 0.0641025641026
+Opponent Back Control: 0.179487179487
+OTHER: 0.0897435897436
+
+
+
+----------------------------------------------------------
+
+2) 3 polynomial
+
+rf prediction: 0.797720797721
+Random Forest Accuracy: 0.70 (+/- 0.17)
+[8 8 8 6 1 6 1 6 1 1 6 1 8 1 6 8 6 1 4 5 3 3 3 3 3 3 3 3 5 3 3 3 3 3 3 3 5
+ 5 5 5 5]
+['OTHER', 'OTHER', 'OTHER', 'opponent_closed_guard', 'your_mount', 'opponent_closed_guard', 'your_mount', 'opponent_closed_guard', 'your_mount', 'your_mount', 'opponent_closed_guard', 'your_mount', 'OTHER', 'your_mount', 'opponent_closed_guard', 'OTHER', 'opponent_closed_guard', 'your_mount', 'your_back_control', 'opponent_mount_or_sc', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc']
+Your Mount: 0.170731707317
+Your Side Control: 0.0
+Your Closed Guard: 0.365853658537
+Your Back Control: 0.0243902439024
+Opponent Mount or Opponent Side Control: 0.170731707317
+Opponent Closed Guard: 0.146341463415
+Opponent Back Control: 0.0
+OTHER: 0.121951219512
+
+[8 8 7 4 4 4 4 4 4 1 1 1 1 1 1 1 6 1 2 2 2 7 2 2 2 2 1 1 5 5 5 5 5 3 5 5 3
+ 4 5 5 3 3 3 1 1 1 6 6 6 2 1 6 1 6 3 5 5 5 5 5 5 5 5 5 5 5 5 5 7 5 5 7 7 7
+ 7 7 7 7 7 2 6]
+['OTHER', 'OTHER', 'opponent_back_control', 'your_back_control', 'your_back_control', 'your_back_control', 'your_back_control', 'your_back_control', 'your_back_control', 'your_mount', 'your_mount', 'your_mount', 'your_mount', 'your_mount', 'your_mount', 'your_mount', 'opponent_closed_guard', 'your_mount', 'your_side_control', 'your_side_control', 'your_side_control', 'opponent_back_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_mount', 'your_mount', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_closed_guard', 'your_back_control', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_mount', 'your_mount', 'your_mount', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'your_side_control', 'your_mount', 'opponent_closed_guard', 'your_mount', 'opponent_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_back_control', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'your_side_control', 'opponent_closed_guard']
+Your Mount: 0.185185185185
+Your Side Control: 0.111111111111
+Your Closed Guard: 0.0740740740741
+Your Back Control: 0.0864197530864
+Opponent Mount or Opponent Side Control: 0.296296296296
+Opponent Closed Guard: 0.0864197530864
+Opponent Back Control: 0.135802469136
+OTHER: 0.0246913580247
+
+[8 8 8 7 4 4 4 4 7 4 7 4 1 1 1 6 6 6 6 6 6 8 8 8 1 6 8 1 1 2 2 2 2 2 2 2 2
+ 2 2 2 6 3 5 3 8 3 8 8 3 3 8 3 8 8 8 3 3 8 8 3 8 3 3 3 1 6 6 6 6 6 6 6 6 6
+ 6 6 6 6 6 1 1 7 3 5 5 5 5 8 8 8 8 8 8 8 8 3 5 5 5 5 5 5 5 5 5 8 5 5 8 5 5
+ 5 5 3 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 1 1 8 8]
+['OTHER', 'OTHER', 'OTHER', 'opponent_back_control', 'your_back_control', 'your_back_control', 'your_back_control', 'your_back_control', 'opponent_back_control', 'your_back_control', 'opponent_back_control', 'your_back_control', 'your_mount', 'your_mount', 'your_mount', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'OTHER', 'OTHER', 'OTHER', 'your_mount', 'opponent_closed_guard', 'OTHER', 'your_mount', 'your_mount', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'opponent_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'your_closed_guard', 'OTHER', 'your_closed_guard', 'OTHER', 'OTHER', 'your_closed_guard', 'your_closed_guard', 'OTHER', 'your_closed_guard', 'OTHER', 'OTHER', 'OTHER', 'your_closed_guard', 'your_closed_guard', 'OTHER', 'OTHER', 'your_closed_guard', 'OTHER', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_mount', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'your_mount', 'your_mount', 'opponent_back_control', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'OTHER', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'OTHER', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_closed_guard', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'your_mount', 'your_mount', 'OTHER', 'OTHER']
+Your Mount: 0.0814814814815
+Your Side Control: 0.0814814814815
+Your Closed Guard: 0.111111111111
+Your Back Control: 0.0444444444444
+Opponent Mount or Opponent Side Control: 0.148148148148
+Opponent Closed Guard: 0.162962962963
+Opponent Back Control: 0.155555555556
+OTHER: 0.214814814815
+
+[8 8 7 4 4 7 7 4 4 4 1 1 1 1 1 1 1 6 1 2 2 2 2 2 2 2 2 3 5 5 5 5 5 3 5 5 5
+ 2 1 1 1 8 1 1 1 6 1 5 5 5 5 5 5 5 5 5 5 5 5 3 5 5 5 4 5 7 7 7 7 7 7 7 7 7
+ 2 1 1 8]
+['OTHER', 'OTHER', 'opponent_back_control', 'your_back_control', 'your_back_control', 'opponent_back_control', 'opponent_back_control', 'your_back_control', 'your_back_control', 'your_back_control', 'your_mount', 'your_mount', 'your_mount', 'your_mount', 'your_mount', 'your_mount', 'your_mount', 'opponent_closed_guard', 'your_mount', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_side_control', 'your_mount', 'your_mount', 'your_mount', 'OTHER', 'your_mount', 'your_mount', 'your_mount', 'opponent_closed_guard', 'your_mount', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_back_control', 'opponent_mount_or_sc', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'your_side_control', 'your_mount', 'your_mount', 'OTHER']
+Your Mount: 0.217948717949
+Your Side Control: 0.128205128205
+Your Closed Guard: 0.0384615384615
+Your Back Control: 0.0769230769231
+Opponent Mount or Opponent Side Control: 0.307692307692
+Opponent Closed Guard: 0.025641025641
+Opponent Back Control: 0.153846153846
+OTHER: 0.0512820512821
 
 """
 

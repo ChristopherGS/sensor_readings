@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import os
+import numpy.fft as fft
 
 
 import config
@@ -14,6 +15,9 @@ def rolling_median(df):
 
 def rolling_max(df):
     return pd.rolling_max(df, window=config.TIME_SEQUENCE_LENGTH-2, center=True).mean()
+
+def standard_deviation(df):
+    return df.std()
 
 def create_rm_feature(df, sequence_length):
     features = []
@@ -83,29 +87,55 @@ def create_rm_feature(df, sequence_length):
 
     #rolling max
 
-    #x_rm = df['ACCEL_X'].groupby(idx).apply(rolling_max)
-    #x_rm.name = 'rolling_max_x'
-    #features.append(x_rm)
+    x_rm = df['ACCEL_X'].groupby(idx).apply(rolling_max)
+    x_rm.name = 'rolling_max_x'
+    features.append(x_rm)
 
-    #y_rm = df['ACCEL_Y'].groupby(idx).apply(rolling_max)
-    #y_rm.name = 'rolling_max_y'
-    #features.append(y_rm)
+    y_rm = df['ACCEL_Y'].groupby(idx).apply(rolling_max)
+    y_rm.name = 'rolling_max_y'
+    features.append(y_rm)
 
-    #z_rm = df['ACCEL_Z'].groupby(idx).apply(rolling_max)
-    #z_rm.name = 'rolling_max_z'
-    #features.append(z_rm)
+    z_rm = df['ACCEL_Z'].groupby(idx).apply(rolling_max)
+    z_rm.name = 'rolling_max_z'
+    features.append(z_rm)
 
-    #gx_rm = df['GYRO_X'].groupby(idx).apply(rolling_max)
-    #gx_rm.name = 'rolling_max_gx'
-    #features.append(gx_rm)
+    gx_rm = df['GYRO_X'].groupby(idx).apply(rolling_max)
+    gx_rm.name = 'rolling_max_gx'
+    features.append(gx_rm)
 
-    #gy_rm = df['GYRO_Y'].groupby(idx).apply(rolling_max)
-    #gy_rm.name = 'rolling_max_gy'
-    #features.append(gy_rm)
+    gy_rm = df['GYRO_Y'].groupby(idx).apply(rolling_max)
+    gy_rm.name = 'rolling_max_gy'
+    features.append(gy_rm)
 
-    #gz_rm = df['GYRO_Z'].groupby(idx).apply(rolling_max)
-    #gz_rm.name = 'rolling_max_gz'
-    #features.append(gz_rm)
+    gz_rm = df['GYRO_Z'].groupby(idx).apply(rolling_max)
+    gz_rm.name = 'rolling_max_gz'
+    features.append(gz_rm)
+
+    #standard deviation
+
+    x_std = df['ACCEL_X'].groupby(idx).apply(standard_deviation)
+    x_std.name = 'std_x'
+    features.append(x_std)
+
+    y_std = df['ACCEL_Y'].groupby(idx).apply(standard_deviation)
+    y_std.name = 'std_y'
+    features.append(y_std)
+
+    z_std = df['ACCEL_Z'].groupby(idx).apply(standard_deviation)
+    z_std.name = 'std_z'
+    features.append(z_std)
+
+    gx_std = df['GYRO_X'].groupby(idx).apply(standard_deviation)
+    gx_std.name = 'std_gx'
+    features.append(gx_std)
+
+    gy_std = df['GYRO_Y'].groupby(idx).apply(standard_deviation)
+    gy_std.name = 'std_gy'
+    features.append(gy_std)
+
+    gz_std = df['GYRO_Z'].groupby(idx).apply(standard_deviation)
+    gz_std.name = 'std_gz'
+    features.append(gz_std)
 
     data = pd.concat(features, axis=1)
     return data
