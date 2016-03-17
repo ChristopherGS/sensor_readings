@@ -207,10 +207,13 @@ class DataAnalysis(Resource):
             current_app.logger.debug(predictions)
             converted_predictions = convert_to_words(predictions)
             stats = get_position_stats(converted_predictions)
-            current_app.logger.debug(predictions)
+            current_app.logger.debug(stats)
+            print stats
+            js = json.dumps(stats)
+            resp = Response(js, status=200, mimetype='application/json')
             my_predictions = json.dumps(converted_predictions)
             current_app.logger.debug(my_predictions)
-            return {'message':my_predictions, 'stats':stats}, 200
+            return resp
         except Exception as e:
             current_app.logger.debug(e)
             return {'error': e}, 500

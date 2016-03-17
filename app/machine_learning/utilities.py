@@ -183,8 +183,7 @@ def get_position_stats(df):
     except ZeroDivisionError:
         OTHER = 0
 
-
-    return ('Your Mount: {:0.2f}\n'
+    print ('Your Mount: {:0.2f}\n'
             'Your Side Control: {:1.2f}\n'
             'Your Closed Guard: {:2.2f}\n'
             'Your Back Control: {:3.2f}\n'
@@ -195,3 +194,15 @@ def get_position_stats(df):
             'OTHER: {:8.2f}\n'
             .format(ymount, ysc, ycg, ybc,
                 omount, osc, ocg, obc, OTHER))
+
+    stats_dict = {"ymount": ymount,
+                    "ysc": ysc,
+                    "ycg": ycg,
+                    "ybc": ybc,
+                    "omount": omount,
+                    "osc": osc,
+                    "ocg": ocg,
+                    "obc": obc,
+                    "OTHER": OTHER}
+
+    return stats_dict
