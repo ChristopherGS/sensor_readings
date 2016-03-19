@@ -126,11 +126,10 @@ def convert_to_words(df):
                     else 'your_side_control' if v == 2
                     else 'your_closed_guard' if v == 3
                     else 'your_back_control' if v == 4
-                    else 'opponent_mount' if v == 5
-                    else 'opponent_side_control' if v == 6
-                    else 'opponent_closed_guard' if v == 7
-                    else 'opponent_back_control' if v == 8
-                    else 'OTHER' if v == 9
+                    else 'opponent_mount_or_sc' if v == 5
+                    else 'opponent_closed_guard' if v == 6
+                    else 'opponent_back_control' if v == 7
+                    else 'OTHER' if v == 8
                     else 'UNKNOWN' for v in df]
 
     return updated_df
@@ -159,14 +158,9 @@ def get_position_stats(df):
         ybc = 0
 
     try: 
-        omount = (df.count('opponent_mount'))/total
+        omountsc = (df.count('opponent_mount_or_sc'))/total
     except ZeroDivisionError:
-        omount = 0
-
-    try: 
-        osc = (df.count('opponent_side_control'))/total
-    except ZeroDivisionError:
-        osc = 0
+        omountsc = 0
 
     try: 
         ocg = (df.count('opponent_closed_guard'))/total
@@ -187,20 +181,18 @@ def get_position_stats(df):
             'Your Side Control: {:1.2f}\n'
             'Your Closed Guard: {:2.2f}\n'
             'Your Back Control: {:3.2f}\n'
-            'Opponent Mount: {:4.2f}\n'
-            'Opponent Side Control: {:5.2f}\n'
+            'Opponent Mount or SC: {:4.2f}\n'
             'Opponent Closed Guard: {:6.2f}\n'
             'Opponent Back Control: {:7.2f}\n'
             'OTHER: {:8.2f}\n'
             .format(ymount, ysc, ycg, ybc,
-                omount, osc, ocg, obc, OTHER))
+                omountsc, ocg, obc, OTHER))
 
     stats_dict = {"ymount": ymount,
                     "ysc": ysc,
                     "ycg": ycg,
                     "ybc": ybc,
-                    "omount": omount,
-                    "osc": osc,
+                    "omountsc": omountsc,
                     "ocg": ocg,
                     "obc": obc,
                     "OTHER": OTHER}

@@ -51,7 +51,7 @@ pd.set_option('display.width', 1200)
 
 FEATURE_COUNT = 0
 TIME_SEQUENCE_LENGTH = 30
-polynomial_features = PolynomialFeatures(interaction_only=False, include_bias=True, degree=2)
+polynomial_features = PolynomialFeatures(interaction_only=False, include_bias=True, degree=3)
 
 #================================================================================
 # DATA PREPARATION
@@ -244,7 +244,11 @@ def api_test(experiment_id_number):
         df2 = resolve_acc_gyro_db(df2)
         df2 = create_rm_feature(df2, TIME_SEQUENCE_LENGTH)
         test_data = blank_filter(df2)
-        return test_data
+
+        # TODO: NEED TO MAKE SURE FEATURE NUMBER IS THE SAME
+        #Xt = df2.drop(['state', 'index'], axis=1)
+        Xt = polynomial_features.fit_transform(test_data)
+        return Xt
 
     except Exception as e:
             current_app.logger.debug('error: {}'.format(e))

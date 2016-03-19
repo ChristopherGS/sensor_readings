@@ -144,29 +144,29 @@ def create_rm_feature(df, sequence_length):
 
     #standard deviation
 
-    x_std = df['ACCEL_X'].groupby(idx).apply(standard_deviation)
-    x_std.name = 'std_x'
-    features.append(x_std)
+    #x_std = df['ACCEL_X'].groupby(idx).apply(standard_deviation)
+    #x_std.name = 'std_x'
+    #features.append(x_std)
 
-    y_std = df['ACCEL_Y'].groupby(idx).apply(standard_deviation)
-    y_std.name = 'std_y'
-    features.append(y_std)
+    #y_std = df['ACCEL_Y'].groupby(idx).apply(standard_deviation)
+    #y_std.name = 'std_y'
+    #features.append(y_std)
 
-    z_std = df['ACCEL_Z'].groupby(idx).apply(standard_deviation)
-    z_std.name = 'std_z'
-    features.append(z_std)
+    #z_std = df['ACCEL_Z'].groupby(idx).apply(standard_deviation)
+    #z_std.name = 'std_z'
+    #features.append(z_std)
 
-    gx_std = df['GYRO_X'].groupby(idx).apply(standard_deviation)
-    gx_std.name = 'std_gx'
-    features.append(gx_std)
+    #gx_std = df['GYRO_X'].groupby(idx).apply(standard_deviation)
+    #gx_std.name = 'std_gx'
+    #features.append(gx_std)
 
-    gy_std = df['GYRO_Y'].groupby(idx).apply(standard_deviation)
-    gy_std.name = 'std_gy'
-    features.append(gy_std)
+    #gy_std = df['GYRO_Y'].groupby(idx).apply(standard_deviation)
+    #gy_std.name = 'std_gy'
+    #features.append(gy_std)
 
-    gz_std = df['GYRO_Z'].groupby(idx).apply(standard_deviation)
-    gz_std.name = 'std_gz'
-    features.append(gz_std)
+    #gz_std = df['GYRO_Z'].groupby(idx).apply(standard_deviation)
+    #gz_std.name = 'std_gz'
+    #features.append(gz_std)
 
     # Max min diff
 
