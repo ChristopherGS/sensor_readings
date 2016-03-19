@@ -217,7 +217,7 @@ def api_serialize():
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
                 min_samples_leaf=8, min_samples_split=4,
-                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=-1,
+                min_weight_fraction_leaf=0.0, n_estimators=500, n_jobs=-1,
                 oob_score=False, random_state=None, verbose=2,
                 warm_start=False)
 
