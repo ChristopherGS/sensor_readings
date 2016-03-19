@@ -51,7 +51,7 @@ pd.set_option('display.width', 1200)
 
 FEATURE_COUNT = 0
 TIME_SEQUENCE_LENGTH = 30
-polynomial_features = PolynomialFeatures(interaction_only=False, include_bias=True, degree=3)
+polynomial_features = PolynomialFeatures(interaction_only=False, include_bias=True, degree=2)
 
 #================================================================================
 # DATA PREPARATION
