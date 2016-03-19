@@ -16,6 +16,10 @@ from sklearn.externals import joblib
 from flask import (abort, current_app)
 from app.data import db, query_to_list
 from app.sensors.models import Experiment, Sensor
+from sklearn.preprocessing import PolynomialFeatures
+from time import time
+from scipy.stats import randint as sp_randint
+from operator import itemgetter
 
 from utilities import (format_time, print_full, combine_csv, blank_filter, concat_data, resolve_acc_gyro,
                         resolve_acc_gyro_db, convert_to_words, get_position_stats)
