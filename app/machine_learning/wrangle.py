@@ -46,7 +46,8 @@ DIR = os.path.dirname(os.path.realpath(__file__))
 pd.set_option('display.width', 1200)
 
 FEATURE_COUNT = 0
-TIME_SEQUENCE_LENGTH = 20
+TIME_SEQUENCE_LENGTH = 30
+polynomial_features = PolynomialFeatures(interaction_only=False, include_bias=True, degree=3)
 
 #================================================================================
 # DATA PREPARATION
@@ -63,16 +64,14 @@ def set_state(df, state):
         df['state'] = 3
     elif state =='your_back_control':
         df['state'] = 4
-    elif state =='opponent_mount':
+    elif state =='opponent_mount_or_sc':
         df['state'] = 5
-    elif state =='opponent_side_control':
-        df['state'] = 6
     elif state =='opponent_closed_guard':
-        df['state'] = 7
+        df['state'] = 6
     elif state == 'opponent_back_control':
-        df['state'] = 8
+        df['state'] = 7
     elif state =='non_jj':
-        df['state'] = 9
+        df['state'] = 8
 
     return df
 
@@ -101,24 +100,19 @@ def prep():
     ycg_td = combine_setState_createFeatures('your_closed_guard_raw_data', 'your_closed_guard')
     #4 Your back control
     ybc_td = combine_setState_createFeatures('your_back_control_raw_data', 'your_back_control')
-    #5 Opponent mount
-    omount_td = combine_setState_createFeatures('opponent_mount_raw_data', 'opponent_mount')
-    #6 Opponent side control
-    osc_td = combine_setState_createFeatures('opponent_side_control_raw_data', 'opponent_side_control')
-    #7 Opponent closed guard control
+    #5 Opponent mount or opponent side control
+    omountsc_td = combine_setState_createFeatures('opponent_mount_and_opponent_side_control_raw_data', 'opponent_mount_or_sc')
+    #6 Opponent closed guard
     ocg_td = combine_setState_createFeatures('opponent_closed_guard_raw_data', 'opponent_closed_guard')
-    #8 Opponent back control
+    #7 Opponent back control
     obc_td = combine_setState_createFeatures('opponent_back_control_raw_data', 'opponent_back_control')
-    #9 "Non jiu-jitsu" motion
+    #8 "Non jiu-jitsu" motion
     nonjj_td = combine_setState_createFeatures('non_jj_raw_data', 'non_jj')
 
-    training_data = concat_data([ymount_td, ysc_td, ycg_td, ybc_td, omount_td, osc_td, 
-        ocg_td, obc_td, nonjj_td])
-
+    training_data = concat_data([ymount_td, ysc_td, ycg_td, ybc_td, omountsc_td, ocg_td, obc_td, nonjj_td])
     # remove NaN
     training_data = blank_filter(training_data)
     return training_data
-
 
 def prep_test(el_file):
     el_file = DIR + '/data/test_cases/' + el_file
@@ -129,7 +123,6 @@ def prep_test(el_file):
     test_data = blank_filter(df)
 
     return test_data
-
 
 #================================================================================
 # MACHINE LEARNING
@@ -145,26 +138,30 @@ Things to try:
 
 """
 
-
-
 def test_model(df_train):
     """check model accuracy"""
 
     y = df_train['state'].values
     X = df_train.drop(['state', 'index'], axis=1)
+
     if X.isnull().values.any() == False: 
 
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
-                min_samples_leaf=1, min_samples_split=2,
-                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
-                oob_score=False, random_state=None, verbose=0,
+                min_samples_leaf=8, min_samples_split=4,
+                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=-1,
+                oob_score=False, random_state=None, verbose=2,
                 warm_start=False)
+
+        
+        X = polynomial_features.fit_transform(X)
 
         X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1)
 
     else: 
         print "Found NaN values"
+
+    # Get the prediction accuracy
 
     rf.fit(X_train, y_train)
     rf_pred = rf.predict(X_test)
@@ -172,10 +169,6 @@ def test_model(df_train):
         rf, X, df_train.state, cv=10, scoring='accuracy')
     print 'rf prediction: {}'.format(accuracy_score(y_test, rf_pred))
     print("Random Forest Accuracy: %0.2f (+/- %0.2f)" % (rf_scores.mean(), rf_scores.std() * 2))
-
-    # Determine feature importance
-    featImp = rf.feature_importances_
-    print(pd.Series(featImp, index=X.columns).sort(inplace=False,ascending=False))
 
 
 def trial(df_train, test_data):
@@ -188,12 +181,14 @@ def trial(df_train, test_data):
 
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
-                min_samples_leaf=1, min_samples_split=2,
-                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
+                min_samples_leaf=8, min_samples_split=4,
+                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=-1,
                 oob_score=False, random_state=None, verbose=0,
                 warm_start=False)
 
-        X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.4)
+        X = polynomial_features.fit_transform(X)
+
+        X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1)
 
     else: 
         print "Found NaN values"
@@ -217,10 +212,13 @@ def api_serialize():
 
         rf = RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',
                 max_depth=None, max_features='auto', max_leaf_nodes=None,
-                min_samples_leaf=1, min_samples_split=2,
-                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=1,
-                oob_score=False, random_state=None, verbose=0,
+                min_samples_leaf=8, min_samples_split=4,
+                min_weight_fraction_leaf=0.0, n_estimators=5000, n_jobs=-1,
+                oob_score=False, random_state=None, verbose=2,
                 warm_start=False)
+
+        
+        X = polynomial_features.fit_transform(X)
 
         X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1)
 

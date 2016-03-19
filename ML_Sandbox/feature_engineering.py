@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import numpy.fft as fft
+import scipy.fftpack
 
 
 import config
@@ -16,8 +17,15 @@ def rolling_median(df):
 def rolling_max(df):
     return pd.rolling_max(df, window=config.TIME_SEQUENCE_LENGTH-2, center=True).mean()
 
+def rolling_min(df):
+    return pd.rolling_min(df, window=config.TIME_SEQUENCE_LENGTH-2, center=True).mean()
+
 def standard_deviation(df):
     return df.std()
+
+def max_min_dif(df):
+    diff = (pd.rolling_min(df, window=config.TIME_SEQUENCE_LENGTH-2, center=True).mean()) - (pd.rolling_max(df, window=config.TIME_SEQUENCE_LENGTH-2, center=True).mean())
+    return diff
 
 def create_rm_feature(df, sequence_length):
     features = []
@@ -73,17 +81,17 @@ def create_rm_feature(df, sequence_length):
     z_ra.name = 'rolling_median_z'
     features.append(z_ra)
 
-    gx_ra = df['GYRO_X'].groupby(idx).apply(rolling_median)
-    gx_ra.name = 'rolling_median_gx'
-    features.append(gx_ra)
+    #gx_ra = df['GYRO_X'].groupby(idx).apply(rolling_median)
+    #gx_ra.name = 'rolling_median_gx'
+    #features.append(gx_ra)
 
-    gy_ra = df['GYRO_Y'].groupby(idx).apply(rolling_median)
-    gy_ra.name = 'rolling_median_gy'
-    features.append(gy_ra)
+    #gy_ra = df['GYRO_Y'].groupby(idx).apply(rolling_median)
+    #gy_ra.name = 'rolling_median_gy'
+    #features.append(gy_ra)
 
-    gz_ra = df['GYRO_Z'].groupby(idx).apply(rolling_median)
-    gz_ra.name = 'rolling_median_gz'
-    features.append(gz_ra)
+    #gz_ra = df['GYRO_Z'].groupby(idx).apply(rolling_median)
+    #gz_ra.name = 'rolling_median_gz'
+    #features.append(gz_ra)
 
     #rolling max
 
@@ -99,17 +107,43 @@ def create_rm_feature(df, sequence_length):
     z_rm.name = 'rolling_max_z'
     features.append(z_rm)
 
-    gx_rm = df['GYRO_X'].groupby(idx).apply(rolling_max)
-    gx_rm.name = 'rolling_max_gx'
-    features.append(gx_rm)
+    #gx_rm = df['GYRO_X'].groupby(idx).apply(rolling_max)
+    #gx_rm.name = 'rolling_max_gx'
+    #features.append(gx_rm)
 
-    gy_rm = df['GYRO_Y'].groupby(idx).apply(rolling_max)
-    gy_rm.name = 'rolling_max_gy'
-    features.append(gy_rm)
+    #gy_rm = df['GYRO_Y'].groupby(idx).apply(rolling_max)
+    #gy_rm.name = 'rolling_max_gy'
+    #features.append(gy_rm)
 
-    gz_rm = df['GYRO_Z'].groupby(idx).apply(rolling_max)
-    gz_rm.name = 'rolling_max_gz'
-    features.append(gz_rm)
+    #gz_rm = df['GYRO_Z'].groupby(idx).apply(rolling_max)
+    #gz_rm.name = 'rolling_max_gz'
+    #features.append(gz_rm)
+
+    #rolling min
+
+    x_rmin = df['ACCEL_X'].groupby(idx).apply(rolling_min)
+    x_rmin.name = 'rolling_min_x'
+    features.append(x_rmin)
+
+    y_rmin = df['ACCEL_Y'].groupby(idx).apply(rolling_min)
+    y_rmin.name = 'rolling_min_y'
+    features.append(y_rmin)
+
+    z_rmin = df['ACCEL_Z'].groupby(idx).apply(rolling_min)
+    z_rmin.name = 'rolling_min_z'
+    features.append(z_rmin)
+
+    #gx_rmin = df['GYRO_X'].groupby(idx).apply(rolling_min)
+    #gx_rmin.name = 'rolling_min_gx'
+    #features.append(gx_rmin)
+
+    #gy_rmin = df['GYRO_Y'].groupby(idx).apply(rolling_min)
+    #gy_rmin.name = 'rolling_min_gy'
+    #features.append(gy_rmin)
+
+    #gz_rmin = df['GYRO_Z'].groupby(idx).apply(rolling_min)
+    #gz_rmin.name = 'rolling_min_gz'
+    #features.append(gz_rmin)
 
     #standard deviation
 
@@ -136,6 +170,32 @@ def create_rm_feature(df, sequence_length):
     gz_std = df['GYRO_Z'].groupby(idx).apply(standard_deviation)
     gz_std.name = 'std_gz'
     features.append(gz_std)
+
+    # Max min diff
+
+    x_diff = df['ACCEL_X'].groupby(idx).apply(max_min_dif)
+    x_diff.name = 'diff_x'
+    features.append(x_diff)
+
+    y_diff = df['ACCEL_Y'].groupby(idx).apply(max_min_dif)
+    y_diff.name = 'diff_y'
+    features.append(y_diff)
+
+    z_diff = df['ACCEL_Z'].groupby(idx).apply(max_min_dif)
+    z_diff.name = 'diff_z'
+    features.append(z_diff)
+
+    gx_diff = df['GYRO_X'].groupby(idx).apply(max_min_dif)
+    gx_diff.name = 'diff_gx'
+    features.append(gx_diff)
+
+    gy_diff = df['GYRO_Y'].groupby(idx).apply(max_min_dif)
+    gy_diff.name = 'diff_gy'
+    features.append(gy_diff)
+
+    gz_diff = df['GYRO_Z'].groupby(idx).apply(max_min_dif)
+    gz_diff.name = 'diff_gz'
+    features.append(gz_diff)
 
     data = pd.concat(features, axis=1)
     return data

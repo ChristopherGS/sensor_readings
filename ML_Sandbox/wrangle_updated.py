@@ -185,7 +185,7 @@ def test_model(df_train):
                 warm_start=False)
 
         
-        #X = polynomial_features.fit_transform(X)
+        X = polynomial_features.fit_transform(X)
 
         X_train, X_test, y_train, y_test = cross_validation.train_test_split(X, y, test_size=0.1)
 
@@ -195,15 +195,15 @@ def test_model(df_train):
     
 
     # run randomized search
-    n_iter_search = 3
-    random_search = RandomizedSearchCV(rf, param_distributions=param_dist,
-                                       n_iter=n_iter_search)
+    #n_iter_search = 3
+    #random_search = RandomizedSearchCV(rf, param_distributions=param_dist,
+    #                                   n_iter=n_iter_search)
 
-    start = time()
-    random_search.fit(X, y)
-    print("RandomizedSearchCV took %.2f seconds for %d candidates"
-          " parameter settings." % ((time() - start), n_iter_search))
-    report(random_search.grid_scores_)
+    #start = time()
+    #random_search.fit(X, y)
+    #print("RandomizedSearchCV took %.2f seconds for %d candidates"
+    #      " parameter settings." % ((time() - start), n_iter_search))
+    #report(random_search.grid_scores_)
 
     # Get the prediction accuracy
 
@@ -225,7 +225,7 @@ def test_model(df_train):
 
     # Determine feature importance
     featImp = rf.feature_importances_
-    print(pd.Series(featImp, index=X.columns).sort(inplace=False,ascending=False))
+    #print(pd.Series(featImp, index=X.columns).sort(inplace=False,ascending=False))
 
 
 def trial(df_train, test_data):
@@ -782,6 +782,100 @@ Opponent Mount or Opponent Side Control: 0.307692307692
 Opponent Closed Guard: 0.025641025641
 Opponent Back Control: 0.153846153846
 OTHER: 0.0512820512821
+
+
+------------------------------------
+
+rf prediction: 0.752136752137
+Random Forest Accuracy: 0.70 (+/- 0.15)
+rolling_max_z        0.092743
+ACCEL_Z              0.091953
+rolling_median_z     0.075923
+rolling_min_z        0.064011
+ACCEL_X              0.061452
+rolling_min_x        0.053418
+rolling_median_x     0.051580
+rolling_max_x        0.046579
+diff_x               0.044278
+std_x                0.040363
+ACCEL_Y              0.030593
+rolling_median_y     0.028305
+diff_y               0.027948
+std_y                0.026728
+rolling_min_y        0.024348
+diff_gx              0.023778
+diff_z               0.023448
+rolling_max_y        0.020182
+std_gz               0.019575
+std_gx               0.019268
+diff_gz              0.018934
+std_z                0.013970
+diff_gy              0.012560
+std_gy               0.011418
+rolling_min_gz       0.008184
+rolling_max_gz       0.007593
+rolling_max_gx       0.007410
+rolling_min_gy       0.007125
+rolling_min_gx       0.006880
+GYRO_Y               0.006683
+rolling_median_gy    0.006551
+GYRO_X               0.005943
+rolling_median_gx    0.005756
+rolling_max_gy       0.005675
+GYRO_Z               0.004463
+rolling_median_gz    0.004381
+dtype: float64
+[8 8 6 6 1 1 6 6 1 6 6 6 8 1 6 8 6 1 4 5 5 3 3 3 3 3 3 3 5 3 3 3 3 3 3 3 5
+ 5 5 5 5]
+['OTHER', 'OTHER', 'opponent_closed_guard', 'opponent_closed_guard', 'your_mount', 'your_mount', 'opponent_closed_guard', 'opponent_closed_guard', 'your_mount', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'OTHER', 'your_mount', 'opponent_closed_guard', 'OTHER', 'opponent_closed_guard', 'your_mount', 'your_back_control', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc']
+Your Mount: 0.121951219512
+Your Side Control: 0.0
+Your Closed Guard: 0.341463414634
+Your Back Control: 0.0243902439024
+Opponent Mount or Opponent Side Control: 0.19512195122
+Opponent Closed Guard: 0.219512195122
+Opponent Back Control: 0.0
+OTHER: 0.0975609756098
+
+[8 8 4 4 4 4 4 3 4 8 1 1 1 1 8 1 1 2 1 1 2 7 2 2 2 2 1 8 5 5 5 5 5 3 5 5 3
+ 3 5 5 3 5 3 1 1 1 1 6 6 2 1 6 1 1 3 5 5 5 5 5 5 5 5 5 5 5 5 5 4 7 5 7 7 7
+ 7 7 7 7 7 2 1]
+['OTHER', 'OTHER', 'your_back_control', 'your_back_control', 'your_back_control', 'your_back_control', 'your_back_control', 'your_closed_guard', 'your_back_control', 'OTHER', 'your_mount', 'your_mount', 'your_mount', 'your_mount', 'OTHER', 'your_mount', 'your_mount', 'your_side_control', 'your_mount', 'your_mount', 'your_side_control', 'opponent_back_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_mount', 'OTHER', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_closed_guard', 'opponent_mount_or_sc', 'your_closed_guard', 'your_mount', 'your_mount', 'your_mount', 'your_mount', 'opponent_closed_guard', 'opponent_closed_guard', 'your_side_control', 'your_mount', 'opponent_closed_guard', 'your_mount', 'your_mount', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_back_control', 'opponent_back_control', 'opponent_mount_or_sc', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'your_side_control', 'your_mount']
+Your Mount: 0.20987654321
+Your Side Control: 0.0987654320988
+Your Closed Guard: 0.0864197530864
+Your Back Control: 0.0864197530864
+Opponent Mount or Opponent Side Control: 0.296296296296
+Opponent Closed Guard: 0.037037037037
+Opponent Back Control: 0.123456790123
+OTHER: 0.0617283950617
+
+[8 8 8 7 4 7 7 7 8 7 4 4 1 1 6 6 6 6 6 6 6 8 8 8 8 6 8 1 1 2 2 2 2 2 2 2 2
+ 2 2 2 6 8 3 3 3 3 8 8 8 3 3 3 8 8 8 3 3 8 8 8 8 3 3 8 1 6 6 6 6 6 6 6 6 6
+ 6 6 6 1 6 6 1 8 3 5 5 5 5 8 8 8 8 8 8 8 8 8 3 5 5 5 5 5 5 5 5 8 8 8 8 8 8
+ 5 5 3 4 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 4 1 1 8 6]
+['OTHER', 'OTHER', 'OTHER', 'opponent_back_control', 'your_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'OTHER', 'opponent_back_control', 'your_back_control', 'your_back_control', 'your_mount', 'your_mount', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'opponent_closed_guard', 'OTHER', 'your_mount', 'your_mount', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'opponent_closed_guard', 'OTHER', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'OTHER', 'OTHER', 'OTHER', 'your_closed_guard', 'your_closed_guard', 'your_closed_guard', 'OTHER', 'OTHER', 'OTHER', 'your_closed_guard', 'your_closed_guard', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'your_closed_guard', 'your_closed_guard', 'OTHER', 'your_mount', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'opponent_closed_guard', 'your_mount', 'opponent_closed_guard', 'opponent_closed_guard', 'your_mount', 'OTHER', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'OTHER', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_closed_guard', 'your_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'your_back_control', 'your_mount', 'your_mount', 'OTHER', 'opponent_closed_guard']
+Your Mount: 0.0666666666667
+Your Side Control: 0.0814814814815
+Your Closed Guard: 0.103703703704
+Your Back Control: 0.037037037037
+Opponent Mount or Opponent Side Control: 0.103703703704
+Opponent Closed Guard: 0.177777777778
+Opponent Back Control: 0.148148148148
+OTHER: 0.281481481481
+
+[8 8 3 4 4 3 4 4 4 4 1 1 1 6 1 6 1 1 1 2 2 2 2 2 2 2 1 3 5 5 5 5 5 3 3 5 5
+ 2 1 1 1 4 1 1 1 6 1 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 4 4 7 7 5 5 7 7 7 7 7
+ 2 1 1 8]
+['OTHER', 'OTHER', 'your_closed_guard', 'your_back_control', 'your_back_control', 'your_closed_guard', 'your_back_control', 'your_back_control', 'your_back_control', 'your_back_control', 'your_mount', 'your_mount', 'your_mount', 'opponent_closed_guard', 'your_mount', 'opponent_closed_guard', 'your_mount', 'your_mount', 'your_mount', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_side_control', 'your_mount', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_closed_guard', 'your_closed_guard', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_side_control', 'your_mount', 'your_mount', 'your_mount', 'your_back_control', 'your_mount', 'your_mount', 'your_mount', 'opponent_closed_guard', 'your_mount', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'your_back_control', 'your_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_mount_or_sc', 'opponent_mount_or_sc', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'opponent_back_control', 'your_side_control', 'your_mount', 'your_mount', 'OTHER']
+Your Mount: 0.217948717949
+Your Side Control: 0.115384615385
+Your Closed Guard: 0.0641025641026
+Your Back Control: 0.115384615385
+Opponent Mount or Opponent Side Control: 0.320512820513
+Opponent Closed Guard: 0.0384615384615
+Opponent Back Control: 0.0897435897436
+OTHER: 0.0384615384615
 
 """
 
