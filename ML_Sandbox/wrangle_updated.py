@@ -50,7 +50,7 @@ If I just want to only get the interaction features(not x^2, then it is enough t
 and include_bias=False. 
 If you want to get higher order Polynomial features(say nth degree), pass degree=n optional parameter to Polynomial Features.
 """
-polynomial_features = PolynomialFeatures(interaction_only=False, include_bias=True, degree=3)
+polynomial_features = PolynomialFeatures(interaction_only=False, include_bias=True, degree=1)
 
 #================================================================================
 # DATA PREPARATION
@@ -60,21 +60,21 @@ def set_state(df, state):
     """set the state for training"""
 
     if state == 'your_mount':
-        df['state'] = 1
+        df['state'] = 0
     elif state == 'your_side_control':
-        df['state'] = 2
+        df['state'] = 1
     elif state =='your_closed_guard':
-        df['state'] = 3
+        df['state'] = 2
     elif state =='your_back_control':
-        df['state'] = 4
+        df['state'] = 3
     elif state =='opponent_mount_or_sc':
-        df['state'] = 5
+        df['state'] = 4
     elif state =='opponent_closed_guard':
-        df['state'] = 6
+        df['state'] = 5
     elif state == 'opponent_back_control':
-        df['state'] = 7
+        df['state'] = 6
     elif state =='non_jj':
-        df['state'] = 8
+        df['state'] = 7
 
     return df
 
@@ -258,6 +258,7 @@ def trial(df_train, test_data):
     final_prediction = convert_to_words(rf_pred2)
     print_full(final_prediction)
     get_position_stats(final_prediction)
+    return rf_pred2
     #print 'parameter list: {}'.format(polynomial_features.get_params())
 
 

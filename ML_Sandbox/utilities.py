@@ -103,14 +103,14 @@ def blank_filter(df):
 
 def convert_to_words(df):
 
-    updated_df = ['your_mount' if v == 1 
-                    else 'your_side_control' if v == 2
-                    else 'your_closed_guard' if v == 3
-                    else 'your_back_control' if v == 4
-                    else 'opponent_mount_or_sc' if v == 5
-                    else 'opponent_closed_guard' if v == 6
-                    else 'opponent_back_control' if v == 7
-                    else 'OTHER' if v == 8
+    updated_df = ['your_mount' if v == 0 
+                    else 'your_side_control' if v == 1
+                    else 'your_closed_guard' if v == 2
+                    else 'your_back_control' if v == 3
+                    else 'opponent_mount_or_sc' if v == 4
+                    else 'opponent_closed_guard' if v == 5
+                    else 'opponent_back_control' if v == 6
+                    else 'OTHER' if v == 7
                     else 'UNKNOWN' for v in df]
 
     return updated_df
