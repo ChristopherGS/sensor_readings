@@ -200,13 +200,13 @@ class DataAnalysis(Resource):
     def get(self, experiment_id):
         try: 
             current_app.logger.debug('RECEIVED ANALYSIS REQUEST: {}'.format(experiment_id))
-            print experiment_id
             test_data = api_test(experiment_id)
             current_app.logger.debug(test_data)
             predictions = algorithm.predict(test_data)
             current_app.logger.debug(predictions)
+            predictions_ = json.dumps(predictions.tolist())
             converted_predictions = convert_to_words(predictions)
-            stats = get_position_stats(converted_predictions)
+            stats = get_position_stats(converted_predictions, predictions_)
             current_app.logger.debug(stats)
             print stats
             js = json.dumps(stats)

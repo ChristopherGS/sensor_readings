@@ -134,7 +134,7 @@ def convert_to_words(df):
 
     return updated_df
 
-def get_position_stats(df):
+def get_position_stats(df, predictions):
     total = len(df)
 
     try: 
@@ -195,6 +195,7 @@ def get_position_stats(df):
                     "omountsc": omountsc,
                     "ocg": ocg,
                     "obc": obc,
-                    "OTHER": OTHER}
+                    "OTHER": OTHER,
+                    "predictions": df}
 
     return stats_dict
