@@ -241,13 +241,16 @@ def api_test(experiment_id_number):
         query = db.session.query(Sensor)
         df = pd.read_sql_query(query.statement, query.session.bind)
         df2 = df[df['experiment_id']==clean_experiment_number]
+        current_app.logger.debug(df2)
         df2 = resolve_acc_gyro_db(df2)
         df2 = create_rm_feature(df2, TIME_SEQUENCE_LENGTH)
         test_data = blank_filter(df2)
+        current_app.logger.debug(test_data)
 
         # TODO: NEED TO MAKE SURE FEATURE NUMBER IS THE SAME
         #Xt = df2.drop(['state', 'index'], axis=1)
         Xt = polynomial_features.fit_transform(test_data)
+        current_app.logger.debug(Xt)
         return Xt
 
     except Exception as e:
