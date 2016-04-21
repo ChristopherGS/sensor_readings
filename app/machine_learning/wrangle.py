@@ -242,8 +242,12 @@ def api_test(experiment_id_number):
         df = pd.read_sql_query(query.statement, query.session.bind)
         df2 = df[df['experiment_id']==clean_experiment_number]
         current_app.logger.debug(df2)
+        current_app.logger.debug('run resolve_acc_gyro')
         df2 = resolve_acc_gyro_db(df2)
+        current_app.logger.debug(df2)
+        current_app.logger.debug('run create_rm_feature')
         df2 = create_rm_feature(df2, TIME_SEQUENCE_LENGTH)
+        current_app.logger.debug(df2)
         test_data = blank_filter(df2)
         current_app.logger.debug(test_data)
 
