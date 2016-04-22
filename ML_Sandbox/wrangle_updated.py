@@ -50,7 +50,7 @@ If I just want to only get the interaction features(not x^2, then it is enough t
 and include_bias=False. 
 If you want to get higher order Polynomial features(say nth degree), pass degree=n optional parameter to Polynomial Features.
 """
-polynomial_features = PolynomialFeatures(interaction_only=False, include_bias=True, degree=1)
+polynomial_features = PolynomialFeatures(interaction_only=False, include_bias=True, degree=3)
 
 #================================================================================
 # DATA PREPARATION
