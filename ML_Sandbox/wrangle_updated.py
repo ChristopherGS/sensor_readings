@@ -262,9 +262,6 @@ def trial(df_train, test_data):
     #print 'parameter list: {}'.format(polynomial_features.get_params())
 
 
-
-
-
 def start():
     """Start here"""
     print "Begin analysis"

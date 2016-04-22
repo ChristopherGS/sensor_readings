@@ -25,7 +25,8 @@ from sklearn.externals import joblib
 from app.data import db, query_to_list
 from app.science import pandas_cleanup, sql_to_pandas
 from app.machine_learning.wrangle import api_serialize, api_test
-from app.machine_learning.utilities import convert_to_words, get_position_stats
+from app.machine_learning.hmm_smoother import apply_hmm
+from app.machine_learning.utilities import convert_to_words, get_position_stats, convert_to_numbers
 
 _basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -45,6 +46,8 @@ def allowed_file(filename):
 
 def Load_Data(file_name, android_status):
     
+    android_status = True # DELETE
+
     if android_status == True:
         current_app.logger.debug('processing Android file')
         current_app.logger.debug(file_name)
@@ -109,6 +112,8 @@ class CsvSimple(Resource):
 
         # now test if it is a file or not
         ANDROID = False
+
+
         
         try:
             for my_file in request.files:
@@ -137,6 +142,8 @@ class CsvSimple(Resource):
             my_experiment = Experiment(hardware='Nexus5', t_stamp=datetime.now(), label='unknown')
             db.session.add(my_experiment)
             db.session.commit()
+
+            ANDROID = True # DELETE
 
             try:
                 file_name = filename
@@ -203,8 +210,21 @@ class DataAnalysis(Resource):
             test_data = api_test(experiment_id)
             current_app.logger.debug(test_data)
             predictions = algorithm.predict(test_data)
-            current_app.logger.debug(predictions)
+
+            print 'predictions before hmm: {}'.format(predictions)
+
+            # Right now these predictions are from 1 - 8
+            # This doesn't work for the HMM
+            temp_converted_predictions = convert_to_words(predictions) # safety
+            converted_predictions = convert_to_numbers(temp_converted_predictions) # safety
+
+            # Run the HMM Smoother
+
+            predictions = apply_hmm(converted_predictions)
             predictions_ = json.dumps(predictions.tolist())
+
+            print 'predictions after hmm: {}'.format(predictions)
+
             converted_predictions = convert_to_words(predictions)
             stats = get_position_stats(converted_predictions, predictions_)
             current_app.logger.debug(stats)

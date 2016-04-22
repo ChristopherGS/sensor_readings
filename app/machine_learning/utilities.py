@@ -122,7 +122,8 @@ def blank_filter(df):
 
 def convert_to_words(df):
 
-    updated_df = ['your_mount' if v == 1 
+    updated_df = ['your_mount' if v == 0 
+                    else 'your_mount' if v == 1
                     else 'your_side_control' if v == 2
                     else 'your_closed_guard' if v == 3
                     else 'your_back_control' if v == 4
@@ -130,6 +131,22 @@ def convert_to_words(df):
                     else 'opponent_closed_guard' if v == 6
                     else 'opponent_back_control' if v == 7
                     else 'OTHER' if v == 8
+                    else 'UNKNOWN' for v in df]
+
+    return updated_df
+
+def convert_to_numbers(df):
+
+    #updated_df = [w.replace('your_mount', '<1>').replace('324', '<324>').replace('567', '<567>') for w in df]
+
+    updated_df = [0 if v == 'your_mount'
+                    else 1 if v == 'your_side_control'
+                    else  2 if v == 'your_closed_guard'
+                    else  3 if v == 'your_back_control'
+                    else  4 if v == 'opponent_mount_or_sc'
+                    else  5 if v == 'opponent_closed_guard'
+                    else  6 if v == 'opponent_back_control'
+                    else  7 if v == 'OTHER'
                     else 'UNKNOWN' for v in df]
 
     return updated_df
