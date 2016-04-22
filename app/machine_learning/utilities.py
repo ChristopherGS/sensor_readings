@@ -137,8 +137,6 @@ def convert_to_words(df):
 
 def convert_to_numbers(df):
 
-    #updated_df = [w.replace('your_mount', '<1>').replace('324', '<324>').replace('567', '<567>') for w in df]
-
     updated_df = [0 if v == 'your_mount'
                     else 1 if v == 'your_side_control'
                     else  2 if v == 'your_closed_guard'
