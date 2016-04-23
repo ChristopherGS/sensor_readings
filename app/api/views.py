@@ -26,7 +26,7 @@ from app.data import db, query_to_list
 from app.science import pandas_cleanup, sql_to_pandas
 from app.machine_learning.wrangle import api_serialize, api_test
 from app.machine_learning.hmm_smoother import apply_hmm
-from app.machine_learning.utilities import convert_to_words, get_position_stats, convert_to_numbers
+from app.machine_learning.utilities import convert_to_words, convert_to_words_post, get_position_stats, convert_to_numbers
 
 _basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -208,7 +208,6 @@ class DataAnalysis(Resource):
         try: 
             current_app.logger.debug('RECEIVED ANALYSIS REQUEST: {}'.format(experiment_id))
             test_data = api_test(experiment_id)
-            current_app.logger.debug(test_data)
             predictions = algorithm.predict(test_data)
 
             print 'predictions before hmm: {}'.format(predictions)
@@ -216,7 +215,13 @@ class DataAnalysis(Resource):
             # Right now these predictions are from 1 - 8
             # This doesn't work for the HMM
             temp_converted_predictions = convert_to_words(predictions) # safety
+
+            # Now the predictions are in words - which are safe
+
+            print temp_converted_predictions
             converted_predictions = convert_to_numbers(temp_converted_predictions) # safety
+
+            # Now we've converted the words to the re-indexed numbers the HMM expects
 
             # Run the HMM Smoother
 
@@ -225,14 +230,16 @@ class DataAnalysis(Resource):
 
             print 'predictions after hmm: {}'.format(predictions)
 
-            converted_predictions = convert_to_words(predictions)
+            # The last step is to convert back to words using the HMM index
+
+            converted_predictions = convert_to_words_post(predictions)
+            print converted_predictions
+
             stats = get_position_stats(converted_predictions, predictions_)
-            current_app.logger.debug(stats)
             print stats
             js = json.dumps(stats)
             resp = Response(js, status=200, mimetype='application/json')
             my_predictions = json.dumps(converted_predictions)
-            current_app.logger.debug(my_predictions)
             return resp
         except Exception as e:
             current_app.logger.debug(e)
