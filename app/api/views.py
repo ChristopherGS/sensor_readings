@@ -45,8 +45,6 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 def Load_Data(file_name, android_status):
-    
-    android_status = True # DELETE
 
     if android_status == True:
         current_app.logger.debug('processing Android file')
@@ -142,8 +140,6 @@ class CsvSimple(Resource):
             my_experiment = Experiment(hardware='Nexus5', t_stamp=datetime.now(), label='unknown')
             db.session.add(my_experiment)
             db.session.commit()
-
-            ANDROID = True # DELETE
 
             try:
                 file_name = filename

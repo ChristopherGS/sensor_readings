@@ -18,7 +18,9 @@ def rolling_min(df):
     return pd.rolling_min(df, window=TIME_SEQUENCE_LENGTH-2, center=True).mean()
 
 def standard_deviation(df):
-    return df.std()
+    std = pd.rolling_std(df, window=TIME_SEQUENCE_LENGTH-2, center=True)
+    print std
+    return std
 
 def max_min_dif(df):
     diff = (pd.rolling_min(df, window=TIME_SEQUENCE_LENGTH-2, center=True).mean()) - (pd.rolling_max(df, window=TIME_SEQUENCE_LENGTH-2, center=True).mean())
@@ -38,6 +40,10 @@ def create_rm_feature(df, sequence_length):
     time_sequence = [i] * sequence_length
 
     # The acutal number of 'i' values in the np.array is the sequence_length
+
+    # COULD try putting a Kalman filter here before we split into 10 second chunks
+    # this would smooth all the readings before processing - not sure if that is a good approach...
+    # This filter could replace values or form new features
 
     idx = np.array(time_sequence).T.flatten()[:len(original_x)]
     x = original_x.groupby(idx).mean()
