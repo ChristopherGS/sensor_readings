@@ -18,9 +18,7 @@ def rolling_min(df):
     return pd.rolling_min(df, window=TIME_SEQUENCE_LENGTH-2, center=True).mean()
 
 def standard_deviation(df):
-    std = pd.rolling_std(df, window=TIME_SEQUENCE_LENGTH-2, center=True)
-    print std
-    return std
+    return df.std()
 
 def max_min_dif(df):
     diff = (pd.rolling_min(df, window=TIME_SEQUENCE_LENGTH-2, center=True).mean()) - (pd.rolling_max(df, window=TIME_SEQUENCE_LENGTH-2, center=True).mean())
