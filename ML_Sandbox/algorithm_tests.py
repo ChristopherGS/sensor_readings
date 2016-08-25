@@ -15,7 +15,24 @@ from utilities import (convert_to_words, print_full, get_position_stats, combine
                        blank_filter, concat_data)
 
 
-
+# TODO: duplicate
+def update_df(df, index, new_values, reach=8):
+    
+    #print new_values # This is the value at the index (i.e. the row when the stand_up event was 1)
+    # need to take this list and lay it over the values in the df at that index
+    # TODO: catch indexing error
+    
+    for x in range(0,reach):
+        amount = reach - x
+        i = index - (amount*20)
+        df.loc[i, 'state'] = new_values[x]
+    
+    for y in range(0,reach):
+        amount = reach - y
+        i = index + (amount*20)
+        df.loc[i, 'state'] = new_values[y+reach]
+    
+    return df
 
 
 def trial(df_train, test_data):
